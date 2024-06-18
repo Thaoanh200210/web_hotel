@@ -1,0 +1,222 @@
+<div class="container">
+  <h1 class="text-center">Chào mừng bạn đến với trang review</h1>
+  <% for(let bookingDetail of booking.detailBookings){ %>
+  <div class="card" style="">
+    <div class="card-body d-flex flex-column">
+      <h3 class="card-title h3"><%= booking.detailBookings[0].room.hotel.name  %></h3>
+      <div class="container card-text">
+        <div class="row">
+          <div class="col-4">
+                  <div>Loại phòng:<%= bookingDetail.room.type_room.name %></div>
+                  <div>Số phòng:<%= bookingDetail.room.number_room %></div>
+                  <div>Giá phòng:<%=  parseInt(bookingDetail.room.original_price).toLocaleString('it-IT', {style : 'currency', currency : 'VND'}) %></div>
+          </div>
+          <% if(haveReview(booking.reviews,bookingDetail )){ %>
+          <div class="col-8 ">
+            <div class="row">
+              <div class="col-6">
+                <div style="width: 80%">
+                  <div class="d-flex flex-column">
+                    <div class="d-flex justify-content-between">
+                      <div class="text-color">Thoải mái</div>
+                      <div><%= getReview(booking.reviews,bookingDetail).comfortScore/10 %></div></div>
+                    </div>
+                    <div class="progress" style="height: 10px">
+                      <div
+                        class="progress-bar c-bg-secondary"
+                        style="width: <%= getReview(booking.reviews,bookingDetail).comfortScore %>%; height: 10px"
+                        role="progressbar"
+                        aria-valuenow="<%= getReview(booking.reviews,bookingDetail).comfortScore %>"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
+                    </div>
+                  </div>
+    
+
+                <div style="width: 80%">
+                  <div class="d-flex flex-column">
+                    <div class="d-flex justify-content-between">
+                      <div class="text-color">Đáng đồng tiền</div>
+                      <div><%= getReview(booking.reviews,bookingDetail).moneyScore/10 %></div>
+                    </div>
+                    <div class="progress" style="height: 10px">
+                      <div
+                        class="progress-bar c-bg-secondary"
+                        style="width: <%= getReview(booking.reviews,bookingDetail).moneyScore %>%; height: 10px"
+                        role="progressbar"
+                        aria-valuenow="<%= getReview(booking.reviews,bookingDetail).moneyScore %>"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="width: 80%">
+                  <div class="d-flex flex-column">
+                    <div class="d-flex justify-content-between">
+                      <div class="text-color">Wifi miễn phí</div>
+                      <div><%= getReview(booking.reviews,bookingDetail).wifiScore/10 %></div>
+                    </div>
+                    <div class="progress" style="height: 10px">
+                      <div
+                        class="progress-bar c-bg-secondary"
+                        style="width: <%= getReview(booking.reviews,bookingDetail).wifiScore %>%; height: 10px"
+                        role="progressbar"
+                        aria-valuenow="<%= getReview(booking.reviews,bookingDetail).wifiScore/10 %>"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6">
+                <div style="width: 80%">
+                  <div class="d-flex flex-column">
+                    <div class="d-flex justify-content-between">
+                      <div class="text-color">Nhân viên phục vụ</div>
+                      <div><%= getReview(booking.reviews,bookingDetail).employeeScore/10 %></div>
+                    </div>
+                    <div class="progress" style="height: 10px">
+                      <div
+                        class="progress-bar c-bg-secondary"
+                        style="width: <%= getReview(booking.reviews,bookingDetail).employeeScore %>%; height: 10px"
+                        role="progressbar"
+                        aria-valuenow="<%= getReview(booking.reviews,bookingDetail).employeeScore/10 %>"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="width: 80%">
+                  <div class="d-flex flex-column">
+                    <div class="d-flex justify-content-between">
+                      <div class="text-color">Tiện nghi</div>
+                      <div><%= getReview(booking.reviews,bookingDetail).sactificationScore/10 %></div>
+                    </div>
+                    <div class="progress" style="height: 10px">
+                      <div
+                        class="progress-bar c-bg-secondary"
+                        style="width: <%= getReview(booking.reviews,bookingDetail).sactificationScore %>%; height: 10px"
+                        role="progressbar"
+                        aria-valuenow="<%= getReview(booking.reviews,bookingDetail).sactificationScore/10 %>"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="width: 80%">
+                  <div class="d-flex flex-column">
+                    <div class="d-flex justify-content-between">
+                      <div class="text-color">Sạch sẽ</div>
+                      <div><%= getReview(booking.reviews,bookingDetail).cleanlinessScore/10 %></div>
+                    </div>
+                    <div class="progress" style="height: 10px">
+                      <div
+                        class="progress-bar c-bg-secondary"
+                        style="width: <%= getReview(booking.reviews,bookingDetail).cleanlinessScore %>%; height: 10px"
+                        role="progressbar"
+                        aria-valuenow="<%= getReview(booking.reviews,bookingDetail).cleanlinessScore/10 %>"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div ><%= getReview(booking.reviews,bookingDetail).comment %></div>
+            </div>
+          </div>
+          <% } else { %>
+          <div class="col-8">
+            <div class="row">
+              <form action="/review_handler/<%=booking._id%>" method="POST">
+                <div class="row">
+                  <div class="col-6">
+                    <label for="vol">Thoải mái</label>
+                    <input
+                      type="range"
+                      name="thoaimai"
+                      style="width: 300px"
+                      min="0"
+                      max="100"
+                    />
+
+                    <label for="vol">Đáng đồng tiền</label>
+                    <input
+                      type="range"
+                      name="dangtien"
+                      style="width: 300px"
+                      min="0"
+                      max="100"
+                    />
+
+                    <label for="vol">Wifi miễn phí</label>
+                    <input
+                      type="range"
+                      name="wifi"
+                      style="width: 300px"
+                      min="0"
+                      max="100"
+                    />
+                  </div>
+
+                  <div class="col-6">
+                    <label for="vol">Nhân viên phục vụ</label>
+                    <input
+                      type="range"
+                      name="nhanvien"
+                      style="width: 300px"
+                      min="0"
+                      max="100"
+                    />
+
+                    <label for="vol">Tiện nghi</label>
+                    <input
+                      type="range"
+                      name="tiennghi"
+                      style="width: 300px"
+                      min="0"
+                      max="100"
+                    />
+
+                    <label for="vol">Sạch sẽ</label>
+                    <input
+                      type="range"
+                      name="sachse"
+                      style="width: 300px"
+                      min="0"
+                      max="100"
+                    />
+                  </div>
+                </div>
+                <div class="">
+                  <label for="vol">Ý kiến của bạn</label>
+                  <textarea name="binhluan" id="" cols="100" rows="4" ></textarea>
+                </div>
+                <div class="d-flex justify-content-end">
+                  <input type="hidden" name="phong" value="<%= bookingDetail.room._id %>">
+                  <button type="submit" class="btn btn-primary" style="margin-right: 95px; margin-top: 10px;">
+                    Đánh giá
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%}%>
+</div>

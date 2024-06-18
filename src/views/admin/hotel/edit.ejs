@@ -1,0 +1,52 @@
+<div class="card">
+    <div class="card-header d-flex">
+        <div class="card-title flex-grow-1 d-flex justify-content-between align-items-center">
+            <h5 class="modal-title d-flex align-items-center">
+                <i class="bi bi-person-lines-fill fs-3 me-2"></i> Sửa thông tin Khách Sạn
+            </h5>
+        </div>
+    </div>
+    <div class="card-body">
+        <form action="/administrator/hotel/edit-handler/<%= hotel._id %>" method="POST" class="d-flex flex-column">
+            <div class="">
+                <div class="mb-3">
+                    <label class="form-label">Tên khách sạn</label>
+                    <input class="form-control shadow-none" name="tenkhachsan" type="text" value="<%=hotel.name%>" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Địa chỉ</label>
+                    <input class="form-control shadow-none" name="diachi" type="text"  value="<%=hotel.address%>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Số sao</label>
+                    <input class="form-control shadow-none" name="sosao" type="number" min="1" max="5" value="<%=hotel.star%>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Thành phố</label>
+                    <input class="form-control shadow-none" name="city" type="text" value="<%=hotel.city_id%>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Miêu tả</label>
+                    <input class="form-control shadow-none" name="mieuta" type="text" value="<%=hotel.description%>" required>
+                </div>
+
+            </div>
+            <div class="text-center my-1">
+                <div class="d-flex justify-content-center gap-4">
+                    <a class="btn btn-warning shadow-none" href="/administrator/hotel">
+                        Trở về
+                    </a>
+                    <button class="btn btn-dark shadow-none" type="submit" name="">
+                        Sửa thông tin
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+

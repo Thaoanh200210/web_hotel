@@ -1,0 +1,92 @@
+<div class="card">
+    <div class="card-header d-flex">
+        <div class="card-title flex-grow-1 d-flex justify-content-between align-items-center">
+            <h5 class="modal-title d-flex align-items-center">
+                <i class="bi bi-person-lines-fill fs-3 me-2"></i> Thêm Khách Sạn
+            </h5>
+        </div>
+    </div>
+    <div class="card-body">
+        <form action="/administrator/hotel/add-handler" method="POST" enctype="multipart/form-data" class="d-flex flex-column">
+            <div class="d-flex ">
+                <div class="flex-grow-1 me-3">
+                    <div class="mb-3">
+                        <label class="form-label">Tên khách sạn</label>
+                        <input class="form-control shadow-none" name="tenkhachsan" type="text" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Địa chỉ</label>
+                        <input class="form-control shadow-none" name="diachi" type="text" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ảnh bìa</label>
+                        <input class="form-control shadow-none" name="hinhanh" type="file" accept="image/*" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Slogan</label>
+                        <input class="form-control shadow-none" name="diachi" type="text" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Số sao</label>
+                        <input class="form-control shadow-none" name="sosao" type="number" min="1" max="5" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Thành phố</label>
+                        <input class="form-control shadow-none" name="city" type="text" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Địa chỉ thành phố</label>
+                        <select class="form-select shadow-none" name="city" type="text" required>
+                            <% for (city of citys) {%>
+                                <option value="<%= city._id %>">
+                                    <%= city.name %>
+                                </option>
+                                <% } %>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex-grow-1 ms-3">
+                    <div class="mb-3">
+                        <label class="form-label">Chủ sở hữu</label>
+                        <input class="form-control shadow-none" name="chusohuu" type="text" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Số điện thoại</label>
+                        <input class="form-control shadow-none" name="sodienthoai" type="number" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input class="form-control shadow-none" name="email" type="text" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Mật khẩu</label>
+                        <input class="form-control shadow-none" name="matkhau" type="text" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Miêu tả khách sạn</label>
+                        <input class="form-control shadow-none" name="mieuta"  type="text" required>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center my-1">
+                <div class="d-flex justify-content-center gap-4">
+                    <a class="btn btn-warning shadow-none" href="/administrator/hotel">
+                        Trở về
+                    </a>
+                    <button class="btn btn-dark shadow-none" type="submit" name="">
+                        Thêm thông tin
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+

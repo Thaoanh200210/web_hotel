@@ -1,0 +1,44 @@
+<div class="card">
+    <div class="card-header d-flex">
+        <div class="card-title flex-grow-1 d-flex justify-content-between align-items-center">
+            <h5 class="modal-title d-flex align-items-center">
+                <i class="bi bi-person-lines-fill fs-3 me-2"></i> Sửa Thông Tin Sự Kiện
+            </h5>
+        </div>
+    </div>
+    <div class="card-body">
+        <form action="/manager/<%=hotel._id%>/event/edit-handler/<%= event._id %>" method="POST" class="d-flex flex-column">
+            <div class="">
+                <div class="mb-3">
+                    <label class="form-label ">Tên sự kiện</label>
+                    <input  class="form-control shadow-none" name="tensukien" value="<%= event.name %>" type="text" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Phần trăm giảm giá</label>
+                    <input  class="form-control shadow-none" name="phantram" type="number" value="<%= event.discount_percent %>"  required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Ngày bắt đầu</label>
+                    <input  class="form-control shadow-none" name="ngaydau" type="datetime-local" value="<%= event.date_start.toISOString().slice(0, 16) %>"  required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Ngày kết thúc</label>
+                    <input  class="form-control shadow-none" name="ngayket" type="datetime-local" value="<%= event.date_end.toISOString().slice(0, 16) %>"  required>
+                </div>
+            </div>
+            <div class="text-center my-1">
+                <div class="d-flex justify-content-center gap-4">
+                    <a class="btn btn-warning shadow-none" href="/manager/<%=hotel._id%>/event">
+                        Trở về
+                    </a>
+                    <button class="btn btn-dark shadow-none" type="submit" name="">
+                        Sửa sự kiện
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+

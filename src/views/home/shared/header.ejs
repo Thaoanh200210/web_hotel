@@ -1,0 +1,386 @@
+<script>
+  function modelHandle(element){
+    let goalId = element.getAttribute('data-bs-target')
+    console.log(goalId)
+    if(document.querySelector(goalId).classList.contains('fade')){
+      document.querySelector(goalId).classList.remove('fade')
+    } else {
+      document.querySelector(goalId).classList.add('fade')
+    }
+  }
+</script>
+<header>
+  <div class="container navbar navbar-expand-lg d-flex align-items-center">
+    <h2 class="d-flex justify-content-center align-items-center fs-1 fw-semibold my-0" style="padding-left: 20px!important;padding-right: 20px!important;"><a href="/">THMS</a></a></h2>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <nav class="collapse navbar-collapse flex-grow-1 align-items-center" style="display: flex !important;" id="navbarSupportedContent">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="/">Trang chủ</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            href="hotel"
+            class="nav-link dropdown-toggle"
+            role="button"
+            data-toggle="dropdown"
+            aria-expanded="false"
+            >Khách sạn
+            </a>
+            
+          <div class="dropdown-menu">
+            <% for(hotelData of hotelDatas){%>
+            <a class="dropdown-item"
+              href="/hotel/<%=hotelData._id%>/room"
+              target="_blank"
+              > <%= hotelData.name %>
+              </a>
+            <% }%>
+          </div>
+          
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="services">Dịch vụ</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="contact">Liên hệ</a>
+        </li>
+      </ul>
+      <div class="flex-grow-1"></div>
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <a
+            href="#"
+            class="nav-link dropdown-toggle"
+            role="button"
+            data-toggle="dropdown"
+            aria-expanded="false"
+            >Tài khoản</a
+          >
+          <div class="dropdown-menu">
+            <% if(user != undefined){%>
+                <a
+                    href="/historical-booking"
+                    class="dropdown-item"
+                >
+                  Lịch sử đặt phòng
+                </a>
+                <button
+                  type="button"
+                  class="dropdown-item"
+                  data-bs-toggle="modal"
+                  data-bs-target="#changePasswordModal"
+                  onclick="modelHandle(this)"
+                >
+                  Đổi mật khẩu
+                </button>
+                <a
+                    href="/log-out"
+                    class="dropdown-item"
+                >
+                  Đăng xuất
+                </a>
+                <% }else{ %>
+                <button
+                  type="button"
+                  class="dropdown-item"
+                  data-bs-toggle="modal"
+                  data-bs-target="#loginModal"
+                  onclick="modelHandle(this)"
+                >
+                  Đăng nhập
+                </button>
+              
+                <button
+                  type="button"
+                  class="dropdown-item"
+                  data-bs-toggle="modal"
+                  data-bs-target="#registerModal"
+                  onclick="modelHandle(this)"
+                >
+                Đăng ký
+                </button>
+                <% } %>
+          </div>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<style>
+  header{
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    z-index: 2;
+  }
+  .nav-link{
+    color: white;
+    font-weight: 600;
+  }
+</style>
+<% 
+  let slogans = {
+    "home/index": {
+      title: "Trang chủ",
+      slogan: "Nơi để đặt Niềm Tin và trao Hy Vọng"
+    },
+    "home/room": {
+      title: "Phòng",
+      slogan: "Khách sạn với những phòng tốt nhất"
+    },
+    "home/contact": {
+      title: "Liên hệ",
+      slogan: "Liên hệ với chúng tôi"
+    },
+    "home/services": {
+      title: "Dịch vụ",
+      slogan: "Khách sạn chúng tôi hân hạnh phục vụ quý khách"
+    },
+    "home/review": {
+      title: "Chào mừng bạn đến với trang đánh giá",
+      slogan: "Khách sạn chúng tôi hân hạnh phục vụ quý khách"
+    },
+    "home/blog": {
+      title: "Đánh giá",
+      slogan: "Những đánh giá chân thật nhất đến từ khách hàng"
+    },
+    "home/hotel": {
+      title: "Khách sạn",
+      slogan: "Khách sạn sẽ cung cấp những dịch vụ, view, giá cả tốt nhất"
+    },
+    "home/room_booking": {
+      title: "Phòng",
+      slogan: "Khách sạn với những phòng tốt nhất"
+    },
+    "home/room_detail": {
+      title: "Phòng",
+      slogan: "Khách sạn với những phòng tốt nhất"
+    },
+    "home/historical_booking": {
+      title: "Lịch sử đặt phòng",
+      slogan: "Nơi lưu lại các giao dịch của bạn"
+    },
+  }
+%>
+<% if(slogans[page]){%>
+<div class="fh5co-parallax" style="background-image: url(/images/slider1.jpg);" data-stellar-background-ratio="0.5">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 col-md-offset-0 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0 text-center fh5co-table">
+        <div class="fh5co-intro fh5co-table-cell">
+          <h1 class="text-center"><%=slogans[page].title %></h1>
+          <p><%=slogans[page].slogan %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>
+
+<div class="d-flex">
+  
+</div>
+
+<!-- form đăng nhập -->
+<div
+  class="modal fade"
+  id="loginModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="" method="post">
+        <div class="modal-header">
+          <h5 class="modal-title d-flex align-items-center">
+            <i class="bi bi-person-circle fs-3 me-2"></i>Đăng nhập tài khoản
+          </h5>
+          <button
+            type="reset"
+            class="btn-close shadow-none"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label"> Email</label>
+            <input
+              type="email"
+              name="email"
+              class="form-control shadow-none"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Mật khẩu</label>
+            <input
+              type="password"
+              name="matkhau"
+              class="form-control shadow-none"
+              required
+            />
+          </div>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <button type="submit" class="btn btn-dark shadow-none">
+              Đăng nhập
+            </button>
+            <a
+              href="javascript: void(0)"
+              class="text-secondary text-decoration-none"
+              >Forgot Password?</a
+            >
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="changePasswordModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="" method="post">
+        <div class="modal-header">
+          <h5 class="modal-title d-flex align-items-center">
+            <i class="bi bi-person-circle fs-3 me-2"></i>Đổi mật khẩu
+          </h5>
+          <button
+            type="reset"
+            class="btn-close shadow-none"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Mật khẩu cũ</label>
+            <input
+              type="password"
+              name="matkhaucu"
+              class="form-control shadow-none"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Mật khẩu mới</label>
+            <input
+              type="password"
+              name="matkhaumoi"
+              class="form-control shadow-none"
+              required
+            />
+          </div>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <button type="submit" class="btn btn-dark shadow-none">
+              Đổi mật khẩu
+            </button>
+        
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- form đăng ký -->
+<div
+  class="modal fade"
+  id="registerModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="" method="POST">
+        <div class="modal-header">
+          <h5 class="modal-title d-flex align-items-center">
+            <i class="bi bi-person-lines-fill fs-3 me-2"></i> Đăng ký tài khoản
+          </h5>
+          <button
+            type="reset"
+            class="btn-close shadow-none"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Họ và tên</label>
+            <input
+              type="text"
+              name="ten"
+              class="form-control shadow-none"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input
+              type="email"
+              name="email"
+              class="form-control shadow-none"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Số điện thoại</label>
+            <input
+              type="text"
+              name="sodienthoai"
+              class="form-control shadow-none"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Mật khẩu</label>
+            <input
+              type="password"
+              name="matkhau"
+              class="form-control shadow-none"
+              required
+            />
+          </div>
+
+          <div class="text-center my-1">
+            <button type="submit" class="btn btn-dark shadow-none">
+              ĐĂNG KÝ
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<% if(slogans[page]){%>
+<div style="height: 130px;"></div>
+<% } %>

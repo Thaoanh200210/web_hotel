@@ -1,0 +1,603 @@
+
+<style>
+  .text-color {
+    color: black;
+  }
+  th,
+  td {
+    border-left: 2px solid #0dcaf0;
+  }
+  th {
+    border-bottom: 2px solid #0dcaf0 !important;
+    border-top: 2px solid #0dcaf0 !important;
+  }
+  table th:nth-child(1),
+  table td:nth-child(1) {
+    border-left: 0 solid #0dcaf0;
+  }
+  div.container > div {
+    width: 100%;
+  }
+
+  .two-line-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/litepicker/dist/litepicker.js"></script>
+<script>
+    // set lại giá tiền
+    function getInterimPrice(roomString, selectElement,goalId,discount) {
+        let rooms = JSON.parse(roomString);
+        const selectedValues = Array.from(selectElement.selectedOptions).map(option => option.value);
+        let prices = rooms.filter(room  => selectedValues.includes(room._id)).map(room => parseInt(room.original_price) )
+        let total = prices.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+        document.querySelector(goalId).innerText = parseInt(total - total*discount).toLocaleString('it-IT', {style : 'currency', currency : 'VND'})
+    }
+    
+  
+</script>
+
+
+
+<%- include("./shared/header") %>
+<div class="container text-black">
+  <div class="d-flex gap-4">
+    <div class="col-3">
+      <form
+        action="/hotel/<%=hotel._id%>/room" method="GET" class="d-flex flex-column py-5 px-4 c-bg-primary"
+      >
+        <div>
+          <div class="fs-1 pb-3 fw-semibold text-color">Search</div>
+          <div class="mb-3">
+            <label class="form-label text-color">Tìm phòng</label>
+            <input
+              class="form-control shadow-none rounded"
+              name="timphong"
+              type="text"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-color">Ngày nhận phòng</label>
+            <input
+              class="form-control shadow-none rounded"
+              name="ngaydau"
+              type="date"
+              required
+              value="<%= ngaydau %>"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-color">Ngày trả phòng</label>
+            <input
+              class="form-control shadow-none rounded"
+              name="ngayket"
+              type="date"
+              required
+              value="<%= ngayket %>"
+            />
+          </div>
+        </div>
+        <div class="text-center my-1">
+          <div class="d-flex justify-content-center gap-4">
+            <button
+              class="btn btn-dark shadow-none rounded w-100"
+              style="margin-right: 0 !important"
+              type="submit"
+              name=""
+            >
+              Tìm
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-9">
+      <div class="position-relative" style="">
+        <div id="images_of_room" class="carousel slide" data-ride="carousel">
+          <style>
+            div.active > img.rounded {
+              border: 4px solid rgb(64, 165, 224) !important;
+            }
+          </style>
+
+          <div class="carousel-inner" style="height: 460px">
+            <% var i=0; %> <% for(let image of images) {%>
+            <div class="carousel-item <%= i++ == 0 ? 'active' : '' %>">
+              <img class="d-block w-100" src="<%= image.url %>" />
+            </div>
+            <% } %>
+          </div>
+
+          <a
+            class="carousel-control-prev"
+            href="#images_of_room"
+            role="button"
+            data-slide="prev"
+          >
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a
+            class="carousel-control-next"
+            href="#images_of_room"
+            role="button"
+            data-slide="next"
+          >
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="" style="padding-top: 25px">
+    <form class="py-5" style="">
+      <div class="d-flex flex-column">
+        <div class="fs-1 fw-semibold text-color">Phòng trống</div>
+        <div class="d-flex gap-3">
+          <div class="col">
+            <div class=" border border-warning rounded text-color">
+            <input class="border-0" type="text" id="start-date" style=" outline: none !important;text-align:right; width: 330px" value="<%= ngaydau %>" />
+            <span class="mx-2">-</span>
+            <input class="border-0" type="text" id="end-date"  style=" outline: none !important; " value="<%= ngayket %>"/>
+            </div>
+          </div>
+          <div class="col">
+            <input
+              type="text"
+              class="form-control border border-warning rounded text-color"
+              placeholder="Loại phòng"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Book phòng -->
+  <div class="">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="c-bg-primary">Loại phòng</th>
+          <th class="c-bg-primary">Số lượng khách</th>
+          <th class="c-bg-primary">Giá hôm nay</th>
+          <th class="c-bg-primary">Các lựa chọn</th>
+          <th class="c-bg-primary">Chọn phòng</th>
+          <th class="c-bg-primary"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(typeRoom of typeRooms) {%>
+        <tr>
+          <td class="w-25">
+            <h1 class="pb-2 c-text-secondary"><%=typeRoom.name %></h1>
+            <div class="pb-2">Dịch vụ phòng:</div>
+            <div class="d-flex gap-4 flex-wrap pb-2">
+              <%for( let service of getServiceOfTypeOfRoom(typeRoom.rooms)) { %>
+              <div
+                class="d-flex justify-content-center align-items-center gap-2"
+              >
+                <i
+                  class="<%= service.icon %> text-success"
+                  style="font-size: 20px"
+                ></i>
+                <div><%= service.name %></div>
+              </div>
+              <% } %>
+            </div>
+          </td>
+          <td><%=typeRoom.number_guest %></td>
+          <td><%- getPriceOfTypeOfRoom(typeRoom.rooms,(discount > typeRoom.discount/100 ? discount : typeRoom.discount/100)) %></td>
+          <td>
+            <div class="d-flex flex-column gap-4 pb-2">
+              <%for( let selection of getSelectionOfTypeOfRoom(typeRoom.rooms))
+              { %>
+              <div
+                class="d-flex justify-content-start align-items-center gap-2"
+              >
+                <i
+                  class="<%= selection.icon %> c-text-secondary"
+                  style="font-size: 20px"
+                ></i>
+                <div class="c-text-secondary"><%= selection.name %></div>
+              </div>
+              <% } %>
+            </div>
+          </td>
+
+          <td>
+              <select class="form-select shadow-none" name="phong" multiple required onchange="getInterimPrice('<%= JSON.stringify(typeRoom.rooms)%>', this, '#current-total-price-<%= typeRoom._id %>',<%= (discount > typeRoom.discount/100 ? discount : typeRoom.discount/100)%>)">
+                <%for( let room of typeRoom.rooms) { %>
+                <optgroup label="<%= room.name %>">
+                  <option value="<%= room._id %>" ondblclick="this.selected = false;">
+                    <%= parseInt(room.original_price - room.original_price*(discount > typeRoom.discount/100 ? discount : typeRoom.discount/100)).toLocaleString('it-IT', {style : 'currency', currency : 'VND'}) %>
+                  </option>
+                </optgroup>
+                <% } %>
+              </select>
+          </td>
+
+          <td>
+            <a href="/hotel/<%=hotel._id%>/booking-show/<%=typeRoom._id%>?ngaydau=<%= ngaydau %>&ngayket=<%= ngayket %>"  class="btn btn-success py-2 px-5">Tôi sẽ đặt</a>
+            <div>Giá:</div>
+            <div id="current-total-price-<%= typeRoom._id %>">0 VND</div>
+          </td>
+
+        </tr>
+        <% }%>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Đánh giá -->
+  <div class="d-flex flex-column flex-active">
+    <div class="fs-1 pb-3 fw-semibold text-color">Đánh giá của khách</div>
+    <div class="fs-3 pb-3 fw-semibold text-color">Đọc đánh giá</div>
+    <div class="d-flex justify-content-between">
+      <div style="width: 32%">
+        <div class="d-flex flex-column">
+          <div class="d-flex justify-content-between">
+            <div class="text-color">Thoải mái</div>
+            <div><%= comfortScore %></div>
+          </div>
+          <div class="progress" style="height: 10px">
+            <div
+              class="progress-bar c-bg-secondary"
+              style="width: <%= comfortScore*10 %>%; height: 10px"
+              role="progressbar"
+              aria-valuenow="<%= comfortScore*10 %>"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            ></div>
+          </div>
+        </div>
+      </div>
+      <div style="width: 32%">
+        <div class="d-flex flex-column">
+          <div class="d-flex justify-content-between">
+            <div class="text-color">Đáng đồng tiền</div>
+            <div><%= moneyScore %></div>
+          </div>
+          <div class="progress" style="height: 10px">
+            <div
+              class="progress-bar c-bg-secondary"
+              style="width: <%= moneyScore*10 %>%; height: 10px"
+              role="progressbar"
+              aria-valuenow="<%= moneyScore*10 %>"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            ></div>
+          </div>
+        </div>
+      </div>
+      <div style="width: 32%">
+        <div class="d-flex flex-column">
+          <div class="d-flex justify-content-between">
+            <div class="text-color">Wifi miễn phí</div>
+            <div><%= wifiScore %></div>
+          </div>
+          <div class="progress" style="height: 10px">
+            <div
+              class="progress-bar c-bg-secondary"
+              style="width: <%= wifiScore*10 %>%; height: 10px"
+              role="progressbar"
+              aria-valuenow="<%= wifiScore*10 %>"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-between pb-3">
+      <div style="width: 32%">
+        <div class="d-flex flex-column">
+          <div class="d-flex justify-content-between">
+            <div class="text-color">Nhân viên phục vụ</div>
+            <div><%= employeeScore %></div>
+          </div>
+          <div class="progress" style="height: 10px">
+            <div
+              class="progress-bar c-bg-secondary"
+              style="width: <%=  employeeScore*10 %>%; height: 10px"
+              role="progressbar"
+              aria-valuenow="<%= employeeScore*10 %>"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            ></div>
+          </div>
+        </div>
+      </div>
+      <div style="width: 32%">
+        <div class="d-flex flex-column">
+          <div class="d-flex justify-content-between">
+            <div class="text-color">Tiện nghi</div>
+            <div><%= sactificationScore %></div>
+          </div>
+          <div class="progress" style="height: 10px">
+            <div
+              class="progress-bar c-bg-secondary"
+              style="width: <%= sactificationScore*10 %>%; height: 10px"
+              role="progressbar"
+              aria-valuenow="<%= sactificationScore*10 %>"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            ></div>
+          </div>
+        </div>
+      </div>
+      <div style="width: 32%">
+        <div class="d-flex flex-column">
+          <div class="d-flex justify-content-between">
+            <div class="text-color">Sạch sẽ</div>
+            <div><%= cleanlinessScore %></div>
+          </div>
+          <div class="progress" style="height: 10px">
+            <div
+              class="progress-bar c-bg-secondary"
+              style="width: <%= cleanlinessScore*10 %>%; height: 10px"
+              role="progressbar"
+              aria-valuenow="<%= cleanlinessScore*10 %>"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Xem comment -->
+  <div class="d-flex flex-column pb-5">
+    <div class="fs-1 pb-3 fw-semibold text-color">
+      Các bình luận tốt nhất của khách hàng:
+    </div>
+    <div class="d-flex justify-content-start gap-4">
+      <% for(let i=0;i< reviews.length;i++) {%>
+        <%if(i<3){%>
+      <div style="width: 32%">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between ">
+              <div> <%= reviews[i].customer.name  %></div>
+              <div class="c-text-secondary fw-semibold"><%= Math.floor((reviews[i].employeeScore + 
+                reviews[i].sactificationScore + 
+                reviews[i].wifiScore + 
+                reviews[i].comfortScore + 
+                reviews[i].moneyScore + 
+                reviews[i].cleanlinessScore)/6)/10 %></div>
+             
+            </div>
+            <div class="two-line-ellipsis" style="height: 28.8px;"><%= reviews[i].comment %></div>
+            <a href="" class="c-text-secondary fw-semibold">Tìm hiểu thêm</a>
+          </div>
+        </div>
+      </div>
+      <%}%>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Quy tắc chung -->
+  <div class="pb-5">
+    <div class="fs-1 pb-3 fw-semibold text-color">Quy tắc chung</div>
+    <table class="table">
+      <tbody>
+        <tr>
+          <td class="w-25">
+            <div class="d-flex w-100 align-items-center">
+              <i
+                style="font-size: 30px; margin-right: 10px"
+                class="bi bi-box-arrow-right"
+              ></i>
+              <span class="">Nhận phòng</span>
+            </div>
+          </td>
+          <td style="vertical-align: middle">
+            <div class="d-flex w-100 align-items-center">Phục vụ 24/24</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="w-25">
+            <div class="d-flex w-100 align-items-center">
+              <i
+                style="font-size: 30px; margin-right: 10px"
+                class="bi bi-box-arrow-left"
+              ></i>
+              Trả phòng
+            </div>
+          </td>
+          <td style="vertical-align: middle">
+            <div class="d-flex w-100 align-items-center">Phục vụ 24/24</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="w-25">
+            <div class="d-flex w-100 align-items-center">
+              <i
+                style="font-size: 30px; margin-right: 10px"
+                class="bi bi-info-circle"
+              ></i
+              >Hủy đặt phòng/ Trả trước
+            </div>
+          </td>
+          <td style="vertical-align: middle">
+            <div class="d-flex w-100 align-items-center">
+              <div>
+                Các chính sách hủy và thanh toán trước có khác biệt dựa trên
+                loại chỗ nghỉ. Vui lòng kiểm tra <a href="">các điều kiện</a> có
+                thể được áp dụng cho mỗi lựa chọn của bạn.
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="w-25">
+            <div class="d-flex w-100 align-items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                version="1.1"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                class=""
+                style="height: 30px; margin-right: 10px"
+                x="0"
+                y="0"
+                viewBox="0 0 512 512"
+                style="enable-background: new 0 0 512 512"
+                xml:space="preserve"
+                class=""
+              >
+                <g>
+                  <path
+                    d="M455.41 281.927c-3.384-4.39-9.687-5.206-14.08-1.821-4.392 3.385-5.207 9.689-1.822 14.08 10.321 13.388 15.776 29.425 15.776 46.376 0 5.544 4.495 10.039 10.039 10.039s10.039-4.496 10.039-10.039c0-21.427-6.899-41.703-19.952-58.635z"
+                    fill="#000000"
+                    opacity="1"
+                    data-original="#000000"
+                    class=""
+                  ></path>
+                  <path
+                    d="M421.676 214.571c20.383-13.757 33.813-37.064 33.813-63.449 0-42.187-34.322-76.509-76.509-76.509s-76.509 34.322-76.509 76.509c0 26.373 13.417 49.671 33.785 63.431a132.268 132.268 0 0 0-41.064 22.701c-10.436-10.037-24.442-15.818-39.191-15.818-14.748 0-28.754 5.783-39.184 15.818a132.352 132.352 0 0 0-41.072-22.702c20.368-13.76 33.785-37.058 33.785-63.432 0-42.187-34.322-76.509-76.509-76.509-42.182 0-76.499 34.322-76.499 76.509 0 26.385 13.427 49.691 33.807 63.449C37.941 232.37.127 281.994.014 340.301c-.003.089-.014.173-.014.261 0 15.413 8.758 38.16 50.484 59 29.732 14.85 70.59 26.013 118.158 32.28 27.902 3.68 57.294 5.547 87.359 5.547 30.072 0 59.467-1.866 87.368-5.547 47.564-6.267 88.419-17.43 118.15-32.28 41.723-20.841 50.481-43.587 50.481-59 0-58.419-37.855-108.163-90.324-125.991zm-99.126-63.449c0-31.116 25.315-56.43 56.43-56.43s56.43 25.315 56.43 56.43c0 31.111-25.315 56.42-56.43 56.42s-56.43-25.309-56.43-56.42zm-96.504 106.077c6.821-9.82 18.017-15.684 29.954-15.684a36.499 36.499 0 0 1 29.963 15.684l.004.007c4.256 6.119 6.504 13.304 6.504 20.781 0 20.111-16.361 36.472-36.472 36.472-20.106 0-36.462-16.362-36.462-36.473 0-7.488 2.247-14.671 6.509-20.787zM76.599 151.122c0-31.116 25.31-56.43 56.42-56.43 31.116 0 56.43 25.315 56.43 56.43 0 31.111-25.315 56.42-56.43 56.42-31.11 0-56.42-25.309-56.42-56.42zm83.32 259.201c-40.485-6.165-75.045-16.028-100.462-28.723-25.32-12.645-39.292-27.173-39.373-40.918 0-.04.006-.079.006-.119-.001-62.276 50.66-112.942 112.93-112.942 26.492 0 51.767 9.152 71.993 25.915-3.647 7.579-5.553 15.888-5.553 24.452 0 17.477 7.971 33.126 20.465 43.508-35.091 14.267-59.915 48.695-60.006 88.827zm172.098 2.687c-24.419 2.849-49.941 4.302-76.017 4.302-26.07 0-51.588-1.453-76.007-4.302v-2.465c0-41.911 34.096-76.007 76.007-76.007 41.916 0 76.017 34.096 76.017 76.007v2.465zm120.529-31.411c-25.415 12.696-59.971 22.558-100.452 28.723-.091-40.132-24.917-74.558-60.011-88.827 12.497-10.382 20.47-26.031 20.47-43.509 0-8.554-1.906-16.865-5.557-24.451 20.217-16.764 45.489-25.916 71.986-25.916 62.275.001 112.94 50.667 112.94 112.942 0 13.782-13.984 28.356-39.376 41.038z"
+                    fill="#000000"
+                    opacity="1"
+                    data-original="#000000"
+                    class=""
+                  ></path>
+                  <path
+                    d="M425.328 258.344c-12.919 0-12.942 20.078 0 20.078 12.92 0 12.941-20.078 0-20.078z"
+                    fill="#000000"
+                    opacity="1"
+                    data-original="#000000"
+                    class=""
+                  ></path>
+                </g>
+              </svg>
+              Trẻ em và giường
+            </div>
+          </td>
+          <td style="vertical-align: middle">
+            <div class="d-flex flex-column gap-2 w-100">
+              <div>Chính sách trẻ em</div>
+              <div>Phù hợp cho tất cả trẻ em.</div>
+              <div>
+                Trẻ em từ 13 tuổi trở lên sẽ được tính giá như người lớn tại chỗ
+                nghỉ này.
+              </div>
+              <div>
+                Giá cho giường phụ chưa được bao gồm trong giá tổng và sẽ cần
+                được thanh toán riêng trong kỳ nghỉ.
+              </div>
+              <div>
+                Số lượng giường phụ được phép tùy thuộc vào tùy chọn của bạn.
+                Vui lòng kiểm tra tùy chọn mà bạn đã chọn để biết thêm thông
+                tin.
+              </div>
+              <div>Chỗ nghỉ này không có nôi/cũi.</div>
+              <div>Tất cả giường phụ tùy thuộc vào tình trạng có sẵn.</div>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="w-25">
+            <div class="d-flex w-100 align-items-center">
+              <i
+                style="font-size: 30px; margin-right: 10px"
+                class="bi bi-person-standing"
+              ></i>
+              <span class="">Không giới hạn độ tuổi</span>
+            </div>
+          </td>
+          <td style="vertical-align: middle">
+            <div class="d-flex w-100 align-items-center">
+              Không có yêu cầu về độ tuổi khi nhận phòng
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="w-25">
+            <div class="d-flex w-100 align-items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                version="1.1"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                class=""
+                style="height: 30px; margin-right: 10px"
+                x="0"
+                y="0"
+                viewBox="0 0 512 512"
+                style="enable-background: new 0 0 512 512"
+                xml:space="preserve"
+                class=""
+              >
+                <g>
+                  <path
+                    d="M342.383 239.352c-23.04-35.942-62.278-57.403-104.965-57.403-42.684 0-81.926 21.461-104.961 57.403l-55.516 86.605c-9.21 14.371-13.46 30.969-12.293 47.996 1.168 17.031 7.649 32.89 18.739 45.871 11.097 12.977 25.761 21.844 42.406 25.649 16.644 3.8 33.707 2.18 49.34-4.692l1.02-.453c39.34-16.957 84.304-16.805 123.546.453 10.121 4.45 20.844 6.7 31.664 6.7 5.883 0 11.801-.668 17.664-2.004 16.645-3.801 31.309-12.668 42.41-25.645 11.094-12.977 17.579-28.84 18.75-45.871 1.172-17.035-3.078-33.633-12.289-48.008zm26.246 160.972c-14.121 16.508-36.965 21.727-56.848 12.985-23.633-10.395-49-15.59-74.375-15.59-25.351 0-50.715 5.191-74.332 15.574l-.672.297c-19.73 8.344-42.238 3.058-56.203-13.266-14.105-16.512-15.71-39.887-3.992-58.172l55.52-86.605c17.492-27.29 47.28-43.582 79.691-43.582 32.41 0 62.203 16.293 79.7 43.582l55.51 86.601c11.724 18.293 10.114 41.672-4 58.176zM91.895 239.238c16.515-6.343 29.062-19.652 35.332-37.476 5.96-16.961 5.472-36.11-1.383-53.922-6.86-17.8-19.336-32.332-35.13-40.922-16.597-9.02-34.827-10.488-51.316-4.133-33.171 12.754-48.394 53.746-33.93 91.399 11.555 29.968 38.505 48.886 65.75 48.886a57.316 57.316 0 0 0 20.677-3.832zm-58.418-55.836c-8.524-22.187-1.036-45.789 16.703-52.609a27.844 27.844 0 0 1 10.047-1.848c5.336 0 10.847 1.457 16.152 4.344 9.539 5.184 17.16 14.184 21.457 25.336 4.293 11.16 4.676 22.941 1.074 33.18-3.3 9.382-9.617 16.28-17.781 19.418l-.016.007c-17.715 6.829-39.086-5.66-47.636-27.828zM199.613 171.387c41.469 0 75.207-38.438 75.207-85.684C274.82 38.445 241.082 0 199.613 0c-41.465 0-75.199 38.445-75.199 85.703 0 47.246 33.734 85.684 75.2 85.684zm0-141.375c24.918 0 45.196 24.984 45.196 55.691 0 30.695-20.278 55.672-45.196 55.672s-45.187-24.977-45.187-55.672c0-30.707 20.27-55.691 45.187-55.691zM329.496 192.438h.004a61.3 61.3 0 0 0 19.367 3.128c30.242 0 59.715-22.011 70.961-55.84 6.477-19.472 6.05-40.062-1.2-57.972-7.585-18.746-21.644-32.356-39.589-38.324-17.945-5.961-37.363-3.477-54.664 7-16.527 10.011-29.191 26.246-35.656 45.718-13.653 41.079 4.64 84.274 40.777 96.29zM317.2 105.612c4.223-12.715 12.293-23.191 22.727-29.511 9.652-5.848 20.183-7.336 29.648-4.192 9.461 3.149 17 10.64 21.235 21.102 4.574 11.304 4.77 24.531.539 37.246-8.434 25.375-31.934 40.492-52.383 33.699-20.434-6.797-30.2-32.969-21.766-58.344zM487.875 182.438l-.012-.012c-28.597-21.125-71.367-11.969-95.347 20.422-23.957 32.406-20.211 75.972 8.343 97.113 10.414 7.715 22.72 11.402 35.313 11.402 21.95 0 44.785-11.203 60.047-31.804 23.957-32.407 20.215-75.973-8.344-97.122zm-15.777 79.265c-14.16 19.113-38.102 25.453-53.38 14.137-15.265-11.3-16.195-36.043-2.073-55.145 9.386-12.68 23.097-19.734 35.734-19.734 6.39 0 12.508 1.805 17.648 5.605 15.254 11.313 16.18 36.047 2.07 55.137zm0 0"
+                    fill="#000000"
+                    opacity="1"
+                    data-original="#000000"
+                  ></path>
+                </g>
+              </svg>
+              <span class="">Vật nuôi</span>
+            </div>
+          </td>
+          <td style="vertical-align: middle">
+            <div class="d-flex w-100 align-items-center">
+              Vật nuôi được phép theo yêu cầu của khách. Có thể bị tính phí.
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="w-25">
+            <div class="d-flex w-100 align-items-center">
+              <i
+                style="font-size: 30px; margin-right: 10px"
+                class="bi bi-credit-card"
+              ></i>
+              <span class="">Các phương thức thanh toán được chấp nhận</span>
+            </div>
+          </td>
+          <td style="vertical-align: middle">
+            <div class="d-flex w-100 align-items-center gap-4">
+              <img
+                src="/images/Logo-VNPAY-QR.png"
+                alt=""
+                class="rounded"
+                style="height: 40px; border: 1px solid rgb(180, 180, 180)"
+              />
+              <div
+                class="rounded d-flex justify-content-center align-items-center px-4 fw-semibold c-bg-secondary text-white"
+                style="height: 40px; border: 1px solid rgb(180, 180, 180)"
+              >
+                Tiền mặt
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- xử lý ngày -->
+<script>
+  const picker = new Litepicker({
+    element: document.getElementById('start-date'),
+    elementEnd: document.getElementById('end-date'),
+    singleMode: false,
+    allowRepick: true,
+    numberOfMonths: 2,
+    numberOfColumns:2,
+  })
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

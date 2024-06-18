@@ -1,0 +1,9 @@
+<% if(typeof message !== "undefined") { %>
+    <script>
+        swal({
+            title: "<%= message.type !== 'success' ? 'Failure!' : 'Successfully!' %>",
+            text: "<%= message.message %>",
+            icon: "<%= message.type%>",
+        });
+    </script>
+<% } %>

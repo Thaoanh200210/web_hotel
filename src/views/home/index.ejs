@@ -1,0 +1,220 @@
+<div style="background: #f3f3f3">
+	<%- include("./shared/header") %>
+	<div id="fh5co-wrapper">
+		<div id="fh5co-page">
+		<div class="wrap">
+			<div class="container">
+				<div class="row">
+					<div id="availability">
+						<form action="#">
+	
+							<div class="a-col">
+								<section>
+									<select class="form-select" name="hotelId" style="font-size: 15px; margin-top:5px">
+										<option value="" disabled selected>Select Hotel</option>
+										<% for(let hotel of hotels){ %>
+											<option value="<%= hotel._id %>"><%= hotel.name %></option>
+										<% } %>
+									</select>
+								</section>
+							</div>
+							<div class="a-col alternate">
+								<div class="input-field">
+									<label for="date-start">Check In</label>
+									<input type="date"  name="startDate" class="form-control" id="date-start" style="font-size: 15px; width: 200px " />
+								</div>
+							</div>
+							<div class="a-col alternate">
+								<div class="input-field">
+									<label for="date-end">Check Out</label>
+									<input type="date" name="endDate" class="form-control" id="date-end" style="font-size: 15px; width: 200px " />
+								</div>
+							</div>
+							<div class="a-col action">
+								<a href="#">
+									<span>Check</span>
+									Availability
+								</a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="fh5co-counter-section" class="fh5co-counters">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-3 text-center">
+						<span class="fh5co-counter js-counter" data-from="0" data-to="20356" data-speed="5000" data-refresh-interval="50">20356</span>
+						<span class="fh5co-counter-label fw-semibold">User Access</span>
+					</div>
+					<div class="col-md-3 text-center">
+						<span class="fh5co-counter js-counter" data-from="0" data-to="15501" data-speed="5000" data-refresh-interval="50">15501</span>
+						<span class="fh5co-counter-label fw-semibold">Hotels</span>
+					</div>
+					<div class="col-md-3 text-center">
+						<span class="fh5co-counter js-counter" data-from="0" data-to="8200" data-speed="5000" data-refresh-interval="50">8200</span>
+						<span class="fh5co-counter-label fw-semibold">Transactions</span>
+					</div>
+					<div class="col-md-3 text-center">
+						<span class="fh5co-counter js-counter" data-from="0" data-to="8763" data-speed="5000" data-refresh-interval="50">8763</span>
+						<span class="fh5co-counter-label fw-semibold">Rating &amp; Review</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+		<div id="featured-hotel" class="fh5co-bg-color">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="section-title text-center">
+							<h2>Khách sạn nổi bật</h2>
+						</div>
+					</div>
+				</div>
+	
+				<div class="row">
+					<div class="feature-full-1col">
+						<div class="image" style="background-image: url('https://dulichyenviet.com/wp-content/uploads/2023/10/478296590.jpg');">
+							<div class="descrip text-center">
+								<p><small>Giá chỉ từ</small><span><%=getPriceOfHotel(hotels[0])%>/đêm</span></p>
+							</div>
+						</div>
+						<div class="desc">
+							<h3><%=hotels[0].name%></h3>
+							<p><%=hotels[0].description%></p>
+							<p><a href="/hotel/<%=hotels[0]._id%>/room" class="btn btn-primary btn-luxe-primary">Đặt ngay <i class="ti-angle-right"></i></a></p>
+						</div>
+					</div>
+	
+					<div class="feature-full-2col">
+						<div class="f-hotel">
+							<div class="image" style="background-image: url('https://lh5.googleusercontent.com/proxy/6V5gjnG_6MCOC-9sXR1vriiWu5D62IZuKgFArMc9Qx1bJHqdbZ_EgRv6JcVwK-ZB9GF6oEJ4z7iA3FYgeFYA-UKrdg');">
+								<div class="descrip text-center">
+									<p><small>Giá chỉ từ</small><span><%=getPriceOfHotel(hotels[1])%>/đêm</span></p>
+								</div>
+							</div>
+							<div class="desc">
+								<h3><%=hotels[1].name%></h3>
+								<p><%=hotels[1].description%></p>
+								<p><a href="/hotel/<%=hotels[1]._id%>/room" class="btn btn-primary btn-luxe-primary">Đặt ngay <i class="ti-angle-right"></i></a></p>
+						</div>
+						</div>
+						<div class="f-hotel">
+							<div class="image" style="background-image: url('https://imagev3.vietnamplus.vn/w1000/Uploaded/2024/fsmsr/2014_12_22/Hotel_view_night.jpg.webp');">
+								<div class="descrip text-center">
+									<p><small>Giá chỉ từ</small><span><%=getPriceOfHotel(hotels[2])%>/đêm</span></p>
+								</div>
+							</div>
+							<div class="desc">
+								<h3><%=hotels[2].name%></h3>
+								<p><%=hotels[2].description%></p>
+								<p><a href="/hotel/<%=hotels[2]._id%>/room" class="btn btn-primary btn-luxe-primary">Đặt ngay <i class="ti-angle-right"></i></a></p>
+						</div>
+						</div>
+					</div>
+				</div>
+	
+			</div>
+		</div>
+	
+		<div id="hotel-facilities">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="section-title text-center">
+							<h2>Hotel Facilities</h2>
+						</div>
+					</div>
+				</div>
+	
+				<div id="tabs">
+					<nav class="tabs-nav">
+						<a  class="active" data-tab="tab1">
+							<i class="bi bi-box2-heart"></i>
+							<span>Restaurant</span>
+						</a>
+						<a  class="active" data-tab="tab2">
+							<i class="bi bi-heart-fill"></i>
+							<span>Bar</span>
+						</a>
+						<a  class="active" data-tab="tab3">
+							<i class="bi bi-gear-fill"></i>
+							<span>Pick-up</span>
+						</a>
+						<a class="active" data-tab="tab4">
+							<i class="bi bi-life-preserver"></i>
+							<span>Swimming Pool</span>
+						</a>
+						<a  class="active" data-tab="tab5">
+							<i class="bi bi-emoji-laughing"></i>
+							<span>Spa</span>
+						</a>
+						<a  class="active" data-tab="tab6">
+							<i class="bi bi-heptagon-fill"></i>
+							<span>Gym</span>
+						</a>
+					</nav>
+				</div>
+			</div>
+		</div>
+		
+	
+		<footer id="footer" class="fh5co-bg-color">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-3">
+						<div class="copyright">
+							<p><small>&copy; Xây dựng năm 2024 <br> KHÁCH SẠN TA<br></small></p>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="row">
+							<div class="col-md-3">
+								<h3>Trang liên quan</h3>
+								<ul class="link">
+									<li><a href="home">Home</a></li>
+									<li><a href="room">Room</a></li>
+									<li><a href="hotel">Hotels</a></li>
+									<li><a href="contact">Contact</a></li>
+									<li><a href="blog">Blog</a></li>
+								</ul>
+							</div>
+							<div class="col-md-3">
+								<h3>Các dịch vụ</h3>
+								<ul class="link">
+									<li><a href="#">Wifi</a></li>
+									<li><a href="#">Tivi màn hình phẳng</a></li>
+									<li><a href="#">Hồ bơi</a></li>
+									<li><a href="#">Bồn tắm lớn</a></li>
+									<li><a href="#">Gym</a></li>
+								</ul>
+							</div>
+							<div class="col-md-6">
+								<h3>Đăng ký tài khoản </h3>
+								<p>Nhanh tay đăng ký tài khoản để đặt phòng khách sạn </p>
+
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<ul class="social-icons">
+							<li>
+								<a href="#"><i class="icon-twitter-with-circle"></i></a>
+								<a href="#"><i class="icon-facebook-with-circle"></i></a>
+								<a href="#"><i class="icon-instagram-with-circle"></i></a>
+								<a href="#"><i class="icon-linkedin-with-circle"></i></a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</footer>
+	
+		</div>
+		<!-- END fh5co-page -->
+	
+	</div>
+</div>
