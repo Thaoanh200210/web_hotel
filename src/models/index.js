@@ -7,6 +7,7 @@ const { Payment } = require("./payment");
 const { Review } = require("./review");
 const { Role } = require("./role");
 const { Room } = require("./room");
+const { RoomFix } = require("./roomfix");
 const { SelectionRoom } = require("./selection_of_room");
 const { Selection } = require("./selection");
 const { ServiceRoom } = require("./service_of_room");
@@ -24,6 +25,7 @@ module.exports = {
     Hotel,
     Image,
     Payment,
+    RoomFix,
     City,
     Review,
     Role,

@@ -18,7 +18,7 @@ async function getTypeRoomById(hotel, id, startDate, endDate, populate) {
     const discountRepo = new DiscountRepository();
     let typeOfRoom =  await typeRoomRepo.selectById(id);
     if(populate){
-            let rooms = await roomRepo.select({hotel:hotel, type_room:typeOfRoom});
+            let rooms = await roomRepo.select({hotel:hotel, type_room:typeOfRoom, status: 'Đang hoạt động'});
             let detailBookings = await detailBookingRepo.select({
                 room: {
                     // tìm những thằng nằm trong danh sách room
@@ -27,10 +27,13 @@ async function getTypeRoomById(hotel, id, startDate, endDate, populate) {
             });
             detailBookings =  detailBookings.filter((detail)=>{
                 //tìm ra những phòng có ngày check_in, out >= ngày bắt đầu và <= kết thúc. 
-                if((detail.booking.check_in >= new Date(startDate) && detail.booking.check_in <= new Date(endDate)) || 
-                (detail.booking.check_out >= new Date(startDate) && detail.booking.check_out <= new Date(endDate))){
+                // if((detail.booking.check_in >= new Date(startDate) && detail.booking.check_in <= new Date(endDate)) || 
+                // (detail.booking.check_out >= new Date(startDate) && detail.booking.check_out <= new Date(endDate))){
+                //     return true;
+                // }else
+                if (detail.booking.check_out <= new Date(startDate)) {
                     return true;
-                }else
+                } else
                 return false;
              });
              //danh sách room đã được đặt.
@@ -41,7 +44,6 @@ async function getTypeRoomById(hotel, id, startDate, endDate, populate) {
             rooms = rooms.filter((room)=>{
                 return !roomBooked.includes(room._id.toString());
             })
-            console.log(rooms)
             //chứa list room
             let roomResult = [];
             for(let room of rooms ){

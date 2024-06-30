@@ -1,7 +1,7 @@
 <div class="card">
       <div class="card-header d-flex">
         <div class="card-title flex-grow-1 d-flex justify-content-between align-items-center">
-            <h3>Quản lý phòng</h3>
+            <h3>Quản lý phòng đang hoạt động</h3>
             <a href="/manager/<%=hotel._id%>/room/add" class="btn btn-dark">Thêm</a>
         </div>
       </div>
@@ -15,6 +15,7 @@
               <th>Tên phòng</th>
               <th>Loại phòng</th>
               <th>Giá phòng</th>
+              <th>Tình trạng</th>
               <th>Quản lý</th>
             </tr>
           </thead>
@@ -27,6 +28,7 @@
               <td><%= room.name %></td>
               <td><%= room.type_room.name %></td>
               <td><%= parseInt(room.original_price  ).toLocaleString('it-IT', {style : 'currency', currency : 'VND'}) %></td>
+              <td><%= room.status %></td>
               <td>
                 <a href="/manager/<%=hotel._id%>/room/detail/<%=room._id %>"  class="btn btn-success">Xem chi tiết</a >
                 <a href="/manager/<%=hotel._id%>/room/edit/<%=room._id %>"  class="btn btn-primary">Sửa</a >

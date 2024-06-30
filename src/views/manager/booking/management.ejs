@@ -12,6 +12,7 @@
           <thead>
             <tr>
               <th>STT</th>
+              <th>Số phòng </th>
               <th>Tên khách hàng</th>
               <th>Ngày nhận phòng</th>
               <th>Ngày trả phòng</th>
@@ -26,6 +27,7 @@
             <% for(let booking of bookings){ %>
             <tr>
               <td><%= i++ %></td>
+              <td><%= getRoom(details, booking._id) %></td>
               <td><%= booking.customer.name %></td>
               <td><%= booking.check_in.toLocaleString() %></td>
               <td><%= booking.check_out.toLocaleString()  %></td>

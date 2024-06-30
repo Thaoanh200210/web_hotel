@@ -10,6 +10,10 @@ const UserSchema = new Schema(
         name: { type: String, trim: true, required: true },
         phone: { type: String, trim: true, required: true },
         email: { type: String, trim: true, required: true },
+        gioitinh: { type: String, trim: true, required: false },
+        address: { type: String, trim: true, required: false },
+        cmnd: { type: String, trim: true, required: false },
+        birth: { type: Date, trim: true, required: false },
         password: { type: String, trim: true, required: true },
         role: {
             type: mongoose.Schema.Types.ObjectId,

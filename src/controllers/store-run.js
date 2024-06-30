@@ -14,6 +14,7 @@ const getTypeRoomByIdAndHotel  = require("../services/get_type_of_room_by_id_and
 const getImageOfHotel = require("../services/get_image_of_hotel")
 const getDiscountByDay = require("../services/get_discount_by_day")
 const getAllTypeRoomByHotel = require("../services/get_all_type_of_room_by_hotel")
+const updateUser = require("../services/update_user");
 const getAllReviews = require("../services/get_all_review")
 const getBookingById = require("../services/get_booking_by_id")
 const getBookingByUser = require("../services/get_booking_by_user")
@@ -81,6 +82,34 @@ class StoreRunController{
             hotels: hotels,
             ...defaultData(req)
         })
+    }
+    async myUser(req, res) {
+        let cookies = new CookieProvider(req, res);
+        let userString = cookies.getCookie(constants.user_info);
+        let customer = await getUserById(JSON.parse(userString)._id) 
+        res.render("index",{
+            page: "home/user",
+            customer:customer,
+            ...defaultData(req)
+        })
+    }
+    async myUserEditHandler(req, res) {
+        let originUser = await getUserById(req.params.id);
+        originUser.name = req.body.fullName;
+        originUser.phone = req.body.phone;
+        originUser.address= req.body.address;
+        originUser.gioitinh= req.body.gender;
+        originUser.birth= req.body.dob;
+        originUser.email= req.body.email;
+        originUser.cmnd= req.body.idCard;
+        await updateUser(originUser);
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã cập nhật thông tin tài khoản thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/myUser");
     }
     async blog(req, res) {
         res.render("index",{
@@ -233,7 +262,6 @@ class StoreRunController{
         let ngaydau = req.query.ngaydau;
         let ngayket = req.query.ngayket;
         let typeRoom = await getTypeRoomByIdAndHotel(req.hotel,req.params.id,ngaydau,ngayket,true);
-        console.log(typeRoom)
         let getImageOfTypeOfRoom = (rooms) => {
             let images = rooms.map((room) => room.images);
             let mergedImages = images.flat();
@@ -256,6 +284,7 @@ class StoreRunController{
         let selection = req.body.luachon;
         let ngaydau = req.query.ngaydau;
         let ngayket = req.query.ngayket;
+        const now = new Date();
         let currentSelection = await getSelectionById(selection);
         let isCheckInWithCreditCard = currentSelection.name == 'Thanh toán online qua chuyển khoản';
         let events = await getCurrentEvent(req.hotel);
@@ -282,6 +311,7 @@ class StoreRunController{
                     discount_price: discount * parseInt(room.original_price) * -1,
                     booking: null,
                     room: room,
+                    NowDate: now,
                 });
                 total = total + (parseInt(room.original_price) - discount * parseInt(room.original_price)) * numberOfDaysBooked;
             }else{
@@ -290,6 +320,7 @@ class StoreRunController{
                     discount_price: 0,
                     booking: null,
                     room: room,
+                    NowDate: now,
                 });
                 total = total + parseInt(room.original_price) * numberOfDaysBooked;
             }
@@ -304,6 +335,7 @@ class StoreRunController{
                         discount_price: discount * parseInt(room.original_price) * -1,
                         booking: null,
                         room: room,
+                        NowDate: now,
                     });
                     total = total + (parseInt(room.original_price) - discount * parseInt(room.original_price)) * numberOfDaysBooked;
                 }else{
@@ -312,6 +344,7 @@ class StoreRunController{
                         discount_price: 0,
                         booking: null,
                         room: room,
+                        NowDate: now,
                     });
                     total = total + parseInt(room.original_price) * numberOfDaysBooked;
                 }

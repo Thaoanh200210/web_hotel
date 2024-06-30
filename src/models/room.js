@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const {RoomStatusEnum} = require("./enum/room");
 
 const RoomSchema = new Schema(
     {
@@ -14,6 +15,7 @@ const RoomSchema = new Schema(
         original_price: { type: String, trim: true, required: true },
         number_room: { type: String, trim: true, required: true },
         description: { type: String, trim: true, required: true },
+        status: { type: String, trim: true, default:RoomStatusEnum.Active },
         type_room: { 
             type: mongoose.Schema.Types.ObjectId, 
             autopopulate: true, //giúp đọc luôn dữ liệu của cả bảng chứ không chỉ lấy id

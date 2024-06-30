@@ -5,24 +5,26 @@
     font-size: 20px;
   }
 </style>
-<div class="container">
+<div class="container" style="width: 1400px">
   <h2 class="">Lịch sử đặt phòng của bạn</h2>
   <table class="table table-striped border border-dark text-center" style="">
     <tbody>
       <tr>
-        <td class="cot1">Mã số hóa đơn</td>
         <td class="cot1">Khách sạn</td>
+        <td class="cot1">Ngày đặt phòng</td>
         <td class="cot1">Ngày nhận phòng</td>
         <td class="cot1">Ngày trả phòng</td>
         <td class="cot1">Số phòng</td>
         <td class="cot1">Tổng tiền</td>
-        <td class="cot1">Tình trạng</td>
+        <td class="cot1">HTTT</td>
         <td class="cot1">Đánh giá</td>
+        <td class="cot1">Trạng thái</td>
+        <td class="cot1"></td>
       </tr>
       <%for(let booking of bookings){%>
       <tr>
-        <td ><%=booking._id%></td></td>
         <td ><%=booking.details[0].room.hotel.name%></td>
+        <td ><%=new Date(booking.details[0].NowDate).toLocaleString()%></td>
         <td><div><%=booking.check_in.toLocaleString()%></div></td>
         <td><div><%=booking.check_out.toLocaleString()%></div></td>
         <!-- map dùng để kiếm được danh sách số phòng đã đặt, join nối chúng thành chuỗi -->
@@ -32,8 +34,10 @@
           <div class=" fw-bold <%=checkPayment(booking.payments) ? 'text-success': 'text-danger' %> "><%=checkPayment(booking.payments) ? "Đã thanh toán": "Chưa thanh toán"; %></div>
         </td>
         <td>
-          <a href="/review/<%= booking._id %>" class="<%= checkPayment(booking.payments)? '': 'd-none' %> btn btn-primary">Đánh giá</a>
+          <a href="/review/<%= booking._id %>" class="<%= checkPayment(booking.payments)? '': 'd-none' %> btn btn-success">Đánh giá</a>
         </td>
+        <td><div><%=booking.status%></div></td>
+        <td > <a href="" class="btn btn-primary">Hủy đặt phòng</a></td>
       </tr>
       <%}%>
     </tbody>

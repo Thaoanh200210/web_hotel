@@ -1,0 +1,35 @@
+const {DetailBookingRepository,RoomRepository, BookingRepository, PaymentRepository, ReviewRepository} = require('../repositories/index');
+
+async function getAllDetailBookings(hotel) {
+    const bookingRepo = new BookingRepository();
+    const detailBookingRepo = new DetailBookingRepository();
+    const paymentRepo = new PaymentRepository();
+    const reviewRepo = new ReviewRepository();
+    let bookings = await bookingRepo.select({
+        _id: hotel,
+    });
+        let bookingResult = [];
+        for( let booking of bookings){
+            //tim nhung payment co booking = booking;
+            let payments = await paymentRepo.select({
+                booking: booking,
+            });
+            let details = await detailBookingRepo.select({
+                booking: booking,
+            });
+            let reviews = await reviewRepo.select({
+                booking: booking,
+            });
+            bookingResult.push({
+                ...booking._doc,
+                details: details,
+                reviews:reviews,
+                payments: payments, 
+            });
+        }
+        return bookingResult;
+
+}
+
+
+module.exports =  getAllDetailBookings ;

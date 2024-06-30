@@ -18,7 +18,7 @@ async function getAllTypeRoomByHotel(hotel) {
     //list typeofroom
     let result = [];
     for(let typeOfRoom of typesOfRoom){
-        let rooms = await roomRepo.select({hotel:hotel, type_room:typeOfRoom});
+        let rooms = await roomRepo.select({hotel:hotel, type_room:typeOfRoom, status: 'Đang hoạt động'});
         //chứa list room
         let roomResult = [];
         for(let room of rooms ){

@@ -1,70 +1,55 @@
-
 <div class="card">
     <div class="card-header d-flex">
         <div class="card-title flex-grow-1 d-flex justify-content-between align-items-center">
             <h5 class="modal-title d-flex align-items-center">
-                <i class="bi bi-person-lines-fill fs-3 me-2"></i> Sửa Thông Tin Phòng
+                <i class="bi bi-person-lines-fill fs-3 me-2"></i> Thêm Thông Tin Phòng Cần Ngưng Hoạt Động
             </h5>
         </div>
     </div>
     <div class="card-body">
-
-        <form action="/manager/<%=hotel._id%>/room/edit-handler/<%= room._id %>" enctype="multipart/form-data" method="POST" class="d-flex flex-column">
+        <form action="/manager/<%=hotel._id%>/roomfix/add-handler" enctype="multipart/form-data" method="POST" class="d-flex flex-column">
             <div class="d-flex ">
                 <div class="flex-grow-1 me-3">
                     <div class="mb-3">
                         <label class="form-label ">Số phòng</label>
-                        <input class="form-control shadow-none" name="sophong" type="text" value="<%= room.number_room%>" required>
+                        <input class="form-control shadow-none" name="sophong" type="text" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Tên phòng</label>
-                        <input class="form-control shadow-none" name="tenphong" type="text" value="<%= room.name%>" required>
+                        <input class="form-control shadow-none" name="tenphong" type="text" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Loại phòng</label>
                         <select class="form-select shadow-none" name="loaiphong" type="text" required>
                             <% for (type of typeRooms) {%>
-                                <option value="<%= type._id %>" <%= room.type_room._id.toString() == type._id.toString() ? "selected" : "" %>>
+                                <option value="<%= type._id %>">
                                     <%= type.name %>
                                 </option>
                                 <% } %>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Giá phòng</label>
-                        <input class="form-control shadow-none" name="giaphong" type="text" value="<%= room.original_price%>" required>
+                        <label class="form-label">Lý do tạm ngưng</label>
+                        <input class="form-control shadow-none" name="lydo" type="text" required>
                     </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Tình trạng</label>
-                        <select class="form-select shadow-none" name="tinhtrang" type="text" required>
-                            <% status.forEach(function(type) { %>
-                                <option value="<%= type %>" <%= room.status.toString() == type.toString() ? "selected" : "" %>>
-                                    <%= type %>
-                                </option>
-                            <% }); %>
-                        </select>      
-                     </div>
                 </div>
 
                 <div class="flex-grow-1 ms-3">
                     <div class="mb-3">
                         <label class="form-label">Dịch vụ</label>
-                        <select class="form-select shadow-none" name="dichvu" type="text" multiple required>
-                            <%= room.services.map(x => x._id) %>
+                        <select class="form-select shadow-none" name="dichvu"  multiple required>
                             <% for (service of serviceRooms) {%>
-                                
-                                <option value="<%= service._id %>" <%= room.services.map(x => x._id.toString()).includes(service._id.toString()) ? "selected" : ""%>>
-                                    <%= service.name %> 
+                                <option value="<%= service._id %>">
+                                    <%= service.name %>
                                 </option>
                                 <% } %>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Lựa chọn</label>
-                        <select class="form-select shadow-none" name="luachon" type="text" multiple required>
+                        <select class="form-select shadow-none" name="luachon"  multiple required >
                             <% for (selection of selectionRooms) {%>
-                                <option value="<%= selection._id %>" <%= room.selections.map(x => x._id.toString()).includes(selection._id.toString()) ? "selected" : ""%>>
+                                <option value="<%= selection._id %>">
                                     <%= selection.name %>
                                 </option>
                                 <% } %>
@@ -130,14 +115,10 @@
                                 </g>
                             </svg>
                             <div>Drop image here or click to select</div>
-                            <input type="file" id="image-input" name="hinhanh" accept="image/*" multiple>
+                            <input type="file" id="image-input" name="hinhanh" accept="image/*" multiple required>
                         </div>
                     
-                        <div class="previews">
-                            <% for(let image of room.images){ %>
-                                <img src="<%= image.url%>" />
-                            <% }%>
-                        </div>
+                        <div class="previews"></div>
                         <script>
                             const dropzone = document.querySelector('.dropzone');
                             const preview = document.querySelector('#preview');
@@ -215,18 +196,17 @@
 
             <div class="mb-3">
                 <label class="form-label">Mô tả</label>
-                <textarea class="form-control shadow-none" name="mota" required rows="4"><%= room.description %></textarea>
+                <textarea class="form-control shadow-none" name="mota" rows="4" required></textarea>
             </div>
             <div class="text-center my-1">
                 <div class="d-flex justify-content-center gap-4">
-                    <a class="btn btn-warning shadow-none" href="/manager/<%=hotel._id%>/room">
+                    <a class="btn btn-warning shadow-none" href="/manager/<%=hotel._id%>/roomfix">
                         Trở về
                     </a>
                     <button class="btn btn-dark shadow-none" type="submit" name="">
-                        Sửa thông tin
+                        Thêm thông tin
                     </button>
                 </div>
-                
             </div>
         </form>
     </div>

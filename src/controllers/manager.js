@@ -6,7 +6,9 @@ const fs = require("fs");
 const path = require("path");
 const {CookieProvider} = require("../helper/cookies")
 const getAllRooms  = require("../services/get_all_rooms")
+const getAllRoomFixs  = require("../services/get_all_roomfix")
 const getAllBookings  = require("../services/get_all_booking")
+const getAllBookingDetails  = require("../services/get_all_detai_booking")
 const getAllUsersByHotel  = require("../services/get_all_user_by_hotel")
 const getAllUsers = require("../services/get_all_user")
 const getAllEvents  = require("../services/get_all_event")
@@ -202,6 +204,7 @@ class ManagerController{
         let typeRooms = await getAllTypeRooms();
         let serviceRooms = await getAllService();
         let selectionRooms = await getAllSelection();
+        const status = ['Đang hoạt động', 'Dừng hoạt động'];
 
         res.render("index-manager",{
             page: "manager/index",
@@ -210,6 +213,7 @@ class ManagerController{
             typeRooms: typeRooms,
             serviceRooms: serviceRooms,
             selectionRooms: selectionRooms,
+            status: status,
             ...defaultManagerNav(),
             ...defaultData(req)
         })
@@ -228,6 +232,7 @@ class ManagerController{
         originRoom.number_room = req.body.sophong;
         originRoom.description = req.body.mota;
         originRoom.type_room = typeRoom;
+        originRoom.status = req.body.tinhtrang;
         
         await updateRoom(originRoom);
         await deleteServiceRoomByFilter({room : originRoom})
@@ -320,6 +325,95 @@ class ManagerController{
             1
         );
         res.redirect("/manager/" +req.hotel._id+ "/room/");
+    }
+
+
+    // quan ly roomfix
+    async roomfix(req, res) {
+        let roomfixs = await getAllRoomFixs();
+        res.render("index-manager",{
+            page: "manager/index",
+            roomPage: "roomfix/management",
+            roomfixs: roomfixs,
+            ...defaultManagerNav(),
+            ...defaultData(req)
+        })
+    }
+
+    async addRoomFix(req, res) {
+        res.render("index-manager",{
+            page: "manager/index",
+            roomPage: "roomfix/add",
+            ...defaultManagerNav(),
+            ...defaultData(req)
+        })
+    }
+
+    async addRoomFixHandler(req, res) {
+        let roomfix = {
+            hotel: req.hotel,
+            name: req.body.tensukien,
+            discount_percent: req.body.phantram,
+            date_start: req.body.ngaydau,
+            date_end: req.body.ngayket,
+        }
+        await createRoomFix(roomfix);
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã thêm sự kiện mới thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/manager/" +req.hotel._id+ "/roomfix/");
+    }
+
+    async editRoomFix(req,res){
+        let roomfix = await getRoomFixById(req.params.id);
+        res.render("index-manager",{
+            page: "manager/index",
+            roomPage: "roomfix/edit",
+            roomfix: roomfix,
+            ...defaultManagerNav(),
+            ...defaultData(req)
+        })
+    }
+
+    async editRoomFixHandler(req, res) {
+        let originRoomFix = await getRoomFixById(req.params.id);
+
+        originRoomFix.hotel = req.hotel;
+        originRoomFix.name = req.body.tensukien;
+        originRoomFix.discount_percent = req.body.phantram;
+        originRoomFix.date_start= req.body.ngaydau;
+        originRoomFix.date_end= req.body.ngayket;
+        
+        await updateRoomFix(originRoomFix);
+
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã sửa thông tin sự kiện thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/manager/" +req.hotel._id+ "/roomfix/");
+        
+    }
+
+    async deleteRoomFixHandler(req, res){
+        try {
+            let originRoomFix = await getRoomFixById(req.params.id);
+            await deleteRoomFix(originRoomFix._id.toString())
+        } catch(e){
+            console.log(e);
+        }
+        
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã xóa thông tin roomfix thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/manager/" +req.hotel._id+ "/roomfix/");
     }
 
     //quản lý sự kiện
@@ -685,6 +779,8 @@ class ManagerController{
     //quản lý đặt phòng
     async booking(req, res) {
         let bookings = await getAllBookings(req.hotel);
+        let details = await getAllBookingDetails(req.hotel);
+
         let getStatus = (booking) => {
             if(booking.deleteAt){
                 return 'Đã bị hủy';
@@ -696,11 +792,23 @@ class ManagerController{
                 return 'Đã đặt phòng';
             }
         }
+
+        let getRoom = (details, booking) => {
+            let result = '';
+            details.forEach((detail) => {
+                if (detail.booking._id.toString() == booking.toString()) {
+                    result = detail.room.number_room;
+                }
+            })
+            return result;
+        }
         res.render("index-manager",{
             page: "manager/index",
             roomPage: "booking/management",
             bookings: bookings,
-            getStatus:getStatus,
+            details: details,
+            getStatus: getStatus,
+            getRoom: getRoom,
             ...defaultManagerNav(),
             ...defaultData(req)
         })
@@ -718,7 +826,6 @@ class ManagerController{
 
     async editStatusBookingHandler(req,res) {
         let booking = await getBookingById(req.params.id,false);
-        console.log(booking);
         if(req.body.status != "cancel"){
             booking.status = req.body.status;
             await updateBooking(booking);

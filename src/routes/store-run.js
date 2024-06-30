@@ -9,6 +9,8 @@ const upload = multer();
 let storeRun = new StoreRunController();
 // để hiện tất cả người dùng đánh giá ra màn hình
 router.route("/blog").get(storeRun.blog).post(storeRun.blog);
+router.route("/myUser").get(storeRun.myUser).post(storeRun.myUser);
+router.route("/edit-handler-myUser/:id").get(storeRun.myUserEditHandler).post(storeRun.myUserEditHandler);
 // Chuyển qua trang cho phép 1 người dùng đánh giá
 router.route("/review/:bookingId").get(storeRun.review).post(storeRun.review);
 router.route("/review_handler/:bookingId").post(storeRun.reviewHandler);
