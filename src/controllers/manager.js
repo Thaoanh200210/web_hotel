@@ -5,12 +5,15 @@ const writeFile = require("../helper/file")
 const fs = require("fs");
 const path = require("path");
 const {CookieProvider} = require("../helper/cookies")
+const uploadImageFromLocal = require("../services/upload_image_from_local")
+const updateHotel = require("../services/update_hotel");
 const getAllRooms  = require("../services/get_all_rooms")
 const getAllRoomFixs  = require("../services/get_all_roomfix")
 const getAllBookings  = require("../services/get_all_booking")
 const getAllBookingDetails  = require("../services/get_all_detai_booking")
 const getAllUsersByHotel  = require("../services/get_all_user_by_hotel")
 const getAllUsers = require("../services/get_all_user")
+const getAllCity = require("../services/get_all_city")
 const getAllEvents  = require("../services/get_all_event")
 const getAllReviews = require("../services/get_all_review")
 const getAllTypeRooms  = require("../services/get_all_type_of_rooms")
@@ -53,11 +56,11 @@ const numberOfEventByHotel = require("../services/number_of_event_by_hotel")
 const numberOfUser = require("../services/number_of_user")
 const numberOfBookingByHotel = require("../services/number_of_booking_by_hotel")
 const bestTypeRoom = require("../services/best_type_room");
+const getHotelById = require("../services/get_hotel_by_id");
 const constants = require("../constants")
 const constantMesages = require("../constants/message"); 
 const { RoleEnum } = require("../models/enum/role");
 const {BookingStatusEnum} = require("../models/enum/booking_status");
-
 
 //controller nơi nhận dữ liệu từ request(req) => vào Service xử lý dữ liệu 
 //=> gọi repository để truy cập vào database  thông qua models
@@ -82,6 +85,53 @@ class ManagerController{
             ...defaultManagerNav(),
             ...defaultData(req)
         })
+    }
+
+    //quản lý khách sạn
+    async hotel(req, res) {
+        let hotel = await getHotelById(req.hotel._id)
+        res.render("index-manager",{
+            page: "manager/index",
+            roomPage: "hotel/management",
+            hotel: hotel,
+            ...defaultManagerNav(),
+            ...defaultData(req)
+        })
+    }
+
+    async editHotel(req, res) {
+        let hotel = await getHotelById(req.hotel._id);
+        let cities = await getAllCity();
+        res.render("index-manager",{
+            page: "manager/index",
+            roomPage: "hotel/edit",
+            cities: cities,
+            ...defaultManagerNav(),
+            ...defaultData(req),
+            hotel: hotel,
+        })
+    }
+
+    async editHotelHandler(req, res) {
+        let originHotel = await getHotelById(req.hotel._id)
+        let file = req.file;
+        originHotel.name = req.body.tenkhachsan;
+        originHotel.address = req.body.diachi;
+        originHotel.description = req.body.mieuta;
+        originHotel.star = req.body.sosao;
+        originHotel.city = req.body.city;
+        if (file) {
+            const imageData = await uploadImageFromLocal(file.path, 'hotel', file.filename);
+            originHotel.image = imageData.img_url;
+        }
+        await updateHotel(originHotel);
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã sửa thông tin khách sạn thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect(`/manager/${req.hotel._id.toString()}/hotel/`);
     }
 
     //quản lý phòng
@@ -600,6 +650,7 @@ class ManagerController{
         );
         res.redirect("/manager/" +req.hotel._id+ "/discount/");
     }
+
 
     //quản lý nhân viên
     async employee(req, res) {

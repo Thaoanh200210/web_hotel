@@ -40,7 +40,11 @@
             <td class="two-line-ellipsis"><%= hotel.city_id %></td>
             <td class="two-line-ellipsis"><%= hotel.description  %></td></td>
             <td>
-                <a href="/administrator/hotel/edit/<%= hotel._id %>"  class="btn btn-primary">Sửa</a >
+                <% if (hotel.isActive === false ) { %>
+                  <a href="/administrator/hotel/activate/<%= hotel._id %>" class="btn btn-primary">Kich hoat</a>
+                <% } else { %>
+                  <button onclick="deleteConfirmButtonClk('/administrator/hotel/negate/<%= hotel._id %>','Bạn có muốn vo hieu khách sạn này không?')" class="btn btn-primary">Vo hieu</button>
+                <% } %>
                 <button  onclick="deleteConfirmButtonClk('/administrator/hotel/delete/<%=hotel._id %>','Bạn có muốn xóa thông tin khách sạn này không?')" class="btn btn-danger">Xóa</button>
               </td>
           </tr>

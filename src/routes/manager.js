@@ -1,6 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const { ManagerController }  = require("../controllers/manager");
+const { uploadDisk } = require("../config/multer");
 
 const router = express.Router();
 const upload = multer();
@@ -8,6 +9,11 @@ const upload = multer();
 let manager = new ManagerController();
 //thống kê
 router.route("/statistical").get(manager.statistical);
+
+router.route('/hotel/edit-handler').post(uploadDisk.single('file'), manager.editHotelHandler);
+router.route("/hotel/edit").get(manager.editHotel);
+router.route("/hotel").get(manager.hotel);
+
 // quản lý phòng
 router.route("/room/add-handler").post(upload.fields([
     {
@@ -24,6 +30,15 @@ router.route("/room/edit/:id").get(manager.editRoom);
 router.route("/room/delete/:id").get(manager.deleteRoomHandler);
 router.route("/room/detail/:id").get(manager.roomDetail);
 router.route("/room").get(manager.room);
+
+
+// //roomfix
+// router.route("/roomfix/add").get(manager.addRoomFix);
+// router.route("/roomfix/add-handler").post(manager.addRoomFixHandler);
+// router.route("/roomfix/edit-handler/:id").post(manager.editRoomFixHandler);
+// router.route("/roomfix/edit/:id").get(manager.editRoomFix);
+// router.route("/roomfix/delete/:id").get(manager.deleteRoomFixHandler);
+// router.route("/roomfix").get(manager.roomFix);
 
 // quản lý sự kiện khuyến mãi
 router.route("/event/add").get(manager.addEvent);

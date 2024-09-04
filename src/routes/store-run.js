@@ -28,6 +28,8 @@ router.route("/hotel/:hotelId/room/:id").all(middleware.getHotel).get(storeRun.r
 router.route("/log-out").get(storeRun.logout);
 
 router.route("/historical-booking").get(storeRun.historicalBooking).post(storeRun.historicalBooking);
+router.route("/cancel-booking/:bookingId").get(storeRun.cancelBooking);
+router.route("/hotels/:cityID").get(storeRun.hotels);
 router.route("/hotel").get(storeRun.hotel).post(storeRun.hotel);
 router.route("/").get(storeRun.homepage).post(storeRun.homepage);
 

@@ -1,0 +1,36 @@
+<div class="card">
+      <div class="card-header d-flex">
+        <div class="card-title flex-grow-1 d-flex justify-content-between align-items-center">
+            <h3>Quản lý khách sạn</h3>
+            <a href="/manager/<%= hotel._id %>/hotel/edit" class="btn btn-dark">Sửa</a>
+        </div>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        <div class="mb-3">
+          <label for="name" class="form-label">Tên</label>
+          <input disabled value="<%= hotel.name %>" type="text" class="form-control" id="name" placeholder="Lewis Hotel"/>
+        </div>
+        <div class="mb-3">
+          <label for="address" class="form-label">Địa chỉ</label>
+          <input disabled value="<%= hotel.address %>" type="text" class="form-control" id="address" placeholder="An Giang">
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">Mô tả</label>
+          <input disabled value="<%= hotel.description %>" type="text" class="form-control" id="description" placeholder="Đây là mô tả"/>
+        </div>
+        <div class="mb-3">
+          <label for="star" class="form-label">Số sao</label>
+          <input disabled value="<%= hotel.star %>" type="text" class="form-control" id="star" placeholder="5">
+        </div>
+        <div class="mb-3">
+          <label for="city" class="form-label">Thành phố</label>
+          <input disabled value="<%= hotel.city %>" type="text" class="form-control" id="city" placeholder="Hà Nội">
+        </div>
+        <div class="mb-3">
+          <label for="thumb" class="form-label">Hình nền</label>
+          <img src="<%= hotel.image %>" alt="Hình ảnh">
+        </div>
+      </div>
+      <!-- /.card-body -->
+    </div>

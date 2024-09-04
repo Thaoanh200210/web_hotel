@@ -38,7 +38,52 @@
         document.querySelector(goalId).innerText = parseInt(total - total*discount).toLocaleString('it-IT', {style : 'currency', currency : 'VND'})
     }
     
+    document.addEventListener('DOMContentLoaded', function() {
+      const today = new Date().toISOString().split('T')[0];
+
+      const startDateInput = document.querySelector('input[name="ngaydau"]');
+      const endDateInput = document.querySelector('input[name="ngayket"]');
+
+      startDateInput.min = today;
+      endDateInput.min = today;
+
+      if (!startDateInput.value) {
+          startDateInput.value = today;
+      }
+
+      startDateInput.addEventListener('change', function() {
+          const selectedDate = startDateInput.value;
+          endDateInput.min = selectedDate;
+      });
+
+      if (!endDateInput.value) {
+          const tomorrow = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0];
+          endDateInput.value = tomorrow;
+          endDateInput.min = startDateInput.value;
+        }
+
+      const submitButtons = document.querySelectorAll('.booking-btn');
+      const urlParams = new URLSearchParams(window.location.search);
+      const startDate = urlParams.get('ngaydau');
+      const endDate = urlParams.get('ngayket');  
   
+      function validateDates() {
+          if (startDate && endDate) {
+              return true;
+          } else {
+              return false;
+          }
+      }
+  
+      submitButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+          if (!validateDates()) {
+            event.preventDefault();
+            alert("Vui lòng chọn ngày nhận phòng và trả phòng, sau đó bấm 'Tìm'");
+          } 
+        });
+      });
+  });
 </script>
 
 
@@ -63,7 +108,7 @@
           <div class="mb-3">
             <label class="form-label text-color">Ngày nhận phòng</label>
             <input
-              class="form-control shadow-none rounded"
+              class="form-control shadow-none rounded start-date"
               name="ngaydau"
               type="date"
               required
@@ -73,7 +118,7 @@
           <div class="mb-3">
             <label class="form-label text-color">Ngày trả phòng</label>
             <input
-              class="form-control shadow-none rounded"
+              class="form-control shadow-none rounded end-date"
               name="ngayket"
               type="date"
               required
@@ -225,7 +270,7 @@
           </td>
 
           <td>
-            <a href="/hotel/<%=hotel._id%>/booking-show/<%=typeRoom._id%>?ngaydau=<%= ngaydau %>&ngayket=<%= ngayket %>"  class="btn btn-success py-2 px-5">Tôi sẽ đặt</a>
+            <a href="/hotel/<%=hotel._id%>/booking-show/<%=typeRoom._id%>?ngaydau=<%= ngaydau %>&ngayket=<%= ngayket %>"  class="btn btn-success py-2 px-5 booking-btn">Tôi sẽ đặt</a>
             <div>Giá:</div>
             <div id="current-total-price-<%= typeRoom._id %>">0 VND</div>
           </td>

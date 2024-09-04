@@ -1,32 +1,34 @@
 <div class="card">
-    <div class="card-header d-flex">
-        <div class="card-title flex-grow-1 d-flex justify-content-between align-items-center">
-            <h5 class="modal-title d-flex align-items-center">
-                <i class="bi bi-person-lines-fill fs-3 me-2"></i> Thêm Thành Phố
-            </h5>
-        </div>
-    </div>
-    <div class="card-body">
-        <form action="/administrator/city/add-handler" method="POST" class="d-flex flex-column">
-            <div class="">
-                <div class="mb-3">
-                    <label class="form-label ">Tên thành phố</label>
-                    <input  class="form-control shadow-none" name="tenthanhpho" type="text" required>
-                </div>
-            </div>
-            <div class="text-center my-1">
-                <div class="d-flex justify-content-center gap-4">
-                    <a class="btn btn-warning shadow-none" href="/administrator/city">
-                        Trở về
-                    </a>
-                    <button class="btn btn-dark shadow-none" type="submit" name="">
-                        Thêm thành phố
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
+  <div class="card-header d-flex">
+      <div class="card-title flex-grow-1 d-flex justify-content-between align-items-center">
+          <h5 class="modal-title d-flex align-items-center">
+              <i class="bi bi-person-lines-fill fs-3 me-2"></i> Thêm Thành Phố
+          </h5>
+      </div>
+  </div>
+  <div class="card-body">
+      <form id="cityForm" class="d-flex flex-column" action="/administrator/city/add-handler" method="POST" enctype="multipart/form-data">
+          <div class="">
+              <div class="mb-3">
+                  <label class="form-label">Tên thành phố</label>
+                  <input class="form-control shadow-none" name="cityName" id="tenthanhpho" type="text" required>
+              </div>
 
+              <div class="mb-3">
+                  <label class="form-label">Hình ảnh</label>
+                  <input class="form-control shadow-none" id="hinhanh" name="file" type="file" accept="image/*" required>
+              </div>
+          </div>
+          <div class="text-center my-1">
+              <div class="d-flex justify-content-center gap-4">
+                  <a class="btn btn-warning shadow-none" href="/administrator/city">
+                      Trở về
+                  </a>
+                  <button class="btn btn-dark shadow-none" type="submit">
+                      Thêm thành phố
+                  </button>
+              </div>
+          </div>
+      </form>
+  </div>
 </div>
-
-

@@ -1,9 +1,8 @@
 const express = require("express");
 const multer = require("multer");
 const { AdminController }  = require("../controllers/administrator");
-
+const { uploadDisk } = require("../config/multer");
 const router = express.Router();
-const upload = multer();
 
 let admin = new AdminController();
 
@@ -11,15 +10,19 @@ let admin = new AdminController();
 router.route("/statistical").get(admin.statistical);
 
 //city
-router.route("/city/edit-handler/:id").post(admin.editCityHandler);
 router.route("/city/edit/:id").get(admin.editCity);
-router.route("/city/add-handler").post(admin.addCityHandler);
+router.route('/city/add-handler').post(uploadDisk.single('file'), admin.addCityHandler);
+router.route('/city/edit-handler/:id').post(uploadDisk.single('file'), admin.editCityHandler);
+router.route("/city/delete/:id").get(admin.deleteCityHandler);
 router.route("/city/add").get(admin.addCity);
 router.route("/city").get(admin.city);
 
-//hottel
+
+//hotel
 router.route("/hotel/edit-handler/:id").post(admin.editHotelHandler);
-router.route("/hotel/edit/:id").get(admin.editHotel);
+router.route("/hotel/activate/:id").get(admin.activateHotelHandler);
+router.route("/hotel/negate/:id").get(admin.negateHotelHandler);
+router.route("/hotel/delete/:id").get(admin.deleteHotelHandler);
 router.route("/hotel/add-handler").post(admin.addHotelHandler);
 router.route("/hotel/add").get(admin.addHotel);
 router.route("/hotel").get(admin.hotel);

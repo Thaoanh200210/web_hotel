@@ -7,7 +7,6 @@
 				<div class="row">
 					<div id="availability">
 						<form action="#">
-	
 							<div class="a-col">
 								<section>
 									<select class="form-select" name="hotelId" style="font-size: 15px; margin-top:5px">
@@ -38,6 +37,12 @@
 							</div>
 						</form>
 					</div>
+					<form action="/hotels/all" method="GET" class="form-inline text-center">
+						<div class="form-group" style="display: flex; align-items: center; height: 100%; margin-top: 40px;">
+							<input style="padding: 28px; line-height: 30px; flex: 1; margin-right: 12px;" type="text" name="name" class="form-control" placeholder="Tìm khách sạn theo tên" value="<%= typeof name !== 'undefined' ? name : '' %>">
+							<button type="submit" class="btn btn-primary">Tìm kiếm</button>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -64,6 +69,40 @@
 				</div>
 			</div>
 		</div>
+
+		<div id="featured-province" class="fh5co-bg-color">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="section-title text-center">
+							<h2>Chọn thành phố</h2>
+						</div>
+					</div>
+				</div>
+		
+				<div class="row">
+					<% cities.forEach((city, index) => { %>
+						<div class="col-md-3">
+							<a href="/hotels/<%= city._id %>" style="display: block; margin-bottom: 28px;">
+								<div class="f-city" style="width: 100%; height: 100%;">
+									<div class="image" style="background-image: url('<%= city.image %>'); height: 120px; background-size: cover; background-position: center;">
+										<div class="descrip text-center">
+											<h3><%= city.name %></h3>
+										</div>
+									</div>
+								</div>
+							</a>
+						</div>
+						<% if ((index + 1) % 4 === 0) { %>
+							</div><div class="row">
+						<% } %>
+					<% }); %>
+				</div>
+				
+		
+			</div>
+		</div>
+		
 	
 		<div id="featured-hotel" class="fh5co-bg-color">
 			<div class="container">
@@ -77,7 +116,7 @@
 	
 				<div class="row">
 					<div class="feature-full-1col">
-						<div class="image" style="background-image: url('https://dulichyenviet.com/wp-content/uploads/2023/10/478296590.jpg');">
+						<div class="image" style="background-image: url('<%=hotels[0].image%>');">
 							<div class="descrip text-center">
 								<p><small>Giá chỉ từ</small><span><%=getPriceOfHotel(hotels[0])%>/đêm</span></p>
 							</div>
@@ -91,7 +130,7 @@
 	
 					<div class="feature-full-2col">
 						<div class="f-hotel">
-							<div class="image" style="background-image: url('https://lh5.googleusercontent.com/proxy/6V5gjnG_6MCOC-9sXR1vriiWu5D62IZuKgFArMc9Qx1bJHqdbZ_EgRv6JcVwK-ZB9GF6oEJ4z7iA3FYgeFYA-UKrdg');">
+							<div class="image" style="background-image: url('<%=hotels[0].image%>');">
 								<div class="descrip text-center">
 									<p><small>Giá chỉ từ</small><span><%=getPriceOfHotel(hotels[1])%>/đêm</span></p>
 								</div>
@@ -103,7 +142,7 @@
 						</div>
 						</div>
 						<div class="f-hotel">
-							<div class="image" style="background-image: url('https://imagev3.vietnamplus.vn/w1000/Uploaded/2024/fsmsr/2014_12_22/Hotel_view_night.jpg.webp');">
+							<div class="image" style="background-image: url('<%=hotels[0].image%>');">
 								<div class="descrip text-center">
 									<p><small>Giá chỉ từ</small><span><%=getPriceOfHotel(hotels[2])%>/đêm</span></p>
 								</div>

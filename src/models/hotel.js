@@ -15,11 +15,8 @@ const HotelSchema = new Schema(
         description: { type: String, trim: true, required: true },
         star: { type: Number, required: true, min: 1, max: 5 },
         slogan: { type: String, trim: true, required: true },
-        city_id: {
-            type: mongoose.Schema.Types.ObjectId, 
-            autopopulate: true, // giúp đọc luôn dữ liệu của cả bảng chứ không chỉ lấy id
-            ref: "citys",
-            required: true 
+        city: {
+            type: String
         },
         image: { 
             type: String, 
@@ -31,6 +28,10 @@ const HotelSchema = new Schema(
                 },
                 message: props => `${props.value} không phải là URL hình ảnh hợp lệ!`
             }
+        },
+        isActive: {
+            type: Boolean,
+            default: false
         },
         deleteAt: { type: Date },
     },

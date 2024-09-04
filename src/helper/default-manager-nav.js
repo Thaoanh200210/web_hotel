@@ -8,6 +8,12 @@ module.exports = () =>{
                 children: []
             },
             {
+                name: "Quản lý khách sạn",
+                icon: "bi bi-journal",
+                url: "/manager/hotel",
+                children: []
+            },
+            {
                 name: "Quản lý phòng",
                 icon: "bi bi-journal",
                 url: "/manager/room",

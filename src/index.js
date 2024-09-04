@@ -10,8 +10,6 @@ console.log(listRouteName);
 
 
 
-
-
 for (const routeName of listRouteName) {
     let name = routeName.replace(".js","")
     //khác store - run 

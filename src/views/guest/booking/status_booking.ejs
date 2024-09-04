@@ -1,0 +1,23 @@
+<div class="container">
+    <form action="/manager/<%=hotel._id%>/booking/status_booking/<%=id%>" method="POST">
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="status" id="CheckedIn" value="Đã nhận phòng" checked>
+            <label class="form-check-label" for="CheckedIn">
+              Đã nhận phòng
+            </label>
+          </div>
+          <div class="form-check ">
+            <input class="form-check-input" type="radio" name="status" id="CheckedOut" value="Đã trả phòng" >
+            <label class="form-check-label" for="CheckedOut">
+              Đã trả phòng
+            </label>
+          </div>
+          <div class="form-check ">
+            <input class="form-check-input" type="radio" name="status" id="cancel" value="cancel" >
+            <label class="form-check-label" for="cancel">
+              Đã hủy 
+            </label>
+          </div>
+          <button class="btn btn-primary">Sửa trạng thái</button>
+    </form>
+</div>

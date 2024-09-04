@@ -20,6 +20,10 @@ const getBookingById = require("../services/get_booking_by_id")
 const getBookingByUser = require("../services/get_booking_by_user")
 const getCurrentEvent = require("../services/get_current_event")
 const getAllHotel = require("../services/get_all_hotel")
+const getHotelByCity = require("../services/get_hotels_by_city")
+const getCityByID = require("../services/get_city_by_id")
+const getAllCities = require("../services/get_all_city")
+const cancelBooking = require("../services/cancel_booking")
 //controller nơi nhận dữ liệu từ request(req) => vào Service xử lý dữ liệu 
 //=> gọi repository để truy cập vào database  thông qua models
 const getPriceOfTypeOfRoom = (rooms,discount) => {
@@ -68,6 +72,7 @@ const getSelectionOfTypeOfRoom = (rooms) => {
 class StoreRunController{
     async homepage(req, res) {
         let hotels = await getAllHotel(true);
+        let cities = await getAllCities();
         let getPriceOfHotel = (hotel) => {
             let prices = hotel.rooms.map((room) => room.original_price);
             // let maxPrice = Math.max.apply(null, prices);
@@ -80,9 +85,44 @@ class StoreRunController{
             page: "home/index",
             getPriceOfHotel:getPriceOfHotel,
             hotels: hotels,
+            cities: cities,
             ...defaultData(req)
         })
     }
+    async hotels(req, res) {
+        const cityID = req.params.cityID;
+        let cityName = {name: "toàn quốc"};
+        let hotels = [];
+        if (cityID === "all") {
+            hotels = await getAllHotel(true);
+        } else {
+            hotels = await getHotelByCity(cityID);
+            cityName = await getCityByID(cityID);
+        }
+        let name = req.query.name;  
+        if (name) {
+            hotels = hotels.filter(hotel => hotel.name.toLowerCase().includes(name.toLowerCase()));
+        }
+        let getPriceOfHotel = (hotel) => {
+            if (!Array.isArray(hotel.rooms) || hotel.rooms.length === 0) {
+                return "???";
+            }
+            let prices = hotel.rooms.map((room) => room.original_price);
+            let minPrice = Math.min.apply(null, prices);
+            return parseInt(minPrice).toLocaleString('it-IT', { style: 'currency', currency: 'VND' });
+        };
+
+        console.log(hotels);
+        //đến home/index
+        res.render("index",{
+            page: "home/hotels",
+            getPriceOfHotel:getPriceOfHotel,
+            hotels: hotels,
+            city: cityName,
+            ...defaultData(req)
+        })
+    }
+
     async myUser(req, res) {
         let cookies = new CookieProvider(req, res);
         let userString = cookies.getCookie(constants.user_info);
@@ -410,6 +450,12 @@ class StoreRunController{
             checkPayment : checkPayment,
             ...defaultData(req)
         })
+    }
+
+    async cancelBooking(req,res){
+        let bookingID = req.params.bookingId;
+        await cancelBooking(bookingID)
+        res.redirect('/historical-booking/')
     }
 
     async reviewHandler(req, res) {

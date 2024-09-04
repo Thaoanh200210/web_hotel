@@ -20,6 +20,7 @@
           <tr>
             <th>STT</th>
             <th>Tên thành phố</th>
+            <th>Hình ảnh </th>
             <th>Quản lý </th>
           </tr>
         </thead>
@@ -29,6 +30,7 @@
           <tr>
             <td><%= i++ %></td>
             <td><%= city.name %></td>
+            <td><img style="width: 100px; height: 100px; object-fit: cover;" src="<%= city.image %>" alt="Place"></td>
             <td>
                 <a href="/administrator/city/edit/<%=city._id %>"  class="btn btn-primary">Sửa</a >
                 <button  onclick="deleteConfirmButtonClk('/administrator/city/delete/<%=city._id %>','Bạn có muốn xóa thông tin địa điểm này không?')" class="btn btn-danger">Xóa</button>

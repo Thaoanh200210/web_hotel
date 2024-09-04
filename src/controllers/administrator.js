@@ -34,6 +34,8 @@ const updateTypeRoom = require("../services/update_type_room")
 const updateUser = require("../services/update_user");
 const updateHotel = require("../services/update_hotel");
 const deleteService = require("../services/delete_service")
+const deleteCity = require("../services/delete_city")
+const deleteHotel = require("../services/delete_hotel")
 const deleteSelection = require("../services/delete_selection")
 const deleteTypeRoom = require("../services/delete_type_room")
 const numberOfHotels = require("../services/number_of_hotel")
@@ -41,6 +43,7 @@ const numberOfRooms = require("../services/number_of_room")
 const numberOfSelections = require("../services/number_of_selection")
 const numberOfTypeOfRooms = require("../services/number_of_type_of_room")
 const numberOfServices = require("../services/number_of_service")
+const uploadImageFromLocal = require("../services/upload_image_from_local")
 
 class AdminController{
 
@@ -82,19 +85,22 @@ class AdminController{
         })
     }
 
-    async addCityHandler(req,res){
-        let city = {
-            name : req.body.tenthanhpho,
-        }
-        await createCity(city);
-        let cookies = new CookieProvider(req, res);
-        cookies.setCookie(
-            constants.has_message,
-            JSON.stringify(message("Bạn đã thêm thành phố mới thành công!",constantMesages.successCustom)),
-            1
-        );
-        res.redirect("/administrator/city/");
-    }
+    // async addCityHandler(req,res){
+    //     console.log(req.body)
+    //     let city = {
+    //         name : req.body.cityName,
+    //         image: req.body.imagePath
+    //     }
+    //     console.log(city);
+    //     await createCity(city);
+    //     let cookies = new CookieProvider(req, res);
+    //     cookies.setCookie(
+    //         constants.has_message,
+    //         JSON.stringify(message("Bạn đã thêm thành phố mới thành công!",constantMesages.successCustom)),
+    //         1
+    //     );
+    //     res.redirect("/administrator/city/");
+    // }
 
     async editCity(req, res) {
         let city = await getCityById(req.params.id);
@@ -107,20 +113,89 @@ class AdminController{
         })
     }
 
-    async editCityHandler(req,res){
-        let originCity = await getCityById(req.params.id);
+    // adđ
+    async addCityHandler(req, res, next) {
+        try {
+          const { file, body: { folderName, cityName } } = req;
+      
+          if (!file) {
+            return res.status(400).send('No file uploaded.');
+          }
+      
+          const imageData = await uploadImageFromLocal(
+            file.path,
+            folderName,
+            file.filename
+          );
+      
+          const city = {
+            name: cityName,
+            image: imageData.img_url
+          };
+      
+          await createCity(city);
+      
+          let cookies = new CookieProvider(req, res);
+          cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã thêm thành phố mới thành công!", constantMesages.successCustom)),
+            1
+          );
+      
+          return res.redirect('/administrator/city');
+        } catch (error) {
+          console.error(error);
+          return res.status(500).send('Error adding city.');
+        }
+      }
 
-        originCity.name = req.body.tenthanhpho;
-        await updateCity(originCity);
+      async deleteCityHandler(req, res) {
+        try {
+            let originCity = await getCityById(req.params.id);
+            await deleteCity(originCity._id.toString())
+        } catch(e){
+            console.log(e);
+        }
+        
         let cookies = new CookieProvider(req, res);
         cookies.setCookie(
             constants.has_message,
-            JSON.stringify(message("Bạn đã sửa thông tin thành phố thành công!",constantMesages.successCustom)),
+            JSON.stringify(message("Bạn đã xóa thông tin địa điểm thành công!",constantMesages.successCustom)),
             1
         );
         res.redirect("/administrator/city/");
     }
 
+    //edit city
+    async editCityHandler(req,res, next){
+        try {
+            console.log("Enter::", req.params.id)
+            let originCity = await getCityById(req.params.id);
+    
+            console.log(req.body);
+            const cityName = req.body.cityName;
+            const file = req.file;
+
+            if (!cityName) {
+                return res.status(400).send('City name is required');
+            }
+            if (file) {
+                const imageData = await uploadImageFromLocal(file.path, 'cities', file.filename);
+                originCity.name = cityName;
+                originCity.image = imageData.img_url;
+                await updateCity(originCity);
+                let cookies = new CookieProvider(req, res);
+                cookies.setCookie(
+                    constants.has_message,
+                    JSON.stringify(message("Bạn đã sửa thông tin thành phố thành công!",constantMesages.successCustom)),
+                    1
+                );
+                res.redirect("/administrator/city/");
+            }
+        } catch (e) {
+            console.log("Error when editing city:: ", e.message)
+        }
+    }
 
     //hotel
     async hotel(req,res) {
@@ -200,6 +275,42 @@ class AdminController{
         res.redirect("/administrator/hotel/");
     }
 
+    async activateHotelHandler(req, res) {
+        let originHotel = await getHotelById(req.params.id);
+        originHotel.isActive = true;
+        await updateHotel(originHotel);
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã kich hoat khách sạn thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/administrator/hotel/");
+    }
+
+    async negateHotelHandler(req, res) {
+        let originHotel = await getHotelById(req.params.id);
+        originHotel.isActive = false;
+        await updateHotel(originHotel);
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã vo hieu khách sạn thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/administrator/hotel/");
+    }
+
+    async deleteHotelHandler(req, res) {
+        await deleteHotel(req.params.id);
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã xoa khách sạn thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/administrator/hotel/");
+    }
 
     //quản lý service 
     async service(req,res){

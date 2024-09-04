@@ -7,7 +7,7 @@
 </style>
 <div class="container" style="width: 1400px">
   <h2 class="">Lịch sử đặt phòng của bạn</h2>
-  <table class="table table-striped border border-dark text-center" style="">
+  <table class="table table-striped border border-dark text-center">
     <tbody>
       <tr>
         <td class="cot1">Khách sạn</td>
@@ -21,25 +21,31 @@
         <td class="cot1">Trạng thái</td>
         <td class="cot1"></td>
       </tr>
-      <%for(let booking of bookings){%>
+      <% 
+        const today = new Date(); 
+        for(let booking of bookings){
+          const bookingDate = new Date(booking.details[0].NowDate);
+          const cancelable = (today - bookingDate) <= 3 * 24 * 60 * 60 * 1000; // kiểm tra nếu ngày đặt phòng không quá 3 ngày trước hôm nay
+      %>
       <tr>
-        <td ><%=booking.details[0].room.hotel.name%></td>
-        <td ><%=new Date(booking.details[0].NowDate).toLocaleString()%></td>
+        <td><%=booking.details[0].room.hotel.name%></td>
+        <td><%=bookingDate.toLocaleString()%></td>
         <td><div><%=booking.check_in.toLocaleString()%></div></td>
         <td><div><%=booking.check_out.toLocaleString()%></div></td>
-        <!-- map dùng để kiếm được danh sách số phòng đã đặt, join nối chúng thành chuỗi -->
-        <td><div><%=booking.details.map((detail) => {return detail.room.number_room}).join(" + ") %></div></td>
-        <td><div><%=parseInt(booking.total_price).toLocaleString('it-IT', {style : 'currency', currency : 'VND'})%></div></div></td>
+        <td><div><%=booking.details.map((detail) => detail.room.number_room).join(" + ") %></div></td>
+        <td><div><%=parseInt(booking.total_price).toLocaleString('it-IT', {style : 'currency', currency : 'VND'})%></div></td>
         <td>
-          <div class=" fw-bold <%=checkPayment(booking.payments) ? 'text-success': 'text-danger' %> "><%=checkPayment(booking.payments) ? "Đã thanh toán": "Chưa thanh toán"; %></div>
+          <div class="fw-bold <%=checkPayment(booking.payments) ? 'text-success': 'text-danger' %> "><%=checkPayment(booking.payments) ? "Đã thanh toán": "Chưa thanh toán"; %></div>
         </td>
         <td>
           <a href="/review/<%= booking._id %>" class="<%= checkPayment(booking.payments)? '': 'd-none' %> btn btn-success">Đánh giá</a>
         </td>
         <td><div><%=booking.status%></div></td>
-        <td > <a href="" class="btn btn-primary">Hủy đặt phòng</a></td>
+        <td>
+          <a href="/cancel-booking/<%= booking._id %>" class="btn btn-primary <%= cancelable ? '' : 'disabled' %>">Hủy đặt phòng</a>
+        </td>
       </tr>
-      <%}%>
+      <% } %>
     </tbody>
   </table>
 </div>
