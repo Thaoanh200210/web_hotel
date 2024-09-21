@@ -25,25 +25,31 @@ async function getTypeRoomById(hotel, id, startDate, endDate, populate) {
                     "$in": rooms,
                 }
             });
+            console.log("Before::", detailBookings.length);
             detailBookings =  detailBookings.filter((detail)=>{
                 //tìm ra những phòng có ngày check_in, out >= ngày bắt đầu và <= kết thúc. 
                 // if((detail.booking.check_in >= new Date(startDate) && detail.booking.check_in <= new Date(endDate)) || 
                 // (detail.booking.check_out >= new Date(startDate) && detail.booking.check_out <= new Date(endDate))){
                 //     return true;
                 // }else
-                if (detail.booking.check_out <= new Date(startDate)) {
-                    return true;
+                if (detail.booking.check_out <= new Date(startDate) && detail.booking.check_out >= new Date(Date.now()) || detail.booking.check_in >= new Date(endDate)) {
+                    return false;
                 } else
-                return false;
+                return true;
              });
+            console.log("After::", detailBookings.length);
              //danh sách room đã được đặt.
             let roomBooked = detailBookings.map((detail)=>{
                 return detail.room._id.toString();
             });
+            console.log(roomBooked);
+
             //lấy danh sách rooms kh có những phòng đã được đặt.
             rooms = rooms.filter((room)=>{
+                console.log(room._id.toString());
                 return !roomBooked.includes(room._id.toString());
             })
+            console.log(rooms);
             //chứa list room
             let roomResult = [];
             for(let room of rooms ){

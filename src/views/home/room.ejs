@@ -258,23 +258,31 @@
           </td>
 
           <td>
-              <select class="form-select shadow-none" name="phong" multiple required onchange="getInterimPrice('<%= JSON.stringify(typeRoom.rooms)%>', this, '#current-total-price-<%= typeRoom._id %>',<%= (discount > typeRoom.discount/100 ? discount : typeRoom.discount/100)%>)">
-                <%for( let room of typeRoom.rooms) { %>
-                <optgroup label="<%= room.name %>">
-                  <option value="<%= room._id %>" ondblclick="this.selected = false;">
-                    <%= parseInt(room.original_price - room.original_price*(discount > typeRoom.discount/100 ? discount : typeRoom.discount/100)).toLocaleString('it-IT', {style : 'currency', currency : 'VND'}) %>
-                  </option>
-                </optgroup>
+            <select class="form-select shadow-none" name="phong" multiple required onchange="getInterimPrice('<%= JSON.stringify(typeRoom.rooms)%>', this, '#current-total-price-<%= typeRoom._id %>',<%= (discount > typeRoom.discount/100 ? discount : typeRoom.discount/100)%>)">
+              <% if(typeRoom.rooms.length === 0) { %>
+                <option disabled>Hết phòng</option>
+              <% } else { %>
+                <% for(let room of typeRoom.rooms) { %>
+                  <optgroup label="<%= room.name %>">
+                    <option value="<%= room._id %>" ondblclick="this.selected = false;">
+                      <%= parseInt(room.original_price - room.original_price * (discount > typeRoom.discount/100 ? discount : typeRoom.discount/100)).toLocaleString('it-IT', {style : 'currency', currency : 'VND'}) %>
+                    </option>
+                  </optgroup>
                 <% } %>
-              </select>
+              <% } %>
+            </select>            
           </td>
 
           <td>
-            <a href="/hotel/<%=hotel._id%>/booking-show/<%=typeRoom._id%>?ngaydau=<%= ngaydau %>&ngayket=<%= ngayket %>"  class="btn btn-success py-2 px-5 booking-btn">Tôi sẽ đặt</a>
+            <% if (typeRoom.rooms.length === 0) { %>
+              <a href="#" class="btn btn-success py-2 px-5 booking-btn disabled">Tôi sẽ đặt</a>
+            <% } else { %>
+              <a href="/hotel/<%=hotel._id%>/booking-show/<%=typeRoom._id%>?ngaydau=<%= ngaydau %>&ngayket=<%= ngayket %>" class="btn btn-success py-2 px-5 booking-btn">Tôi sẽ đặt</a>
+            <% } %>
             <div>Giá:</div>
             <div id="current-total-price-<%= typeRoom._id %>">0 VND</div>
           </td>
-
+                    
         </tr>
         <% }%>
       </tbody>
@@ -644,5 +652,4 @@
     numberOfColumns:2,
   })
 </script>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

@@ -4,6 +4,8 @@ const path = require("path");
 const {CookieProvider} = require("../helper/cookies")
 const uploadImageFromLocal = require("../services/upload_image_from_local")
 const getAllCity = require("../services/get_all_city")
+const getAllHotels = require("../services/get_all_hotel")
+const getAllRooms = require("../services/get_all_rooms")
 const createUser  = require("../services/create_user")
 const createEmployee = require("../services/create_employee");
 const createHotel = require('../services/create_hotel')
@@ -16,6 +18,43 @@ const { RoleEnum } = require("../models/enum/role");
 
 
 class GuestController{
+    // find available hotels and rooms
+    async getRoomPriceOfHotel(req, res) {
+        try {
+            const hotelName = req.body.queryResult.parameters.hotelName || "Thao Anh Hotel";
+    
+            const hotel = await findHotelByName(hotelName);
+            
+            if (!hotel) {
+                return res.json({
+                    fulfillmentText: `Không tìm thấy khách sạn ${hotelName}.`
+                });
+            }
+    
+            const rooms = await getAllRooms({
+                hotel: hotel._id,
+                status: "Đang hoạt động"
+            });
+    
+            if (rooms.length === 0) {
+                return res.json({
+                    fulfillmentText: `Khách sạn ${hotelName} không có phòng nào đang hoạt động.`
+                });
+            }
+
+            const roomDescriptions = rooms.map(room => `Phòng ${room.name} có giá ${room.original_price} VNĐ`).join(', ');
+
+            return res.json({
+                fulfillmentText: `Khách sạn ${hotelName} có các phòng: ${roomDescriptions}.`
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({
+                fulfillmentText: 'Có lỗi xảy ra khi xử lý yêu cầu của bạn.'
+            });
+        }
+    }
+
     async addHotel(req, res) {
         let citys = await getAllCity();
         res.render("index-guest",{

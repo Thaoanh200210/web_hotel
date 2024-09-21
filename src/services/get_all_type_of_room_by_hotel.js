@@ -5,12 +5,14 @@ const {
     SelectionRoomRepository,
     ImageRepository,
     DiscountRepository,
+    DetailBookingRepository
 } = require('../repositories/index');
 
-async function getAllTypeRoomByHotel(hotel) {
+async function getAllTypeRoomByHotel(hotel, startDate= "", endDate= "") {
     const typeRoomRepo = new TypeRoomRepository();
     const roomRepo = new RoomRepository();
     const serviceRoomRepo = new ServiceRoomRepository();
+    const detailBookingRepo = new DetailBookingRepository();
     const selectionRoomRepo = new SelectionRoomRepository();
     const imageRepo = new ImageRepository();
     const discountRepo = new DiscountRepository();
@@ -19,6 +21,32 @@ async function getAllTypeRoomByHotel(hotel) {
     let result = [];
     for(let typeOfRoom of typesOfRoom){
         let rooms = await roomRepo.select({hotel:hotel, type_room:typeOfRoom, status: 'Đang hoạt động'});
+        // console.log("All rooms of hotel", rooms.length);
+        if (startDate != "" || endDate != "") {
+            let detailBookings = await detailBookingRepo.select({
+                room: {
+                    "$in": rooms,
+                }
+            });
+            console.log("Before::", detailBookings.length);
+            detailBookings =  detailBookings.filter((detail)=>{
+                if (detail.booking.check_out <= new Date(startDate) && detail.booking.check_out >= new Date(Date.now()) || detail.booking.check_in >= new Date(endDate)) {
+                    return false;
+                } else
+                return true;
+             });
+             let roomBooked = detailBookings.map((detail)=>{
+                 return detail.room._id.toString();
+             });
+             console.log(roomBooked);
+     
+             //lấy danh sách rooms kh có những phòng đã được đặt.
+             rooms = rooms.filter((room)=>{
+                 console.log("Room", room._id.toString());
+                 return !roomBooked.includes(room._id.toString());
+             })
+        }
+        console.log("All room", rooms)
         //chứa list room
         let roomResult = [];
         for(let room of rooms ){

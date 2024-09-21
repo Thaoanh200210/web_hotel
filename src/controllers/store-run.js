@@ -24,6 +24,12 @@ const getHotelByCity = require("../services/get_hotels_by_city")
 const getCityByID = require("../services/get_city_by_id")
 const getAllCities = require("../services/get_all_city")
 const cancelBooking = require("../services/cancel_booking")
+const getHotelByName = require("../services/get_hotel_by_name");
+const getRoomByName = require("../services/get_room_by_name");
+const getAllRooms = require("../services/get_all_rooms")
+const getServiceByID = require("../services/get_service_by_id")
+const getSelectionByID = require("../services/get_selection_by_id")
+
 //controller nơi nhận dữ liệu từ request(req) => vào Service xử lý dữ liệu 
 //=> gọi repository để truy cập vào database  thông qua models
 const getPriceOfTypeOfRoom = (rooms,discount) => {
@@ -199,7 +205,7 @@ class StoreRunController{
         let ngayket = req.query.ngayket;
 
         let images = await getImageOfHotel(req.hotel);
-        let typeRooms = await getAllTypeRoomByHotel(req.hotel);
+        let typeRooms = await getAllTypeRoomByHotel(req.hotel, ngaydau, ngayket);
         let reviews = await getAllReviews(req.hotel);
         let events = await getCurrentEvent(req.hotel);
 
@@ -365,6 +371,7 @@ class StoreRunController{
                 total = total + parseInt(room.original_price) * numberOfDaysBooked;
             }
         } else {
+            console.log("Phogs", phongs)
             for(let phong of phongs){
                 let room = await getRoomById(phong,false);
                 let typeRoom = await getTypeRoomByIdAndHotel(req.hotel,room.type_room._id.toString(),ngaydau,ngayket,true);
