@@ -27,7 +27,7 @@ class Middleware {
             let hotel = await hotelRepo.selectById(req.params.hotelId);
             req.hotel = hotel;
         }
-        let hotels = await hotelRepo.selectAll();
+        let hotels = await hotelRepo.select({isActive: true});
         req.hotelDatas = hotels;
         return await next();
     }

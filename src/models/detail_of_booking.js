@@ -19,6 +19,10 @@ const DetailBookingSchema = new Schema(
             ref: "rooms",
             required: true 
         },
+        status: {
+            type: String,
+            default: "Đang đặt"
+        },
         deleteAt: {type:Date},
     },
     { versionKey: false }

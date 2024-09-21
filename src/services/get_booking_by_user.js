@@ -8,6 +8,7 @@ async function getBookingByUser(user, populate = false) {
     let bookings = await bookingRepo.select({
         customer: user,
     });
+    
     if(populate) {
         let bookingResult = [];
         for( let booking of bookings){
@@ -28,8 +29,10 @@ async function getBookingByUser(user, populate = false) {
                 payments: payments, 
             });
         }
+        console.log("BResult", bookingResult);
         return bookingResult;
     }else{
+        console.log("Boking::", bookings);
         return bookings;
     }
 }

@@ -57,7 +57,7 @@ class GuestController{
 
     async addHotel(req, res) {
         let citys = await getAllCity();
-        res.render("index-guest",{
+        res.render("index-manager",{
             page: "guest/index",
             roomPage: "hotel/add",
             citys: citys,
@@ -87,20 +87,18 @@ class GuestController{
         }
         if (file) {
             const imageData = await uploadImageFromLocal(file.path, 'hotel', file.filename);
-            console.log("Uploading image...");
             hotel.image = imageData.img_url;
         }
         const hotelCreated = await createHotel(hotel);
-        const result = await createEmployee(hotelCreated._id, user._id);
+        await createEmployee(hotelCreated._id, user._id);
         let cookies = new CookieProvider(req, res);
         cookies.setCookie(
-            constants.has_message,
-            JSON.stringify(message("Bạn đã thêm khách sạn mới thành công, sau khi Manager duyet khach san cua ban se di vao hoat dong!",constantMesages.successCustom)),
-            1
+          constants.has_message,
+          JSON.stringify(message("Bạn đã đăng ký khách sạn thành công, chờ quản trị viên duyệt để đi vào hoạt động!", constantMesages.successCustom)),
+          1
         );
-        if (result) {
-            return "Create hotel successfully, please wait for admin acceptance...";
-        }
+    
+        return res.redirect('/');
     }
 }
 module.exports = { GuestController }

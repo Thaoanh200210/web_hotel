@@ -26,6 +26,9 @@ async function getAllTypeRoomByHotel(hotel, startDate= "", endDate= "") {
             let detailBookings = await detailBookingRepo.select({
                 room: {
                     "$in": rooms,
+                },
+                status: {
+                    "$eq": "Đang đặt" // Tìm status "Đang đặt"
                 }
             });
             console.log("Before::", detailBookings.length);

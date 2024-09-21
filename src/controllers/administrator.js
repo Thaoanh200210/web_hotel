@@ -158,7 +158,7 @@ class AdminController{
         }
         
         let cookies = new CookieProvider(req, res);
-        cookies.setCookie(
+        okie(
             constants.has_message,
             JSON.stringify(message("Bạn đã xóa thông tin địa điểm thành công!",constantMesages.successCustom)),
             1

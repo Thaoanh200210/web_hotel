@@ -4,7 +4,6 @@ const { StoreRunController }  = require("../controllers/store-run");
 const { Middleware }  = require("../middlewares/index.middleware");
 let middleware = new Middleware();
 const router = express.Router();
-const upload = multer();
 
 let storeRun = new StoreRunController();
 // để hiện tất cả người dùng đánh giá ra màn hình

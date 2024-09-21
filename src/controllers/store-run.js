@@ -101,6 +101,7 @@ class StoreRunController{
         let hotels = [];
         if (cityID === "all") {
             hotels = await getAllHotel(true);
+            hotels = hotels.filter(hotel => hotel.isActive === true);
         } else {
             hotels = await getHotelByCity(cityID);
             cityName = await getCityByID(cityID);

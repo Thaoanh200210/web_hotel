@@ -21,10 +21,12 @@ async function getTypeRoomById(hotel, id, startDate, endDate, populate) {
             let rooms = await roomRepo.select({hotel:hotel, type_room:typeOfRoom, status: 'Đang hoạt động'});
             let detailBookings = await detailBookingRepo.select({
                 room: {
-                    // tìm những thằng nằm trong danh sách room
-                    "$in": rooms,
+                    "$in": rooms, // Tìm những room nằm trong danh sách rooms
+                },
+                status: {
+                    "$eq": "Đang đặt" // Tìm status "Đang đặt"
                 }
-            });
+            });            
             console.log("Before::", detailBookings.length);
             detailBookings =  detailBookings.filter((detail)=>{
                 //tìm ra những phòng có ngày check_in, out >= ngày bắt đầu và <= kết thúc. 
