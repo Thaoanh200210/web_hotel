@@ -119,7 +119,6 @@ class StoreRunController{
             return parseInt(minPrice).toLocaleString('it-IT', { style: 'currency', currency: 'VND' });
         };
 
-        console.log(hotels);
         //đến home/index
         res.render("index",{
             page: "home/hotels",
@@ -372,7 +371,6 @@ class StoreRunController{
                 total = total + parseInt(room.original_price) * numberOfDaysBooked;
             }
         } else {
-            console.log("Phogs", phongs)
             for(let phong of phongs){
                 let room = await getRoomById(phong,false);
                 let typeRoom = await getTypeRoomByIdAndHotel(req.hotel,room.type_room._id.toString(),ngaydau,ngayket,true);

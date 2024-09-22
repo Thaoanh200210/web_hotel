@@ -31,7 +31,6 @@ async function getAllTypeRoomByHotel(hotel, startDate= "", endDate= "") {
                     "$eq": "Đang đặt" // Tìm status "Đang đặt"
                 }
             });
-            console.log("Before::", detailBookings.length);
             detailBookings =  detailBookings.filter((detail)=>{
                 if (detail.booking.check_out <= new Date(startDate) && detail.booking.check_out >= new Date(Date.now()) || detail.booking.check_in >= new Date(endDate)) {
                     return false;
@@ -41,15 +40,12 @@ async function getAllTypeRoomByHotel(hotel, startDate= "", endDate= "") {
              let roomBooked = detailBookings.map((detail)=>{
                  return detail.room._id.toString();
              });
-             console.log(roomBooked);
      
              //lấy danh sách rooms kh có những phòng đã được đặt.
              rooms = rooms.filter((room)=>{
-                 console.log("Room", room._id.toString());
                  return !roomBooked.includes(room._id.toString());
              })
         }
-        console.log("All room", rooms)
         //chứa list room
         let roomResult = [];
         for(let room of rooms ){
@@ -66,9 +62,12 @@ async function getAllTypeRoomByHotel(hotel, startDate= "", endDate= "") {
         }
         roomResult.sort((a, b) => a.original_price - b.original_price);
         //danh sách giảm giá của từng loại phòng ở hotel
+        const today = new Date();
+        // thêm điều kiện mã giảm giá phải còn hữu hiệu khi người dùng đặt phòng
         let discounts = await discountRepo.select({
             type_room: typeOfRoom,
             hotel:hotel,
+            date_end: { $gt: today }
         });
         discounts.sort((a, b) => a.discount_percent - b.discount_percent);
         let discount = 0;
