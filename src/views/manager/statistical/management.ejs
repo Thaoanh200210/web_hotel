@@ -23,6 +23,13 @@
     <link href="plugins/daterangepicker/daterangepicker.css" rel="stylesheet">
 
     <link href="plugins/summernote/summernote-bs4.min.css" rel="stylesheet">
+
+    <!-- Chart -->
+    <link href="plugins/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="dist/css/adminlte.min.css?v=3.2.0" rel="stylesheet">
+
+    <!-- Link Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script
         src="/cdn-cgi/zaraz/s.js?z=JTdCJTIyZXhlY3V0ZWQlMjIlM0ElNUIlNUQlMkMlMjJ0JTIyJTNBJTIyQWRtaW5MVEUlMjAzJTIwJTdDJTIwRGFzaGJvYXJkJTIyJTJDJTIyeCUyMiUzQTAuNzc4NjQ2NDMwOTUyMTI3NSUyQyUyMnclMjIlM0ExNTM2JTJDJTIyaCUyMiUzQTg2NCUyQyUyMmolMjIlM0E3MzAlMkMlMjJlJTIyJTNBMTUzNiUyQyUyMmwlMjIlM0ElMjJodHRwcyUzQSUyRiUyRmFkbWlubHRlLmlvJTJGdGhlbWVzJTJGdjMlMkZpbmRleC5odG1sJTIyJTJDJTIyciUyMiUzQSUyMmh0dHBzJTNBJTJGJTJGYWRtaW5sdGUuaW8lMkZ0aGVtZXMlMkZ2MyUyRmluZGV4My5odG1sJTIyJTJDJTIyayUyMiUzQTI0JTJDJTIybiUyMiUzQSUyMlVURi04JTIyJTJDJTIybyUyMiUzQS00MjAlMkMlMjJxJTIyJTNBJTVCJTVEJTdE"
         defer referrerpolicy="origin"></script>
@@ -217,6 +224,57 @@
                     </div>
                 </div>
             </div>
+            <div class="tab-content">
+                <!-- Biểu đồ được vẽ tại đây -->
+                <canvas id="roomBookingChart" width="400" height="400"></canvas>
+            </div>
         </div>
     </div>
 </section>
+
+<script>
+    // Giả sử biến bookedCountPerTypeRoom được truyền từ server sang
+    const bookedCountPerTypeRoom = <%- JSON.stringify(best_type_room.bookedCountPerTypeRoom) %>;
+
+    // Lấy dữ liệu từ bookedCountPerTypeRoom
+    const roomTypes = Object.keys(bookedCountPerTypeRoom);
+    const bookingCounts = Object.values(bookedCountPerTypeRoom);
+
+    // Tạo biểu đồ
+    const ctx = document.getElementById('roomBookingChart').getContext('2d');
+    const roomBookingChart = new Chart(ctx, {
+        type: 'pie', 
+        data: {
+            labels: roomTypes, 
+            datasets: [{
+                label: 'Số lượng đặt phòng',
+                data: bookingCounts, 
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Số lần đặt từng loại phòng'
+                }
+            }
+        }
+    });
+</script>

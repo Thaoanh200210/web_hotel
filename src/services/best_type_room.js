@@ -53,16 +53,29 @@ async function bestTypeRoom(hotel) {
     const maxCountKeys = Object.keys(groupedByString).filter(
         (key) => groupedByString[key] === maxCount
       );
-    
+
     let typeOfRooms = await getAllTypeRoomByHotel(hotel);
+
+    const bookedCountPerTypeRoom = {}
+
+    Object.keys(groupedByString).forEach(key => {
+        const value = groupedByString[key];
+        const roomName = typeOfRooms.find((typeRoom) =>{
+            return typeRoom._id.toString() === key}).name
+        bookedCountPerTypeRoom[roomName] = value
+    });
+
     //Lọc những thằng typeOfRooms có id nằm trong maxcountKeys
     typeOfRooms = typeOfRooms.filter((typeOfRoom)=>{
         return maxCountKeys.includes(typeOfRoom._id.toString())
     })
-    
+
+    console.log(bookedCountPerTypeRoom);
+
     return {
         typeOfRooms: typeOfRooms,
         maxCount: maxCount,
+        bookedCountPerTypeRoom: bookedCountPerTypeRoom,
     };
 
 }
