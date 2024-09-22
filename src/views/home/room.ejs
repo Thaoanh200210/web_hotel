@@ -438,6 +438,7 @@
     </div>
   
     <button id="see-all-btn" class="mt-4 btn btn-primary">Xem tất cả</button>
+    <button id="collapse-btn" class="mt-4" style="display: none;">Thu Gọn</button>
   </div>
 
   <!-- Quy tắc chung -->
@@ -656,11 +657,32 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script>
+  // Hiển thị chỉ một số bài đánh giá ban đầu
+  const reviews = document.querySelectorAll('.review');
+  const initialVisibleReviews = 3; // Số lượng review hiển thị ban đầu
+  reviews.forEach((review, index) => {
+    if (index >= initialVisibleReviews) {
+      review.style.display = 'none'; // Ẩn các review khác
+    }
+  });
+
+  // Xử lý sự kiện khi bấm vào nút "See All"
   document.getElementById('see-all-btn').addEventListener('click', function() {
-    const reviews = document.querySelectorAll('.review');
     reviews.forEach(review => {
-      review.style.display = 'block'; // Show all reviews
+      review.style.display = 'block'; // Hiển thị tất cả các bài đánh giá
     });
-    this.style.display = 'none'; // Hide the "See All" button
+    this.style.display = 'none'; // Ẩn nút "See All"
+    document.getElementById('collapse-btn').style.display = 'inline-block'; // Hiện nút "Thu Gọn"
+  });
+
+  // Xử lý sự kiện khi bấm vào nút "Thu Gọn"
+  document.getElementById('collapse-btn').addEventListener('click', function() {
+    reviews.forEach((review, index) => {
+      if (index >= initialVisibleReviews) {
+        review.style.display = 'none'; // Ẩn các review khác để thu gọn
+      }
+    });
+    this.style.display = 'none'; // Ẩn nút "Thu Gọn"
+    document.getElementById('see-all-btn').style.display = 'inline-block'; // Hiện nút "See All"
   });
 </script>

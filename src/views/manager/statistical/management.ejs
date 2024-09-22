@@ -226,7 +226,7 @@
             </div>
             <div class="tab-content">
                 <!-- Biểu đồ được vẽ tại đây -->
-                <canvas id="roomBookingChart" width="400" height="400"></canvas>
+                <canvas id="roomBookingChart" width="200" height="200"></canvas>
             </div>
         </div>
     </div>
@@ -266,6 +266,7 @@
         },
         options: {
             responsive: true,
+            aspectRatio: 3.0,
             plugins: {
                 legend: {
                     position: 'top',
