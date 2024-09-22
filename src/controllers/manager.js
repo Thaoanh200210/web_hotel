@@ -833,7 +833,7 @@ class ManagerController{
         let details = await getAllBookingDetails(req.hotel);
 
         let getStatus = (booking) => {
-            if(booking.deleteAt){
+            if(booking.deleteAt || booking.status == "Đã hủy"){
                 return 'Đã bị hủy';
             }else if(booking.status == BookingStatusEnum.CheckedOut){
                 return 'Đã trả phòng';
