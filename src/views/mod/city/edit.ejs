@@ -1,0 +1,33 @@
+<div class="card">
+    <div class="card-header d-flex">
+        <div class="card-title flex-grow-1 d-flex justify-content-between align-items-center">
+            <h5 class="modal-title d-flex align-items-center">
+                <i class="bi bi-person-lines-fill fs-3 me-2"></i> Sửa Thông Tin Thành Phố
+            </h5>
+        </div>
+    </div>
+    <div class="card-body">
+        <form id="editCityForm" action="/administrator/city/edit-handler/<%= city._id %>" method="POST" enctype="multipart/form-data" class="d-flex flex-column">
+            <div class="">
+                <div class="mb-3">
+                    <label for="tenthanhpho" class="form-label">Tên thành phố</label>
+                    <input class="form-control shadow-none" name="cityName" id="tenthanhpho" type="text" value="<%=city.name%>" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Ảnh hiện tại</label>
+                    <img style="width: 200px; height: 200px; object-fit: cover;" src="<%=city.image%>" alt="Current image">
+                </div>
+                <div class="mb-3">
+                    <label for="hinhanh" class="form-label">Hình ảnh</label>
+                    <input class="form-control shadow-none" id="hinhanh" name="file" type="file" accept="image/*">
+                </div>
+            </div>
+            <div class="text-center my-1">
+                <div class="d-flex justify-content-center gap-4">
+                    <a class="btn btn-warning shadow-none" href="/administrator/city">Trở về</a>
+                    <button class="btn btn-dark shadow-none" type="submit">Sửa thành phố</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

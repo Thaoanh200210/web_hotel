@@ -1,8 +1,8 @@
 const {RoleRepository} = require('../repositories/index');
 
-async function getAllRoles(filter) {
+async function getAllRoles() {
     const roleRepo = new RoleRepository();
-    return await roleRepo.select(filter);
+    return await roleRepo.selectAll();
 }
 
 

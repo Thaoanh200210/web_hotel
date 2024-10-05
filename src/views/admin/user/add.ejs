@@ -22,10 +22,19 @@
                     <input  class="form-control shadow-none" name="email" type="email" required>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Password</label>
+                    <label class="form-label">Mật khẩu</label>
                     <input  class="form-control shadow-none" name="matkhau" type="password" required>
                 </div>
-                
+                <div class="mb-3">
+                    <label class="form-label">Quyền</label>
+                    <select class="form-select shadow-none" name="role" type="text" required>
+                        <% for (role of roles) {%>
+                            <option value="<%= role.name %>">
+                                <%= role.name %>
+                            </option>
+                            <% } %>
+                    </select>
+                </div>
             </div>
             <div class="text-center my-1">
                 <div class="d-flex justify-content-center gap-4">

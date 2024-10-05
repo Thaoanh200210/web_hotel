@@ -90,7 +90,8 @@ class Middleware {
                 }else if(user.role.name == RoleEnum.Admin){
                     return res.redirect("/administrator/hotel");
                 }else if(user.role.name == RoleEnum.Mod){
-                    return res.redirect("/mod");
+                    console.log("Hello");
+                    return res.redirect("/mod/city");
                 }
                 
             }else{

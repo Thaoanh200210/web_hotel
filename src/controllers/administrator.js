@@ -18,6 +18,7 @@ const getHotelById = require("../services/get_hotel_by_id")
 const getTypeRoomById = require("../services/get_type_room_by_id")
 const getServiceById = require("../services/get_service_by_id")
 const getSelectionById = require("../services/get_selection_by_id")
+const getAllRole = require("../services/get_all_role")
 const getUserById  = require("../services/get_user_by_id")
 const getCityById  = require("../services/get_city_by_id")
 const createHotel = require("../services/create_hotel")
@@ -35,6 +36,7 @@ const updateUser = require("../services/update_user");
 const updateHotel = require("../services/update_hotel");
 const deleteCity = require("../services/delete_city")
 const deleteHotel = require("../services/delete_hotel")
+const deleteUser = require("../services/delete_user")
 const deleteSelection = require("../services/delete_selection")
 const deleteService = require("../services/delete_service")
 const deleteTypeRoom = require("../services/delete_type_room")
@@ -548,7 +550,12 @@ class AdminController{
 
     //quản lý nhân viên
     async user(req,res){
-        let users = await getAllUsers(RoleEnum.Admin);
+        let admins = await getAllUsers(RoleEnum.Admin);
+        let mods = await getAllUsers(RoleEnum.Mod);
+        let users = [
+            ...admins,
+            ...mods
+        ]
         res.render("index-manager",{
             page: "admin/index",
             roomPage: "user/management",
@@ -559,9 +566,11 @@ class AdminController{
     }
 
     async addUser(req, res) {
+        const roles = await getAllRole()
         res.render("index-manager",{
             page: "admin/index",
             roomPage: "user/add",
+            roles: roles,
             ...defaultAdminNav(),
             ...defaultData(req)
         })
@@ -572,9 +581,10 @@ class AdminController{
             name: req.body.tennhanvien,
             phone: req.body.sodienthoai,
             email: req.body.email,
-            password: req.body.matkhau
+            password: req.body.matkhau,
         }
-        await createUser(user, RoleEnum.Admin);
+        console.log("Role", req.body.role);
+        await createUser(user, req.body.role);
         let cookies = new CookieProvider(req, res);
         cookies.setCookie(
             constants.has_message,
@@ -585,11 +595,13 @@ class AdminController{
     }
 
     async editUser(req, res) {
+        const roles = await getAllRole()
         let currentUser = await getUserById(req.params.id);
         res.render("index-manager",{
             page: "admin/index",
             roomPage: "user/edit",
             currentUser: currentUser,
+            roles: roles,
             ...defaultAdminNav(),
             ...defaultData(req)
         })
@@ -600,6 +612,7 @@ class AdminController{
         originUser.name = req.body.tennhanvien;
         originUser.phone = req.body.sodienthoai;
         originUser.email= req.body.email;
+        originUser.role= req.body.role;
         await updateUser(originUser);
         let cookies = new CookieProvider(req, res);
         cookies.setCookie(
