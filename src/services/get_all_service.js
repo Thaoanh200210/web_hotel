@@ -1,8 +1,8 @@
 const {ServiceRepository} = require('../repositories/index');
 
-async function getAllServices() {
+async function getAllServices(filter) {
     const serviceRepo = new ServiceRepository();
-    return await serviceRepo.selectAll();
+    return await serviceRepo.select(filter);
 }
 
 

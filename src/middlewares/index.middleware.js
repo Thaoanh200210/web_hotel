@@ -89,6 +89,8 @@ class Middleware {
                     return res.redirect("/manager/"+ employee.hotel._id.toString() + "/room");
                 }else if(user.role.name == RoleEnum.Admin){
                     return res.redirect("/administrator/hotel");
+                }else if(user.role.name == RoleEnum.Mod){
+                    return res.redirect("/mod");
                 }
                 
             }else{

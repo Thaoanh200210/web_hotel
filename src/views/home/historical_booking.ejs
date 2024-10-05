@@ -6,10 +6,11 @@
   }
 </style>
 <div class="container" style="width: 1400px">
-  <h2 class="">Lịch sử đặt phòng của bạn</h2>
+  <h3 style="font-family: initial; color: red; font-weight: bold;" ><div>Lưu ý: Sau 3 ngày đặt trên web, bạn sẽ không thể hủy phòng. Nếu muốn hủy xin bạn hãy xem thông tin khách sạn bạn đã đặt, liên hệ qua số điện thoại hoặc gmail của khách sạn để hủy. </div></h3>
   <table class="table table-striped border border-dark text-center">
     <tbody>
       <tr>
+        <td class="cot1">Mã đặt phòng</td>
         <td class="cot1">Khách sạn</td>
         <td class="cot1">Ngày đặt phòng</td>
         <td class="cot1">Ngày nhận phòng</td>
@@ -28,6 +29,7 @@
           const cancelable = (today - bookingDate) <= 3 * 24 * 60 * 60 * 1000 && booking.status != "Đã hủy"; // kiểm tra nếu ngày đặt phòng không quá 3 ngày trước hôm nay
       %>
       <tr>
+        <td><%=booking._id%></td>
         <td><%=booking.details[0].room.hotel.name%></td>
         <td><%=bookingDate.toLocaleString()%></td>
         <td><div><%=booking.check_in.toLocaleString()%></div></td>

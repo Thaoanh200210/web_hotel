@@ -1,0 +1,46 @@
+<style>
+    .two-line-ellipsis {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px;
+      }
+</style>
+<div class="card">
+    <div class="card-header d-flex">
+      <div class="card-title flex-grow-1 d-flex justify-content-between align-items-center">
+          <h3>Quản lý các dịch vụ của khách sạn</h3>
+          <a href="/manager/<%=hotel._id%>/service_hotel/add" class="btn btn-dark">Thêm</a>
+      </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+      <table id="datatable" class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>Tên dịch vụ</th>
+            <th>Giá dịch vụ</th>
+            <th>Miêu tả </th>
+            <th>Quản lý </th>
+          </tr>
+        </thead>
+        <tbody>
+          <% var i=1; %>
+          <% for(let service_hotel of service_hotels){ %>
+          <tr>
+            <td><%= i++ %></td>
+            <td><%= service_hotel.name %></td>
+            <td><%= parseInt(service_hotel.price  ).toLocaleString('it-IT', {style : 'currency', currency : 'VND'}) %></td>  
+            <td><%= service_hotel.description %></td>
+            <td>
+                <a href="/manager/<%=hotel._id%>/service_hotel/edit/<%=service_hotel._id %>"  class="btn btn-primary">Sửa</a >
+                <button  onclick="deleteConfirmButtonClk('/manager/<%=hotel._id%>/service_hotel/delete/<%=service_hotel._id %>','Bạn có muốn xóa thông tin dịch vụ này không?')" class="btn btn-danger">Xóa</button>
+              </td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+    <!-- /.card-body -->
+  </div>

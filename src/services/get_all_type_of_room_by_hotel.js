@@ -38,7 +38,9 @@ async function getAllTypeRoomByHotel(hotel, startDate= "", endDate= "") {
                 return true;
              });
              let roomBooked = detailBookings.map((detail)=>{
-                 return detail.room._id.toString();
+                if (detail.status === "Đang đặt") {
+                    return detail.room._id.toString();
+                }
              });
      
              //lấy danh sách rooms kh có những phòng đã được đặt.

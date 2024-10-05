@@ -4,39 +4,7 @@
 		<div id="fh5co-page">
 		<div class="wrap">
 			<div class="container">
-				<div class="row">
-					<div id="availability">
-						<form action="#">
-							<div class="a-col">
-								<section>
-									<select class="form-select" name="hotelId" style="font-size: 15px; margin-top:5px">
-										<option value="" disabled selected>Select Hotel</option>
-										<% for(let hotel of hotels){ %>
-											<option value="<%= hotel._id %>"><%= hotel.name %></option>
-										<% } %>
-									</select>
-								</section>
-							</div>
-							<div class="a-col alternate">
-								<div class="input-field">
-									<label for="date-start">Check In</label>
-									<input type="date"  name="startDate" class="form-control" id="date-start" style="font-size: 15px; width: 200px " />
-								</div>
-							</div>
-							<div class="a-col alternate">
-								<div class="input-field">
-									<label for="date-end">Check Out</label>
-									<input type="date" name="endDate" class="form-control" id="date-end" style="font-size: 15px; width: 200px " />
-								</div>
-							</div>
-							<div class="a-col action">
-								<a href="#">
-									<span>Check</span>
-									Availability
-								</a>
-							</div>
-						</form>
-					</div>
+				<div >
 					<form action="/hotels/all" method="GET" class="form-inline text-center">
 						<div class="form-group" style="display: flex; align-items: center; height: 100%; margin-top: 40px;">
 							<input style="padding: 28px; line-height: 30px; flex: 1; margin-right: 12px;" type="text" name="name" class="form-control" placeholder="Tìm khách sạn theo tên" value="<%= typeof name !== 'undefined' ? name : '' %>">
@@ -44,6 +12,40 @@
 						</div>
 					</form>
 				</div>
+
+				<div id="availability">
+					<form action="#">
+						<div class="a-col">
+							<section>
+								<select class="form-select" name="hotelId" style="font-size: 15px; margin-top:5px">
+									<option value="" disabled selected>Select Hotel</option>
+									<% for(let hotel of hotels){ %>
+										<option value="<%= hotel._id %>"><%= hotel.name %></option>
+									<% } %>
+								</select>
+							</section>
+						</div>
+						<div class="a-col alternate">
+							<div class="input-field">
+								<label for="date-start">Check In</label>
+								<input type="date"  name="startDate" class="form-control" id="date-start" style="font-size: 15px; width: 200px " />
+							</div>
+						</div>
+						<div class="a-col alternate">
+							<div class="input-field">
+								<label for="date-end">Check Out</label>
+								<input type="date" name="endDate" class="form-control" id="date-end" style="font-size: 15px; width: 200px " />
+							</div>
+						</div>
+						<div class="a-col action">
+							<a href="#">
+								<span>Check</span>
+								Availability
+							</a>
+						</div>
+					</form>
+				</div>
+				
 			</div>
 		</div>
 		
@@ -86,10 +88,10 @@
 							<a href="/hotels/<%= city._id %>" style="display: block; margin-bottom: 28px;">
 								<div class="f-city" style="width: 100%; height: 100%;">
 									<div class="image" style="background-image: url('<%= city.image %>'); height: 120px; background-size: cover; background-position: center;">
-										<div class="descrip text-center">
-											<h3><%= city.name %></h3>
-										</div>
 									</div>
+								</div>
+								<div class="descrip text-center">
+									<h3><%= city.name %></h3>
 								</div>
 							</a>
 						</div>
@@ -124,7 +126,7 @@
 						<div class="desc">
 							<h3><%=hotels[0].name%></h3>
 							<p><%=hotels[0].description%></p>
-							<p><a href="/hotel/<%=hotels[0]._id%>/room" class="btn btn-primary btn-luxe-primary">Đặt ngay <i class="ti-angle-right"></i></a></p>
+							<p><a href="/hotel/<%=hotels[0]._id%>/room" class="btn btn-primary btn-luxe-primary">Xem chi tiết <i class="ti-angle-right"></i></a></p>
 						</div>
 					</div>
 	
@@ -138,7 +140,7 @@
 							<div class="desc">
 								<h3><%=hotels[1].name%></h3>
 								<p><%=hotels[1].description%></p>
-								<p><a href="/hotel/<%=hotels[1]._id%>/room" class="btn btn-primary btn-luxe-primary">Đặt ngay <i class="ti-angle-right"></i></a></p>
+								<p><a href="/hotel/<%=hotels[1]._id%>/room" class="btn btn-primary btn-luxe-primary">Xem chi tiết <i class="ti-angle-right"></i></a></p>
 						</div>
 						</div>
 						<div class="f-hotel">
@@ -150,7 +152,7 @@
 							<div class="desc">
 								<h3><%=hotels[2].name%></h3>
 								<p><%=hotels[2].description%></p>
-								<p><a href="/hotel/<%=hotels[2]._id%>/room" class="btn btn-primary btn-luxe-primary">Đặt ngay <i class="ti-angle-right"></i></a></p>
+								<p><a href="/hotel/<%=hotels[2]._id%>/room" class="btn btn-primary btn-luxe-primary">Xem chi tiết <i class="ti-angle-right"></i></a></p>
 						</div>
 						</div>
 					</div>

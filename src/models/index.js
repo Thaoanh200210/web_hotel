@@ -12,6 +12,7 @@ const { SelectionRoom } = require("./selection_of_room");
 const { Selection } = require("./selection");
 const { ServiceRoom } = require("./service_of_room");
 const { Service } = require("./service");
+const { ServiceHotel } = require("./service_hotel");
 const { TypeRoom } = require("./type_of_room");
 const { User } = require("./user");
 const {Employee} = require("./employee");
@@ -28,6 +29,7 @@ module.exports = {
     RoomFix,
     City,
     Review,
+    ServiceHotel,
     Role,
     Discount,
     Room,

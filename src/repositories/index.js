@@ -7,7 +7,7 @@ const { PaymentRepository } = require("./payment");
 const { ReviewRepository } = require("./review");
 const { RoleRepository } = require("./role");
 const { RoomRepository } = require("./room");
-const { RoomFixRepository } = require("./roomfix");
+const { ServiceHotelRepository } = require("./service_hotel");
 const { SelectionRoomRepository } = require("./selection_of_room");
 const { SelectionRepository } = require("./selection");
 const { ServiceRoomRepository } = require("./service_of_room");
@@ -34,6 +34,7 @@ module.exports = {
     SelectionRepository,
     ServiceRoomRepository,
     ServiceRepository,
+    ServiceHotelRepository,
     TypeRoomRepository,
     UserRepository
 };

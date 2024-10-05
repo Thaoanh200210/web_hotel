@@ -32,13 +32,40 @@ router.route("/room/detail/:id").get(manager.roomDetail);
 router.route("/room").get(manager.room);
 
 
-// //roomfix
-// router.route("/roomfix/add").get(manager.addRoomFix);
-// router.route("/roomfix/add-handler").post(manager.addRoomFixHandler);
-// router.route("/roomfix/edit-handler/:id").post(manager.editRoomFixHandler);
-// router.route("/roomfix/edit/:id").get(manager.editRoomFix);
-// router.route("/roomfix/delete/:id").get(manager.deleteRoomFixHandler);
-// router.route("/roomfix").get(manager.roomFix);
+//quản lý lựa chọn
+router.route("/selection/add-handler").post(manager.addSelectionHandler);
+router.route("/selection/add").get(manager.addSelection);
+router.route("/selection/edit-handler/:id").post(manager.editSelectionHandler);
+router.route("/selection/edit/:id").get(manager.editSelection);
+router.route("/selection/delete/:id").get(manager.deleteSelectionHandler);
+router.route("/selection").get(manager.selection);
+
+//quản lý loại phòng
+router.route("/type_room/add-handler").post(manager.addTypeRoomHandler);
+router.route("/type_room/add").get(manager.addTypeRoom);
+router.route("/type_room/edit-handler/:id").post(manager.editTypeRoomHandler);
+router.route("/type_room/edit/:id").get(manager.editTypeRoom);
+router.route("/type_room/delete/:id").get(manager.deleteTypeRoomHandler);
+router.route("/type_room").get(manager.TypeRoom);
+
+// quan ly co so vat chat
+router.route("/service/add-handler").post(manager.addServiceHandler);
+router.route("/service/add").get(manager.addService);
+router.route("/service/edit-handler/:id").post(manager.editServiceHandler);
+router.route("/service/edit/:id").get(manager.editService);
+router.route("/service/delete/:id").get(manager.deleteServiceHandler);
+router.route("/service").get(manager.service);
+
+
+
+//quan ly dich vu (vd: xe, nuoc, do an)
+router.route("/service_hotel/add-handler").post(manager.addServiceHotelHandler);
+router.route("/service_hotel/add").get(manager.addServiceHotel);
+router.route("/service_hotel/edit-handler/:id").post(manager.editServiceHotelHandler);
+router.route("/service_hotel/edit/:id").get(manager.editServiceHotel);
+router.route("/service_hotel/delete/:id").get(manager.deleteServiceHotelHandler);
+router.route("/service_hotel").get(manager.ServiceHotel);
+
 
 // quản lý sự kiện khuyến mãi
 router.route("/event/add").get(manager.addEvent);

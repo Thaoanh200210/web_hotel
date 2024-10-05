@@ -14,6 +14,7 @@ const getTypeRoomByIdAndHotel  = require("../services/get_type_of_room_by_id_and
 const getImageOfHotel = require("../services/get_image_of_hotel")
 const getDiscountByDay = require("../services/get_discount_by_day")
 const getAllTypeRoomByHotel = require("../services/get_all_type_of_room_by_hotel")
+const getAllServiceHotel  = require("../services/get_all_service_hotel")
 const updateUser = require("../services/update_user");
 const getAllReviews = require("../services/get_all_review")
 const getBookingById = require("../services/get_booking_by_id")
@@ -29,6 +30,8 @@ const getRoomByName = require("../services/get_room_by_name");
 const getAllRooms = require("../services/get_all_rooms")
 const getServiceByID = require("../services/get_service_by_id")
 const getSelectionByID = require("../services/get_selection_by_id")
+const getAllSelections = require("../services/get_all_selection")
+const getHotelById = require("../services/get_hotels_by_city")
 
 //controller nơi nhận dữ liệu từ request(req) => vào Service xử lý dữ liệu 
 //=> gọi repository để truy cập vào database  thông qua models
@@ -105,6 +108,7 @@ class StoreRunController{
         } else {
             hotels = await getHotelByCity(cityID);
             cityName = await getCityByID(cityID);
+            console.log("Hotels", hotels, "City name", cityName);
         }
         let name = req.query.name;  
         if (name) {
@@ -206,8 +210,11 @@ class StoreRunController{
 
         let images = await getImageOfHotel(req.hotel);
         let typeRooms = await getAllTypeRoomByHotel(req.hotel, ngaydau, ngayket);
+        console.log("Type rôooms", typeRooms);
         let reviews = await getAllReviews(req.hotel);
         let events = await getCurrentEvent(req.hotel);
+        let hotel = await getHotelById(req.params.id);
+        let service_hotels = await getAllServiceHotel(req.hotel)
 
         let employeeScore = 0; 
         let sactificationScore = 0; 
@@ -273,6 +280,8 @@ class StoreRunController{
             cleanlinessScore:cleanlinessScore,
             moneyScore: moneyScore,
             discount:discount,
+            hotel:hotel,
+            service_hotels:service_hotels,
             ngaydau:ngaydau,
             ngayket:ngayket,
             getPriceOfTypeOfRoom: getPriceOfTypeOfRoom,

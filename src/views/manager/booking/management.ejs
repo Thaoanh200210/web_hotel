@@ -33,13 +33,15 @@
               <td><%= booking.check_out.toLocaleString()  %></td>
               <td><%=  parseInt(booking.total_price).toLocaleString('it-IT', {style : 'currency', currency : 'VND'}) %></td>
               <td><%= booking.customer_identify_number %></td>
-              <td><%= getStatus(booking)  %></td></td>
-              <td>
+              <td><%= getStatus(booking)  %></td>
+              <td><a class="btn btn-success" href="/manager/<%=hotel._id%>/booking/status_booking/<%=booking._id%>">
+                Chi tiết </a></td>
+              <!-- <td>
                 <% if(getStatus(booking) == "Đã đặt phòng" || getStatus(booking) == "Đã nhận phòng") {%>
                 <a class="btn btn-success" href="/manager/<%=hotel._id%>/booking/status_booking/<%=booking._id%>">
                   Sửa trạng thái</a> 
                 <%}%>
-              </td>
+              </td> -->
             </tr>
             <% } %>
           </tbody>

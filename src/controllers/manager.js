@@ -8,7 +8,6 @@ const {CookieProvider} = require("../helper/cookies")
 const uploadImageFromLocal = require("../services/upload_image_from_local")
 const updateHotel = require("../services/update_hotel");
 const getAllRooms  = require("../services/get_all_rooms")
-const getAllRoomFixs  = require("../services/get_all_roomfix")
 const getAllBookings  = require("../services/get_all_booking")
 const getAllBookingDetails  = require("../services/get_all_detai_booking")
 const getAllUsersByHotel  = require("../services/get_all_user_by_hotel")
@@ -19,10 +18,14 @@ const getAllReviews = require("../services/get_all_review")
 const getAllTypeRooms  = require("../services/get_all_type_of_rooms")
 const getAllSelection  = require("../services/get_all_selection")
 const getAllService  = require("../services/get_all_service")
+const getAllServiceHotel  = require("../services/get_all_service_hotel")
+const getAllTypeRoom = require("../services/get_all_type_of_rooms")
 const getTypeRoomById  = require("../services/get_type_room_by_id")
 const getServiceById  = require("../services/get_service_by_id")
+const getServiceHotelById  = require("../services/get_service_hotel_by_id")
 const getRoomById  = require("../services/get_room_by_id")
 const getDiscountById  = require("../services/get_discount_by_id")
+const getDetailBookingById = require("../services/get_detail_booking_by_id")
 const getBookingById  = require("../services/get_booking_by_id")
 const getReviewById  = require("../services/get_review_by_id")
 const getEventById  = require("../services/get_event_by_id")
@@ -30,24 +33,38 @@ const getUserById  = require("../services/get_user_by_id")
 const getSelectionById  = require("../services/get_selection_by_id")
 const getImageByFilter  = require("../services/get_image_by_filter")
 const getAllDiscounts = require("../services/get_all_discount")
+const getCityByID = require("../services/get_city_by_id")
 const createRoom  = require("../services/create_room")
 const createUser  = require("../services/create_user")
 const createEvent = require("../services/create_event")
 const createDiscount = require("../services/create_discount")
 const createEmployee = require("../services/create_employee");
 const createImage  = require("../services/create_image")
+const createTypeRoom = require("../services/create_type_room")
+const createService = require("../services/create_service")
+const createServiceHotel = require("../services/create_service_hotel")
+const createSelection = require("../services/create_selection")
 const createServiceRoom  = require("../services/create_service_room")
 const createSelectionRoom  = require("../services/create_selection_room")
 const updateRoom = require("../services/update_room");
 const updateUser = require("../services/update_user");
 const updateEvent = require("../services/update_event");
 const updateDiscount = require("../services/update_discount");
+const updateSelection = require("../services/update_selection")
+const updateService = require("../services/update_service")
+const updateServiceHotel = require("../services/update_service_hotel")
+const updateTypeRoom = require("../services/update_type_room")
 const updateBooking = require("../services/update_booking");
+const updateBookingDetail = require("../services/update_detail_booking")
 const deleteServiceRoomByFilter = require("../services/delete_service_room_by_filter");
 const deleteSelectionRoomByFilter = require("../services/delete_selection_room_by_filter");
 const deleteImageByFilter = require("../services/delete_image_by_filter");
 const deleteRoom = require("../services/delete_room");
 const deleteEvent = require("../services/delete_event");
+const deleteSelection = require("../services/delete_selection")
+const deleteService = require("../services/delete_service")
+const deleteServiceHotel = require("../services/delete_service_hotel")
+const deleteTypeRoom = require("../services/delete_type_room")
 const deleteDiscount = require("../services/delete_discount");
 const deleteUser = require("../services/delete_user");
 const deleteBooking = require("../services/delete_booking");
@@ -90,10 +107,12 @@ class ManagerController{
     //quản lý khách sạn
     async hotel(req, res) {
         let hotel = await getHotelById(req.hotel._id)
+        let cityDetail = await getCityByID(hotel.city)
         res.render("index-manager",{
             page: "manager/index",
             roomPage: "hotel/management",
             hotel: hotel,
+            city: cityDetail.name,
             ...defaultManagerNav(),
             ...defaultData(req)
         })
@@ -120,6 +139,7 @@ class ManagerController{
         originHotel.description = req.body.mieuta;
         originHotel.star = req.body.sosao;
         originHotel.city = req.body.city;
+        console.log("City", req.body.city);
         if (file) {
             const imageData = await uploadImageFromLocal(file.path, 'hotel', file.filename);
             originHotel.image = imageData.img_url;
@@ -377,94 +397,6 @@ class ManagerController{
         res.redirect("/manager/" +req.hotel._id+ "/room/");
     }
 
-
-    // quan ly roomfix
-    async roomfix(req, res) {
-        let roomfixs = await getAllRoomFixs();
-        res.render("index-manager",{
-            page: "manager/index",
-            roomPage: "roomfix/management",
-            roomfixs: roomfixs,
-            ...defaultManagerNav(),
-            ...defaultData(req)
-        })
-    }
-
-    async addRoomFix(req, res) {
-        res.render("index-manager",{
-            page: "manager/index",
-            roomPage: "roomfix/add",
-            ...defaultManagerNav(),
-            ...defaultData(req)
-        })
-    }
-
-    async addRoomFixHandler(req, res) {
-        let roomfix = {
-            hotel: req.hotel,
-            name: req.body.tensukien,
-            discount_percent: req.body.phantram,
-            date_start: req.body.ngaydau,
-            date_end: req.body.ngayket,
-        }
-        await createRoomFix(roomfix);
-        let cookies = new CookieProvider(req, res);
-        cookies.setCookie(
-            constants.has_message,
-            JSON.stringify(message("Bạn đã thêm sự kiện mới thành công!",constantMesages.successCustom)),
-            1
-        );
-        res.redirect("/manager/" +req.hotel._id+ "/roomfix/");
-    }
-
-    async editRoomFix(req,res){
-        let roomfix = await getRoomFixById(req.params.id);
-        res.render("index-manager",{
-            page: "manager/index",
-            roomPage: "roomfix/edit",
-            roomfix: roomfix,
-            ...defaultManagerNav(),
-            ...defaultData(req)
-        })
-    }
-
-    async editRoomFixHandler(req, res) {
-        let originRoomFix = await getRoomFixById(req.params.id);
-
-        originRoomFix.hotel = req.hotel;
-        originRoomFix.name = req.body.tensukien;
-        originRoomFix.discount_percent = req.body.phantram;
-        originRoomFix.date_start= req.body.ngaydau;
-        originRoomFix.date_end= req.body.ngayket;
-        
-        await updateRoomFix(originRoomFix);
-
-        let cookies = new CookieProvider(req, res);
-        cookies.setCookie(
-            constants.has_message,
-            JSON.stringify(message("Bạn đã sửa thông tin sự kiện thành công!",constantMesages.successCustom)),
-            1
-        );
-        res.redirect("/manager/" +req.hotel._id+ "/roomfix/");
-        
-    }
-
-    async deleteRoomFixHandler(req, res){
-        try {
-            let originRoomFix = await getRoomFixById(req.params.id);
-            await deleteRoomFix(originRoomFix._id.toString())
-        } catch(e){
-            console.log(e);
-        }
-        
-        let cookies = new CookieProvider(req, res);
-        cookies.setCookie(
-            constants.has_message,
-            JSON.stringify(message("Bạn đã xóa thông tin roomfix thành công!",constantMesages.successCustom)),
-            1
-        );
-        res.redirect("/manager/" +req.hotel._id+ "/roomfix/");
-    }
 
     //quản lý sự kiện
     async event(req, res) {
@@ -827,6 +759,7 @@ class ManagerController{
     }
 
 
+
     //quản lý đặt phòng
     async booking(req, res) {
         let bookings = await getAllBookings(req.hotel);
@@ -877,9 +810,13 @@ class ManagerController{
 
     async editStatusBookingHandler(req,res) {
         let booking = await getBookingById(req.params.id,false);
+        let detailBooking = await getDetailBookingById(booking._id)
+        console.log("Detail booking: ", detailBooking);
         if(req.body.status != "cancel"){
             booking.status = req.body.status;
+            detailBooking.status = req.body.status;
             await updateBooking(booking);
+            await updateBookingDetail(detailBooking)
         }else{
             await deleteBooking(booking);
         }
@@ -892,6 +829,338 @@ class ManagerController{
         );
         res.redirect("/manager/" +req.hotel._id+ "/booking");
     }
+
+
+    
+    //quản lý co so vat chat
+    async service(req,res){
+        let services = await getAllService({
+            hotel: req.hotel,
+        });
+        console.log("Service: ", services);
+        res.render("index-manager",{
+            page: "manager/index",
+            roomPage: "cosovatchat/management",
+            services: services,
+            ...defaultManagerNav(),
+            ...defaultData(req)
+        })
+    }
+
+    async addService(req, res) {
+        res.render("index-manager",{
+            page: "manager/index",
+            roomPage: "cosovatchat/add",
+            ...defaultManagerNav(),
+            ...defaultData(req)
+        })
+    }
+
+    async addServiceHandler(req,res){
+        let service = {
+            hotel: req.hotel,
+            name : req.body.tendichvu,
+            icon: req.body.icon,
+        }
+        await createService(service);
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã thêm cơ sở vật chất mới thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/manager/" +req.hotel._id+ "/service");
+    }
+
+    async editService(req, res) {
+        let service = await getServiceById(req.params.id);
+        res.render("index-manager",{
+            page: "manager/index",
+            roomPage: "cosovatchat/edit",
+            service: service,
+            ...defaultManagerNav(),
+            ...defaultData(req)
+        })
+    }
+    async editServiceHandler(req,res){
+        let originService = await getServiceById(req.params.id);
+        originService.hotel = req.hotel;
+        originService.name = req.body.tendichvu;
+        originService.icon = req.body.icon;
+        await updateService(originService);
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã sửa thông tin cơ sở vật chất thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/manager/" +req.hotel._id+ "/service");
+    }
+
+    async deleteServiceHandler(req, res) {
+        try {
+            let originService = await getServiceById(req.params.id);
+            await deleteService(originService._id.toString())
+        } catch(e){
+            console.log(e);
+        }
+        
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã xóa thông tin cơ sở vật chất thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/manager/" +req.hotel._id+ "/service");
+    }
+
+    //quản lý lựa chọn
+    async selection(req,res){
+        let selections = await getAllSelection({
+            hotel: req.hotel,
+        });
+        res.render("index-manager",{
+            page: "manager/index",
+            roomPage: "selection/management",
+            selections: selections,
+            ...defaultManagerNav(),
+            ...defaultData(req)
+        })
+    }
+
+    async addSelection(req, res) {
+        res.render("index-manager",{
+            page: "manager/index",
+            roomPage: "selection/add",
+            ...defaultManagerNav(),
+            ...defaultData(req)
+        })
+    }
+
+    async addSelectionHandler(req,res){
+        let selection = {
+            hotel: req.hotel,
+            name : req.body.tendichvu,
+            icon: req.body.icon,
+        }
+        await createSelection(selection);
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã thêm lựa chọn mới thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/manager/" +req.hotel._id+ "/selection");
+    }
+
+    async editSelection(req, res) {
+        let selection = await getSelectionById(req.params.id);
+        res.render("index-manager",{
+            page: "manager/index",
+            roomPage: "selection/edit",
+            selection: selection,
+            ...defaultManagerNav(),
+            ...defaultData(req)
+        })
+    }
+    async editSelectionHandler(req,res){
+        let originSelection = await getSelectionById(req.params.id);
+        originSelection.hotel = req.hotel;
+        originSelection.name = req.body.tendichvu;
+        originSelection.icon = req.body.icon;
+        await updateSelection(originSelection);
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã sửa thông tin lựa chọn thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/manager/" +req.hotel._id+ "/selection");
+    }
+
+    async deleteSelectionHandler(req, res) {
+        try {
+            let originSelection = await getSelectionById(req.params.id);
+            await deleteSelection(originSelection._id.toString())
+        } catch(e){
+            console.log(e);
+        }
+        
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã xóa thông tin lựa chọn thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/manager/" +req.hotel._id+ "/selection");
+    }
+
+    //quản lý loại phòng
+    async TypeRoom(req,res){
+        let type_rooms = await getAllTypeRoom(req.hotel);
+        res.render("index-manager",{
+            page: "manager/index",
+            roomPage: "type_room/management",
+            type_rooms: type_rooms,
+            ...defaultManagerNav(),
+            ...defaultData(req)
+        })
+    }
+
+    async addTypeRoom(req, res) {
+        res.render("index-manager",{
+            page: "manager/index",
+            roomPage: "type_room/add",
+            ...defaultManagerNav(),
+            ...defaultData(req)
+        })
+    }
+
+    async addTypeRoomHandler(req,res){
+        let typeRoom = {
+            hotel: req.hotel,
+            name : req.body.loaiphong,
+            number_guest: req.body.soluongkhach,
+        }
+        await createTypeRoom(typeRoom);
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã thêm loại phòng mới thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/manager/" +req.hotel._id+ "/type_room");
+    }
+
+    async editTypeRoom(req, res) {
+        let type_room = await getTypeRoomById(req.params.id);
+        res.render("index-manager",{
+            page: "manager/index",
+            roomPage: "type_room/edit",
+            type_room: type_room,
+            ...defaultManagerNav(),
+            ...defaultData(req)
+        })
+    }
+    async editTypeRoomHandler(req,res){
+        let originTypeRoom = await getTypeRoomById(req.params.id);
+        originTypeRoom.hotel = req.hotel;
+        originTypeRoom.name = req.body.loaiphong;
+        originTypeRoom.number_guest = req.body.soluongkhach;
+        await updateTypeRoom(originTypeRoom);
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã sửa thông tin loại phòng thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/manager/" +req.hotel._id+ "/type_room");
+    }
+
+    async deleteTypeRoomHandler(req, res) {
+        try {
+            let originTypeRoom = await getTypeRoomById(req.params.id);
+            await deleteTypeRoom(originTypeRoom._id.toString())
+        } catch(e){
+            console.log(e);
+        }
+        
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã xóa thông tin loại phòng thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/manager/" +req.hotel._id+ "/type_room");
+    }
+
+
+    // quan ly dich vu
+    async ServiceHotel(req,res){
+        let service_hotels = await getAllServiceHotel({
+            hotel: req.hotel,
+        });
+        res.render("index-manager",{
+            page: "manager/index",
+            roomPage: "service_hotel/management",
+            service_hotels: service_hotels,
+            ...defaultManagerNav(),
+            ...defaultData(req)
+        })
+    }
+
+    async addServiceHotel(req, res) {
+        res.render("index-manager",{
+            page: "manager/index",
+            roomPage: "service_hotel/add",
+            ...defaultManagerNav(),
+            ...defaultData(req)
+        })
+    }
+
+    async addServiceHotelHandler(req,res){
+        let service_hotel = {
+            hotel: req.hotel,
+            name : req.body.tendichvu,
+            description: req.body.description,
+            price: req.body.gia,
+        }
+        await createServiceHotel(service_hotel);
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã thêm dịch vụ mới thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/manager/" +req.hotel._id+ "/service_hotel");
+    }
+
+    async editServiceHotel(req, res) {
+        let service_hotel = await getServiceHotelById(req.params.id);
+        res.render("index-manager",{
+            page: "manager/index",
+            roomPage: "service_hotel/edit",
+            service_hotel: service_hotel,
+            ...defaultManagerNav(),
+            ...defaultData(req)
+        })
+    }
+    async editServiceHotelHandler(req,res){
+        let originServiceHotel = await getServiceHotelById(req.params.id);
+        originServiceHotel.hotel = req.hotel;
+        originServiceHotel.name = req.body.tendichvu;
+        originServiceHotel.description = req.body.description;
+        originServiceHotel.price = req.body.gia;
+
+        await updateServiceHotel(originServiceHotel);
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã sửa thông tin dịch vụ thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/manager/" +req.hotel._id+ "/service_hotel");
+    }
+
+    async deleteServiceHotelHandler(req, res) {
+        try {
+            let originServiceHotel = await getServiceHotelById(req.params.id);
+            await deleteServiceHotel(originServiceHotel._id.toString())
+        } catch(e){
+            console.log(e);
+        }
+        
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã xóa thông tin dịch vụ thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/manager/" +req.hotel._id+ "/service_hotel");
+    }
+
+
+
     //Đánh giá
     async review(req, res){
         let reviews = await getAllReviews(req.hotel);

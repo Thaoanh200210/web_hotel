@@ -16,7 +16,7 @@
 
                 <div class="mb-3">
                     <label for="thumb" class="form-label">Ảnh bìa hiện tại</label>
-                    <img src="<%= hotel.image %>" alt="Hình ảnh">
+                    <img style="height: 150px;"  src="<%= hotel.image %>" alt="Hình ảnh">
                   </div>
 
                 <div class="mb-3">
@@ -37,14 +37,15 @@
                 <div class="mb-3">
                     <label class="form-label">Thành phố</label>
                     <select class="form-control shadow-none" name="city" required>
+                        <p><%= hotel.city %></p>
                         <% for(let city of cities) { %>
-                            <option value="<%= city.name %>" <%= city.name === hotel.city ? 'selected' : '' %>><%= city.name %></option>
+                            <option value="<%= city._id.toString() %>" <%= city._id.toString() === hotel.city.toString() ? 'selected' : '' %>><%= city.name %></option>
                         <% } %>
                     </select>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Miêu tả</label>
+                    <label class="form-label">Mô tả và thông tin liên hệ của khách sạn</label>
                     <input class="form-control shadow-none" name="mieuta" type="text" value="<%=hotel.description%>" required>
                 </div>
             </div>

@@ -38,6 +38,30 @@ module.exports = () =>{
                 children: []
             },
             {
+                name: "Cơ sở vật chất",
+                icon: "bi bi-journal-text",
+                url: "/manager/service",
+                children: []
+            },
+            {
+                name: "Quản lý loại phòng",
+                icon: "bi bi-calendar-event",
+                url: "/manager/type_room",
+                children: []
+            },
+            {
+                name: "Hình thức thanh toán",
+                icon: "bi bi-star",
+                url: "/manager/selection",
+                children: []
+            },
+            {
+                name: "Quản lý dịch vụ",
+                icon: "bi bi-calendar-event",
+                url: "/manager/service_hotel",
+                children: []
+            },
+            {
                 name: "Quản lý người dùng",
                 icon: "bi bi-person-circle",
                 url: "#",

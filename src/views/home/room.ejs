@@ -223,7 +223,7 @@
         <tr>
           <td class="w-25">
             <h1 class="pb-2 c-text-secondary"><%=typeRoom.name %></h1>
-            <div class="pb-2">Dịch vụ phòng:</div>
+            <div class="pb-2">Cơ sở vật chất có sẵn tại phòng:</div>
             <div class="d-flex gap-4 flex-wrap pb-2">
               <%for( let service of getServiceOfTypeOfRoom(typeRoom.rooms)) { %>
               <div
@@ -283,6 +283,33 @@
             <div id="current-total-price-<%= typeRoom._id %>">0 VND</div>
           </td>
                     
+        </tr>
+        <% }%>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Dich vu -->
+  <div class="pd-5">
+    <div class="fs-1 pb-3 fw-semibold text-color">Dịch vụ khách sạn</div>
+    <h4>Khi ở tại khách sạn quý khách có thể lựa chọn một số dịch vụ </h4>
+    <table class="table">
+      <thead>
+        <tr>
+          <th style="font-weight: bolder;" class="c-bg-primary">Loại dịch vụ</th>
+          <th style="font-weight: bolder;"  class="c-bg-primary">Giá dịch vụ </th>
+          <th style="font-weight: bolder;"  class="c-bg-primary">Miêu tả</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        <% for(service_hotel of service_hotels) {%>
+        <tr>
+          <td style="font-weight: bolder;" ><%=service_hotel.name %>
+          </td>
+          <td style="font-weight: bolder;" ><%=parseInt(service_hotel.price  ).toLocaleString('it-IT', {style : 'currency', currency : 'VND'}) %></td>
+          <td style="font-weight: bolder;" ><%=service_hotel.description %></td>
+          
         </tr>
         <% }%>
       </tbody>
@@ -440,6 +467,8 @@
     <button id="see-all-btn" class="mt-4 btn btn-primary">Xem tất cả</button>
     <button id="collapse-btn" class="mt-4" style="display: none;">Thu Gọn</button>
   </div>
+
+
 
   <!-- Quy tắc chung -->
   <div class="pb-5">
@@ -642,7 +671,34 @@
       </tbody>
     </table>
   </div>
+
+  <!-- Mo ta khach san -->
+  <div class="pd-5">
+    <div class="fs-1 pb-3 fw-semibold text-color">Mô tả và thông tin liên hệ của khách sạn</div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th style="font-weight: bolder;" class="c-bg-primary">Ten</th>
+          <th style="font-weight: bolder;"  class="c-bg-primary">Dia chi </th>
+          <th style="font-weight: bolder;"  class="c-bg-primary">Miêu tả</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-weight: bolder;" ><%=hotel.name %>
+          </td>
+          <td style="font-weight: bolder;" ><%=hotel.address %></td>
+          <td style="font-weight: bolder;" ><%=hotel.description %></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
 </div>
+
+  
+
 
 <!-- xử lý ngày -->
 <script>

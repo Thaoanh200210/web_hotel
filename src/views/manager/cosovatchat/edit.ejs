@@ -1,0 +1,36 @@
+<div class="card">
+    <div class="card-header d-flex">
+        <div class="card-title flex-grow-1 d-flex justify-content-between align-items-center">
+            <h5 class="modal-title d-flex align-items-center">
+                <i class="bi bi-person-lines-fill fs-3 me-2"></i> Sửa Thông Tin Dịch Vụ
+            </h5>
+        </div>
+    </div>
+    <div class="card-body">
+        <form action="/manager/<%=hotel._id%>/service/edit-handler/<%= service._id %>" method="POST" class="d-flex flex-column">
+            <div class="">
+                <div class="mb-3">
+                    <label class="form-label ">Tên dịch vụ</label>
+                    <input  class="form-control shadow-none" name="tendichvu" type="text" value="<%=service.name%>" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Icon</label>
+                    <input  class="form-control shadow-none" name="icon" type="text" value="<%=service.icon%>" required >
+                </div>
+            </div>
+            <div class="text-center my-1">
+                <div class="d-flex justify-content-center gap-4">
+                    <a class="btn btn-warning shadow-none" href="/manager/<%=hotel._id%>/service">
+                        Trở về
+                    </a>
+                    <button class="btn btn-dark shadow-none" type="submit" name="">
+                        Sửa dịch vụ
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+

@@ -42,7 +42,9 @@ async function getTypeRoomById(hotel, id, startDate, endDate, populate) {
             console.log("After::", detailBookings.length);
              //danh sách room đã được đặt.
             let roomBooked = detailBookings.map((detail)=>{
-                return detail.room._id.toString();
+                if (detail.status === 'Đang đặt') {
+                    return detail.room._id.toString();
+                }
             });
             console.log(roomBooked);
 
