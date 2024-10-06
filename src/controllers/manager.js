@@ -181,9 +181,13 @@ class ManagerController{
     }
 
     async addRoom(req, res) {
-        let typeRooms = await getAllTypeRooms();
-        let serviceRooms = await getAllService();
-        let selectionRooms = await getAllSelection();
+        let typeRooms = await getAllTypeRooms(req.hotel);
+        let serviceRooms = await getAllService({
+            hotel: req.hotel, 
+        });
+        let selectionRooms = await getAllSelection({
+            hotel: req.hotel, 
+        });
         res.render("index-manager",{
             page: "manager/index",
             roomPage: "room/add",
@@ -271,9 +275,13 @@ class ManagerController{
 
     async editRoom(req,res){
         let room = await getRoomById(req.params.id,true);
-        let typeRooms = await getAllTypeRooms();
-        let serviceRooms = await getAllService();
-        let selectionRooms = await getAllSelection();
+        let typeRooms = await getAllTypeRooms(req.hotel);
+        let serviceRooms = await getAllService({
+            hotel: req.hotel, 
+        });
+        let selectionRooms = await getAllSelection({
+            hotel: req.hotel, 
+        });
         const status = ['Đang hoạt động', 'Dừng hoạt động'];
 
         res.render("index-manager",{

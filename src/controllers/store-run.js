@@ -210,11 +210,11 @@ class StoreRunController{
 
         let images = await getImageOfHotel(req.hotel);
         let typeRooms = await getAllTypeRoomByHotel(req.hotel, ngaydau, ngayket);
-        console.log("Type rôooms", typeRooms);
         let reviews = await getAllReviews(req.hotel);
         let events = await getCurrentEvent(req.hotel);
         let hotel = await getHotelById(req.params.id);
-        let service_hotels = await getAllServiceHotel(req.hotel)
+        const {hotelId} = req.params;
+        let service_hotels = await getAllServiceHotel({hotel: hotelId})
 
         let employeeScore = 0; 
         let sactificationScore = 0; 
