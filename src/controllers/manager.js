@@ -822,7 +822,7 @@ class ManagerController{
     async editBookingStatus(req, res){
         let booking = await getBookingById(req.params.id);
         let detail = await getBookingDetailById(req.params.id);
-        console.log("detail:", detail, "booking:", booking)
+        let service_hotels = await getAllServiceHotel({hotel: req.hotel,})
         let getStatus = (booking) => {
             if(booking.deleteAt || booking.status == "Đã hủy"){
                 return 'Đã bị hủy';
@@ -849,6 +849,7 @@ class ManagerController{
             id:req.params.id,
             booking:booking,
             detail:detail,
+            service_hotels:service_hotels,
             getStatus: getStatus,
             // getRoom: getRoom,
             ...defaultManagerNav(),

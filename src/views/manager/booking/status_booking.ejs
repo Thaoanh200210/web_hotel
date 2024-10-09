@@ -45,33 +45,48 @@
             <td>SĐT: <%= booking.customer.phone %></td>
           </tr>
           <tr>
+            <td>Email: <%= booking.customer.email %></td>
+          </tr>
+          <tr>
             <td>CCCD: <%= booking.customer_identify_number %></td>
           </tr>
         </tbody>
       </table>
       
     </div>
+    <div style="color: blue; font-weight: bold ;">Đã thanh toán online: <%=  parseInt(booking.total_price).toLocaleString('it-IT', {style : 'currency', currency : 'VND'}) %></div>
   </div>
   
-  <tbody>
-    <tr>
-
+  <div class="row">
+    <div class="col-6">
+      <div class="pd-5">
+        <div style="color: red">Dịch vụ khách sạn</div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th></th>
+              <th class="c-bg-primary">Loại dịch vụ</th>
+              <th  class="c-bg-primary">Giá dịch vụ </th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            <% for(service_hotel of service_hotels) {%>
+            <tr>
+              <td><input type="checkbox" value="<%=service_hotel._id%>" name="dichvuphong"></td>
+              <td ><%=service_hotel.name %>
+              </td>
+              <td ><%=parseInt(service_hotel.price  ).toLocaleString('it-IT', {style : 'currency', currency : 'VND'}) %></td> 
+            </tr>
+            <% }%>
+          </tbody>
+        </table>
+      </div>
+    </div>
     
-      
-      <td></td>
-      <td></td>
-      <td></td>
-      <td><%= getStatus(booking)  %></td>
-
-      <!-- <td>
-        <% if(getStatus(booking) == "Đã đặt phòng" || getStatus(booking) == "Đã nhận phòng") {%>
-        <a class="btn btn-success" href="/manager/<%=hotel._id%>/booking/status_booking/<%=booking._id%>">
-          Sửa trạng thái</a> 
-        <%}%>
-      </td> -->
-    </tr>
-
-  </tbody>
+    <div class="col-6"></div>
+  </div>
+ 
     <form action="/manager/<%=hotel._id%>/booking/status_booking/<%=id%>" method="POST">
         <div class="form-check">
             <input class="form-check-input" type="radio" name="status" id="CheckedIn" value="Đã nhận phòng" checked>
