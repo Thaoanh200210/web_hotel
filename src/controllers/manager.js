@@ -879,8 +879,23 @@ class ManagerController{
         res.redirect("/manager/" +req.hotel._id+ "/booking");
     }
 
+    async addBooking(req, res){
+        let rooms = await getAllRooms({
+            hotel: req.hotel,
+        });
+        res.render("index-manager",{
+            page: "manager/index",
+            roomPage: "booking/add",
+            rooms:rooms,
+            ...defaultManagerNav(),
+            ...defaultData(req)
+        })
 
+    }
     
+    async addBookingHandler(req, res){
+        
+    }
     //quản lý co so vat chat
     async service(req,res){
         let services = await getAllService({

@@ -100,6 +100,8 @@ router.route("/user/customer/delete/:id").get(manager.deleteCustomerHandler);
 router.route("/user/customer").get(manager.customer);
 
 //quản lý đặt phòng
+router.route("/booking/status_booking/add-handler").post(manager.addBookingHandler);
+router.route("/booking/add").get(manager.addBooking);
 router.route("/booking/status_booking/:id").get(manager.editBookingStatus).post(manager.editStatusBookingHandler);
 router.route("/booking").get(manager.booking);
 

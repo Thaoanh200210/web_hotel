@@ -26,17 +26,14 @@
                         <label class="form-label">Ngày trả phòng</label>
                         <input class="form-control shadow-none" name="checkin" type="text" required>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Giá phòng</label>
-                        <input class="form-control shadow-none" name="giaphong" type="text" required>
-                    </div>
+                    
                 </div>
 
                 <div class="flex-grow-1 ms-3">
                     <div class="mb-3">
                         <label class="form-label">Số phòng</label>
                         <select class="form-select shadow-none" name="sophong"  multiple required>
-                            <% for (room of Rooms) {%>
+                            <% for (room of rooms) {%>
                                 <option value="<%= room._id %>">
                                     <%= room.name %>
                                 </option>
