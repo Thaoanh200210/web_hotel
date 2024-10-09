@@ -1,8 +1,11 @@
 const { RoleEnum } = require('../models/enum/role');
-const {EmployeeRepository} = require('../repositories/index');
+const {EmployeeRepository,RoleRepository} = require('../repositories/index');
 
 async function getAllUsersByHotel(hotel,role = RoleEnum.Customer) {
     const employeeRepo = new EmployeeRepository();
+    // const roleRepo = new RoleRepository();
+    // let roleResult = await roleRepo.selectOne({name: role})
+    // return await roomRepo.select({role: roleResult});
     let employees = await employeeRepo.select({
         hotel:hotel,
     });

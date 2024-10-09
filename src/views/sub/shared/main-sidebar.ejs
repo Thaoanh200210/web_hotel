@@ -1,0 +1,48 @@
+<div class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+  <div class="app-wrapper">
+    <aside style="min-height: fit-content;" class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+      <div class="sidebar-brand">
+        <a href="/sub/" class="brand-link">
+          <span class="brand-text fw-light"><%= hotel.name %></span>
+        </a>
+      </div>
+      <div class="sidebar-wrapper">
+        <nav class="mt-2">
+          <ul
+            class="nav sidebar-menu flex-column"
+            data-lte-toggle="treeview"
+            role="menu"
+            data-accordion="false"
+          >
+          <% for(let nav of navTabs){ %>
+            <li class="nav-item">
+              <a href="<%= nav.url.replace('/sub','/sub/' + hotel._id.toString()) %>" class="nav-link">
+                <i class="nav-icon <%= nav.icon %>"></i>
+                <p>
+                  <%= nav.name %>
+                  <% if(nav.children.length > 0){  %>
+                  <i class="nav-arrow bi bi-chevron-right"></i>
+                  <% } %>
+                </p>
+              </a>
+              
+              <% if(nav.children.length > 0){  %>
+              <ul class="nav nav-treeview">
+                <% for(let navChild of nav.children){ %>
+                <li class="nav-item">
+                  <a href="<%= navChild.url.replace('/sub','/sub/' + hotel._id.toString()) %>" class="nav-link">
+                    <i class="nav-icon <%= navChild.icon %>"></i>
+                    <p><%= navChild.name %></p>
+                  </a>
+                </li>
+                <% } %>
+              </ul>
+              <% } %>
+            </li>
+          <% } %>
+          </ul>
+        </nav>
+      </div>
+    </aside>
+  </div>
+</div>

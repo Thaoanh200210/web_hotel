@@ -1,0 +1,236 @@
+
+<div class="card">
+    <div class="card-header d-flex">
+        <div class="card-title flex-grow-1 d-flex justify-content-between align-items-center">
+            <h5 class="modal-title d-flex align-items-center">
+                <i class="bi bi-person-lines-fill fs-3 me-2"></i> Sửa Thông Tin Phòng
+            </h5>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <form action="/sub/<%=hotel._id%>/room/edit-handler/<%= room._id %>" enctype="multipart/form-data" method="POST" class="d-flex flex-column">
+            <div class="d-flex ">
+                <div class="flex-grow-1 me-3">
+                    <div class="mb-3">
+                        <label class="form-label ">Số phòng</label>
+                        <input class="form-control shadow-none" name="sophong" type="text" value="<%= room.number_room%>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tên phòng</label>
+                        <input class="form-control shadow-none" name="tenphong" type="text" value="<%= room.name%>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Loại phòng</label>
+                        <select class="form-select shadow-none" name="loaiphong" type="text" required>
+                            <% for (type of typeRooms) {%>
+                                <option value="<%= type._id %>" <%= room.type_room._id.toString() == type._id.toString() ? "selected" : "" %>>
+                                    <%= type.name %>
+                                </option>
+                                <% } %>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Giá phòng</label>
+                        <input class="form-control shadow-none" name="giaphong" type="text" value="<%= room.original_price%>" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Tình trạng</label>
+                        <select class="form-select shadow-none" name="tinhtrang" type="text" required>
+                            <% status.forEach(function(type) { %>
+                                <option value="<%= type %>" <%= room.status.toString() == type.toString() ? "selected" : "" %>>
+                                    <%= type %>
+                                </option>
+                            <% }); %>
+                        </select>      
+                     </div>
+                </div>
+
+                <div class="flex-grow-1 ms-3">
+                    <div class="mb-3">
+                        <label class="form-label">Dịch vụ</label>
+                        <select class="form-select shadow-none" name="dichvu" type="text" multiple required>
+                            <%= room.services.map(x => x._id) %>
+                            <% for (service of serviceRooms) {%>
+                                
+                                <option value="<%= service._id %>" <%= room.services.map(x => x._id.toString()).includes(service._id.toString()) ? "selected" : ""%>>
+                                    <%= service.name %> 
+                                </option>
+                                <% } %>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Lựa chọn</label>
+                        <select class="form-select shadow-none" name="luachon" type="text" multiple required>
+                            <% for (selection of selectionRooms) {%>
+                                <option value="<%= selection._id %>" <%= room.selections.map(x => x._id.toString()).includes(selection._id.toString()) ? "selected" : ""%>>
+                                    <%= selection.name %>
+                                </option>
+                                <% } %>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Hình ảnh</label>
+                        <style>
+                            .dropzone {
+                                border: 2px dashed #ccc;
+                                border-radius: 5px;
+                                padding: 20px;
+                                height: 100px;
+                                text-align: center;
+                                cursor: pointer;
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: center;
+                                align-items: center;
+                            }
+                    
+                            #image-input {
+                                display: none;
+                            }
+                    
+                            .dropzone img {
+                                max-width: 100%;
+                                height: auto;
+                            }
+                    
+                            .previews {
+                                display: flex;
+                                flex-wrap: wrap;
+                                margin-top: 10px;
+                            }
+                    
+                            .previews img {
+                                width: 100px;
+                                height: 100px;
+                                object-fit: cover;
+                                margin: 5px;
+                                border: 1px solid #ccc;
+                                cursor: pointer;
+                            }
+                        </style>
+                        <div class="dropzone">
+                            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="50"
+                                height="50" x="0" y="0" viewBox="0 0 32 32" style="enable-background:new 0 0 512 512" xml:space="preserve"
+                                class="">
+                                <g>
+                                    <rect width="28" height="30" x="2" y="1" fill="#ddebfd" rx="4" opacity="1" data-original="#ddebfd"
+                                        class=""></rect>
+                                    <path fill="#4071f7"
+                                        d="M23.5 14.458a1 1 0 0 0-1.392.022l-4.312 4.313a1 1 0 0 0 0 1.414l10.223 10.226A3.985 3.985 0 0 0 30 27v-6.433z"
+                                        opacity="1" data-original="#4071f7"></path>
+                                    <g fill="#5392f9">
+                                        <circle cx="19" cy="11" r="3" fill="#5392f9" opacity="1" data-original="#5392f9"></circle>
+                                        <path
+                                            d="M13.707 13.293a1.029 1.029 0 0 0-1.414 0L2 23.586V27a4 4 0 0 0 4 4h20a3.985 3.985 0 0 0 3.433-1.981z"
+                                            fill="#5392f9" opacity="1" data-original="#5392f9"></path>
+                                    </g>
+                                </g>
+                            </svg>
+                            <div>Drop image here or click to select</div>
+                            <input type="file" id="image-input" name="hinhanh" accept="image/*" multiple>
+                        </div>
+                    
+                        <div class="previews">
+                            <% for(let image of room.images){ %>
+                                <img src="<%= image.url%>" />
+                            <% }%>
+                        </div>
+                        <script>
+                            const dropzone = document.querySelector('.dropzone');
+                            const preview = document.querySelector('#preview');
+                            const imageInput = document.querySelector('#image-input');
+                            const previewsContainer = document.querySelector('.previews');
+                    
+                            dropzone.addEventListener('dragover', (event) => {
+                                event.preventDefault();
+                                dropzone.classList.add('dragover');
+                            });
+                            dropzone.addEventListener('click', () => {
+                                imageInput.click(); // Trigger the file input when the dropzone is clicked
+                            });
+                    
+                            dropzone.addEventListener('dragleave', (event) => {
+                                dropzone.classList.remove('dragover');
+                            });
+                    
+                            dropzone.addEventListener('drop', (event) => {
+                                console.log(event);
+                                event.preventDefault();
+                                dropzone.classList.remove('dragover');
+                    
+                                const files = event.dataTransfer.files;
+                                imageInput.files = files;
+                    
+                                previewsContainer.innerHTML = ''; // Clear previous previews
+                    
+                                for (let i = 0; i < files.length; i++) {
+                                    const file = files[i];
+                                    const reader = new FileReader();
+                    
+                                    reader.onload = (event) => {
+                                        const previewImage = document.createElement('img');
+                                        previewImage.src = event.target.result;
+                                        previewImage.alt = file.name;
+                    
+                                        previewsContainer.appendChild(previewImage);
+                                    };
+                    
+                                    reader.readAsDataURL(file);
+                                }
+                    
+                                // Handle uploads here (e.g., send files to server)
+                            });
+                    
+                    
+                            imageInput.addEventListener('change', (event) => {
+                                const files = event.target.files;
+                    
+                                previewsContainer.innerHTML = ''; // Clear previous previews
+                    
+                                for (let i = 0; i < files.length; i++) {
+                                    const file = files[i];
+                                    const reader = new FileReader();
+                    
+                                    reader.onload = (event) => {
+                                        const previewImage = document.createElement('img');
+                                        previewImage.src = event.target.result;
+                                        previewImage.alt = file.name;
+                    
+                                        previewsContainer.appendChild(previewImage);
+                                    };
+                    
+                                    reader.readAsDataURL(file);
+                                }
+                    
+                                // Handle uploads here (e.g., send files to server)
+                            });
+                    
+                        </script>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Mô tả</label>
+                <textarea class="form-control shadow-none" name="mota" required rows="4"><%= room.description %></textarea>
+            </div>
+            <div class="text-center my-1">
+                <div class="d-flex justify-content-center gap-4">
+                    <a class="btn btn-warning shadow-none" href="/sub/<%=hotel._id%>/room">
+                        Trở về
+                    </a>
+                    <button class="btn btn-dark shadow-none" type="submit" name="">
+                        Sửa thông tin
+                    </button>
+                </div>
+                
+            </div>
+        </form>
+    </div>
+
+</div>
+
+

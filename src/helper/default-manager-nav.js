@@ -89,7 +89,7 @@ module.exports = () =>{
             {
                 name: "Đăng xuất",
                 icon: "bi bi-box-arrow-left",
-                url: "",
+                url: "/log-out",
                 children: []
             },
         ]

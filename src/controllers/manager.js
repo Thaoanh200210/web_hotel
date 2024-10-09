@@ -11,6 +11,7 @@ const getAllRooms  = require("../services/get_all_rooms")
 const getAllBookings  = require("../services/get_all_booking")
 const getAllBookingDetails  = require("../services/get_all_detai_booking")
 const getAllUsersByHotel  = require("../services/get_all_user_by_hotel")
+const getAllRole = require("../services/get_all_role")
 const getAllUsers = require("../services/get_all_user")
 const getAllCity = require("../services/get_all_city")
 const getAllEvents  = require("../services/get_all_event")
@@ -25,7 +26,7 @@ const getServiceById  = require("../services/get_service_by_id")
 const getServiceHotelById  = require("../services/get_service_hotel_by_id")
 const getRoomById  = require("../services/get_room_by_id")
 const getDiscountById  = require("../services/get_discount_by_id")
-const getDetailBookingById = require("../services/get_detail_booking_by_id")
+const getBookingDetailById = require("../services/get_detail_booking_by_id")
 const getBookingById  = require("../services/get_booking_by_id")
 const getReviewById  = require("../services/get_review_by_id")
 const getEventById  = require("../services/get_event_by_id")
@@ -67,6 +68,7 @@ const deleteServiceHotel = require("../services/delete_service_hotel")
 const deleteTypeRoom = require("../services/delete_type_room")
 const deleteDiscount = require("../services/delete_discount");
 const deleteUser = require("../services/delete_user");
+const deleteEmployee = require("../services/delete_employee");
 const deleteBooking = require("../services/delete_booking");
 const numberOfRoomByHotel = require("../services/number_of_room_by_hotel")
 const numberOfEventByHotel = require("../services/number_of_event_by_hotel")
@@ -509,7 +511,7 @@ class ManagerController{
     }
 
     async addDiscount(req, res) {
-        let type_rooms = await getAllTypeRooms();
+        let type_rooms = await getAllTypeRooms(req.hotel);
         res.render("index-manager",{
             page: "manager/index",
             roomPage: "discount/add",
@@ -541,7 +543,7 @@ class ManagerController{
 
     async editDiscount(req,res){
         let discount = await getDiscountById(req.params.id);
-        let type_rooms = await getAllTypeRooms();
+        let type_rooms = await getAllTypeRooms(req.hotel);
         res.render("index-manager",{
             page: "manager/index",
             roomPage: "discount/edit",
@@ -594,7 +596,12 @@ class ManagerController{
 
     //quản lý nhân viên
     async employee(req, res) {
-        let users = await getAllUsersByHotel(req.hotel,RoleEnum.Employee);
+        let employees = await getAllUsersByHotel(req.hotel,RoleEnum.Employee);
+        let subs = await getAllUsersByHotel(req.hotel,RoleEnum.Sub);
+        let users = [
+            ...employees,
+            ...subs,
+        ]
         res.render("index-manager",{
             page: "manager/index",
             roomPage: "user/employee/management",
@@ -605,9 +612,11 @@ class ManagerController{
     }
 
     async addEmployee(req, res) {
+        const roles = await getAllRole()
         res.render("index-manager",{
             page: "manager/index",
             roomPage: "user/employee/add",
+            roles: roles,
             ...defaultManagerNav(),
             ...defaultData(req)
         })
@@ -620,7 +629,8 @@ class ManagerController{
             email: req.body.email,
             password: req.body.matkhau
         }
-        let employee = await createUser(user, RoleEnum.Employee);
+        let employee = await createUser(user, req.body.role);
+        console.log("role nhan vien:", req.body.role)
         await createEmployee(req.hotel,employee);
         let cookies = new CookieProvider(req, res);
         cookies.setCookie(
@@ -634,10 +644,12 @@ class ManagerController{
 
     async editEmployee(req,res){
         let currentUser = await getUserById(req.params.id);
+        const roles = await getAllRole()
         res.render("index-manager",{
             page: "manager/index",
             roomPage: "user/employee/edit",
             currentUser: currentUser,
+            roles: roles,
             ...defaultManagerNav(),
             ...defaultData(req)
         })
@@ -666,6 +678,7 @@ class ManagerController{
         try {
             let originUser = await getUserById(req.params.id);
             await deleteUser(originUser._id.toString())
+            await deleteEmployee(originUser._id.toString())
         } catch(e){
             console.log(e);
         }
@@ -807,10 +820,37 @@ class ManagerController{
     }
 
     async editBookingStatus(req, res){
+        let booking = await getBookingById(req.params.id);
+        let detail = await getBookingDetailById(req.params.id);
+        console.log("detail:", detail, "booking:", booking)
+        let getStatus = (booking) => {
+            if(booking.deleteAt || booking.status == "Đã hủy"){
+                return 'Đã bị hủy';
+            }else if(booking.status == BookingStatusEnum.CheckedOut){
+                return 'Đã trả phòng';
+            }else if(booking.status == BookingStatusEnum.CheckedIn){
+                return 'Đang nhận phòng';
+            }else if(booking.status == BookingStatusEnum.Reserved){
+                return 'Đã đặt phòng';
+            }
+        }
+        // let getRoom = (details, booking) => {
+        //     let result = '';
+        //     details.forEach((detail) => {
+        //         if (detail.booking._id.toString() == booking.toString()) {
+        //             result = detail.room.number_room;
+        //         }
+        //     })
+        //     return result;
+        // }
         res.render("index-manager",{
             page: "manager/index",
             roomPage: "booking/status_booking",
             id:req.params.id,
+            booking:booking,
+            detail:detail,
+            getStatus: getStatus,
+            // getRoom: getRoom,
             ...defaultManagerNav(),
             ...defaultData(req)
         })
@@ -818,7 +858,7 @@ class ManagerController{
 
     async editStatusBookingHandler(req,res) {
         let booking = await getBookingById(req.params.id,false);
-        let detailBooking = await getDetailBookingById(booking._id)
+        let detailBooking = await getDetailBookingById(req.params.id)
         console.log("Detail booking: ", detailBooking);
         if(req.body.status != "cancel"){
             booking.status = req.body.status;

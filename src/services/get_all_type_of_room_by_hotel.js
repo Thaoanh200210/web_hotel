@@ -16,7 +16,9 @@ async function getAllTypeRoomByHotel(hotel, startDate= "", endDate= "") {
     const selectionRoomRepo = new SelectionRoomRepository();
     const imageRepo = new ImageRepository();
     const discountRepo = new DiscountRepository();
-    let typesOfRoom =  await typeRoomRepo.selectAll();
+    let typesOfRoom =  await typeRoomRepo.select({
+        hotel: hotel,
+    });
     //list typeofroom
     let result = [];
     for(let typeOfRoom of typesOfRoom){

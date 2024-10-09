@@ -1,0 +1,39 @@
+<div>
+    <div class="fw-bold fs-2">Chi tiết đánh giá</div>
+    <div class="pb-2">Số phòng: <%= review.room.number_room %> </div>
+    <div class="pb-2">Loại phòng: <%= review.room.type_room.name %> </div>
+    <table class="table table-bordered border border-dark">
+        <thead>
+          <tr>
+            <th scope="col">Thoải mái</th>
+            <th scope="col">Đáng đồng tiền</th>
+            <th scope="col">Wifi</th>
+            <th scope="col">Nhân viên phục vụ</th>
+            <th scope="col">Tiện nghi</th>
+            <th scope="col">Sạch sẽ</th>
+            <th scope="col">Tổng điểm</th>
+            <th scope="col">Bình luận</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><%= review.comfortScore/10 %></td>
+            <td><%= review.moneyScore/10 %></td>
+            <td><%= review.wifiScore/10 %></td>
+            <td><%= review.employeeScore/10 %></td>
+            <td><%= review.sactificationScore/10 %></td>
+            <td><%= review.cleanlinessScore/10 %></td>
+            <td><%=  Math.floor((review.employeeScore + 
+                review.sactificationScore + 
+                review.wifiScore + 
+                review.comfortScore + 
+                review.moneyScore + 
+                review.cleanlinessScore)/6)/10 %></td>
+            <td><%= review.comment %></td>
+          </tr>
+        </tbody>
+      </table>
+    <a class="btn btn-warning shadow-none" href="/sub/<%=hotel._id%>/review">
+        Trở về
+    </a>
+</div>

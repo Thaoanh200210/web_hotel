@@ -87,6 +87,9 @@ class Middleware {
                 }else if(user.role.name == RoleEnum.Employee){
                     let employee = await getEmployeeByUser(user);
                     return res.redirect("/manager/"+ employee.hotel._id.toString() + "/room");
+                }else if(user.role.name == RoleEnum.Sub){
+                    let employee = await getEmployeeByUser(user);
+                    return res.redirect("/sub/"+ employee.hotel._id.toString() + "/room");
                 }else if(user.role.name == RoleEnum.Admin){
                     return res.redirect("/administrator/hotel");
                 }else if(user.role.name == RoleEnum.Mod){

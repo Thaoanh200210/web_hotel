@@ -1,0 +1,54 @@
+<div class="card">
+    <div class="card-header d-flex">
+        <div class="card-title flex-grow-1 d-flex justify-content-between align-items-center">
+            <h5 class="modal-title d-flex align-items-center">
+                <i class="bi bi-person-lines-fill fs-3 me-2"></i> Thêm Thông Tin Giảm Giá
+            </h5>
+        </div>
+    </div>
+    <div class="card-body">
+        <form action="/sub/<%=hotel._id%>/discount/add-handler" method="POST" class="d-flex flex-column">
+            <div class="">
+                <div class="mb-3">
+                    <label class="form-label ">Tên giảm giá</label>
+                    <input  class="form-control shadow-none" name="tengiamgia" type="text" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Phòng</label>
+                    <select class="form-control form-select mr-sm-2" name="phong"  required >
+                        <%for( let type_room of type_rooms  ) { %>
+                        <option  value="<%= type_room._id %>" >
+                            <%= type_room.name %>
+                        </option>
+                        <% } %>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Phần trăm giảm giá</label>
+                    <input  class="form-control shadow-none" name="phantram" type="number" required >
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Ngày bắt đầu</label>
+                    <input  class="form-control shadow-none" name="ngaydau" type="datetime-local" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Ngày kết thúc</label>
+                    <input  class="form-control shadow-none" name="ngayket" type="datetime-local" required>
+                </div>
+            </div>
+            <div class="text-center my-1">
+                <div class="d-flex justify-content-center gap-4">
+                    <a class="btn btn-warning shadow-none" href="/sub/<%=hotel._id%>/discount">
+                        Trở về
+                    </a>
+                    <button class="btn btn-dark shadow-none" type="submit" name="">
+                        Thêm sự kiện
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+

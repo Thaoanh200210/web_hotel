@@ -18,6 +18,9 @@ for (const routeName of listRouteName) {
             // thằng nào muốn truy cập manager đều phải có 1 hotel id
             router.use("/" + name + "/:hotelId",middleware.authenticate, middleware.message, require(`./routes/${name}`))
         }
+        else if(name == "sub"){
+            router.use("/" + name + "/:hotelId",middleware.authenticate, middleware.message, require(`./routes/${name}`))
+        }
         else{
             //đường dẫn paymnet or ad đều dùng này
             router.use("/" + name,middleware.authenticate, middleware.message, require(`./routes/${name}`))
