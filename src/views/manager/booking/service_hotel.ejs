@@ -17,7 +17,7 @@
           <td><%=service_hotel.name %></td>
           <td><%=parseInt(service_hotel.price).toLocaleString('it-IT', {style: 'currency', currency: 'VND'}) %></td>
           <td>
-            <input style="width: 70px;" class="form-control shadow-none" name="soluong" type="number" min="1" >
+            <input style="width: 70px;" class="form-control shadow-none" name="soluong" type="number" min="1" required>
           </td>
         </tr>
         <% } %>

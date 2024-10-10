@@ -76,6 +76,26 @@
         <a style="color: red" href="/manager/<%=hotel._id%>/booking/status_booking/<%=id%>/service_hotel">Dịch vụ khách sạn</a>
 
       </div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="c-bg-primary">Loại dịch vụ</th>
+            <th class="c-bg-primary">Giá dịch vụ</th>
+            <th class="c-bg-primary">Số lượng</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(service_quantity of service_quantitys) {%>
+          <tr>
+            <td><%=service_quantity.service_hotel.name %></td>
+            <td><%=parseInt(service_quantity.service_hotel.price).toLocaleString('it-IT', {style: 'currency', currency: 'VND'}) %></td>
+            <td><%=service_quantity.quatity %></td>
+            
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
     </div>
 
     <div class="col-6"></div>

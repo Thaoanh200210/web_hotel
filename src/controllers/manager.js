@@ -20,6 +20,7 @@ const getAllTypeRooms = require("../services/get_all_type_of_rooms")
 const getAllSelection = require("../services/get_all_selection")
 const getAllService = require("../services/get_all_service")
 const getAllServiceHotel = require("../services/get_all_service_hotel")
+const getAllServiceQuantity = require("../services/get_all_service_quantity")
 const getAllTypeRoom = require("../services/get_all_type_of_rooms")
 const getTypeRoomById = require("../services/get_type_room_by_id")
 const getTypeRoomByIdAndHotel = require("../services/get_type_of_room_by_id_and_hotel")
@@ -826,7 +827,8 @@ class ManagerController {
     async editBookingStatus(req, res) {
         let booking = await getBookingById(req.params.id);
         let detail = await getBookingDetailById(req.params.id);
-        let service_hotels = await getAllServiceHotel({ hotel: req.hotel, })
+        let service_hotels = await getAllServiceHotel({ hotel: req.hotel });
+        let service_quantitys = await getAllServiceQuantity({ detail_booking: detail });
         let getStatus = (booking) => {
             if (booking.deleteAt || booking.status == "Đã hủy") {
                 return 'Đã bị hủy';
@@ -845,6 +847,7 @@ class ManagerController {
             id: req.params.id,
             booking: booking,
             detail: detail,
+            service_quantitys: service_quantitys,
             service_hotels: service_hotels,
             getStatus: getStatus,
             // getRoom: getRoom,
@@ -907,14 +910,12 @@ class ManagerController {
 
         // Chuyển đổi sang số nếu cần
         selectedQuantity = parseInt(selectedQuantity, 10);
-        console.log("dich vu phong:", serviceHotel)
 
         let serviceQuantity = {
             detail_booking: detailBooking._id,
             service_hotel: serviceHotelID._id,
             quatity: selectedQuantity,
         }
-        console.log("quantity:", serviceQuantity)
         await createServiceQuantity(serviceQuantity);
         let cookies = new CookieProvider(req, res);
         cookies.setCookie(
