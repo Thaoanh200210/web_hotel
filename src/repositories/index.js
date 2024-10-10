@@ -17,11 +17,16 @@ const { UserRepository } = require("./user");
 const {EmployeeRepository} = require("./employee");
 const {DiscountRepository} = require( "./discount");
 const {CityRepository} = require( "./city");
+const {FinalRepository} = require( "./final");
+const {ServiceQuantityRepository} = require( "./service_quantity");
+
 module.exports = {
     DiscountRepository,
     EmployeeRepository,
     BookingRepository,
     CityRepository,
+    ServiceQuantityRepository,
+    FinalRepository,
     DetailBookingRepository,
     EventRepository,
     HotelRepository,

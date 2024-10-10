@@ -1,3 +1,5 @@
+
+
 <div class="container">
   <div class="row">
     <div class="col-5">
@@ -9,23 +11,30 @@
         </thead>
         <tbody>
           <tr>
-            <td><%= detail.room.number_room %></td>
+            <td>
+              <%= detail.room.number_room %>
+            </td>
           </tr>
           <tr>
-            <td>Ngày đặt phòng: <%= detail.NowDate.toLocaleString() %> </td>
+            <td>Ngày đặt phòng: <%= detail.NowDate.toLocaleString() %>
+            </td>
           </tr>
           <tr>
-            <td>Ngày nhận phòng: <%= booking.check_in.toLocaleString() %> </td>
+            <td>Ngày nhận phòng: <%= booking.check_in.toLocaleString() %>
+            </td>
           </tr>
           <tr>
-            <td>Ngày trả: <%= booking.check_out.toLocaleString()  %></td>
+            <td>Ngày trả: <%= booking.check_out.toLocaleString() %>
+            </td>
           </tr>
           <tr>
-            <td>Giá: <%=  parseInt(booking.total_price).toLocaleString('it-IT', {style : 'currency', currency : 'VND'}) %></td>
+            <td>Giá: <%= parseInt(booking.total_price).toLocaleString('it-IT', {style : 'currency' , currency : 'VND' })
+                %>
+            </td>
           </tr>
         </tbody>
       </table>
-      
+
     </div>
     <div class="col">
 
@@ -39,73 +48,61 @@
         </thead>
         <tbody>
           <tr>
-            <td>Số phòng: <%= booking.customer.name %></td>
+            <td>Số phòng: <%= booking.customer.name %>
+            </td>
           </tr>
           <tr>
-            <td>SĐT: <%= booking.customer.phone %></td>
+            <td>SĐT: <%= booking.customer.phone %>
+            </td>
           </tr>
           <tr>
-            <td>Email: <%= booking.customer.email %></td>
+            <td>Email: <%= booking.customer.email %>
+            </td>
           </tr>
           <tr>
-            <td>CCCD: <%= booking.customer_identify_number %></td>
+            <td>CCCD: <%= booking.customer_identify_number %>
+            </td>
           </tr>
         </tbody>
       </table>
-      
+
     </div>
-    <div style="color: blue; font-weight: bold ;">Đã thanh toán online: <%=  parseInt(booking.total_price).toLocaleString('it-IT', {style : 'currency', currency : 'VND'}) %></div>
+    <!-- <div style="color: blue; font-weight: bold ;">Đã thanh toán online: <%=  parseInt(booking.total_price).toLocaleString('it-IT', {style : 'currency', currency : 'VND'}) %></div> -->
   </div>
-  
+
   <div class="row">
     <div class="col-6">
       <div class="pd-5">
-        <div style="color: red">Dịch vụ khách sạn</div>
-        <table class="table">
-          <thead>
-            <tr>
-              <th></th>
-              <th class="c-bg-primary">Loại dịch vụ</th>
-              <th  class="c-bg-primary">Giá dịch vụ </th>
-              
-            </tr>
-          </thead>
-          <tbody>
-            <% for(service_hotel of service_hotels) {%>
-            <tr>
-              <td><input type="checkbox" value="<%=service_hotel._id%>" name="dichvuphong"></td>
-              <td ><%=service_hotel.name %>
-              </td>
-              <td ><%=parseInt(service_hotel.price  ).toLocaleString('it-IT', {style : 'currency', currency : 'VND'}) %></td> 
-            </tr>
-            <% }%>
-          </tbody>
-        </table>
+        <a style="color: red" href="/manager/<%=hotel._id%>/booking/status_booking/<%=id%>/service_hotel">Dịch vụ khách sạn</a>
+
       </div>
     </div>
-    
+
     <div class="col-6"></div>
   </div>
- 
-    <form action="/manager/<%=hotel._id%>/booking/status_booking/<%=id%>" method="POST">
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="status" id="CheckedIn" value="Đã nhận phòng" checked>
-            <label class="form-check-label" for="CheckedIn">
-              Đã nhận phòng
-            </label>
-          </div>
-          <div class="form-check ">
-            <input class="form-check-input" type="radio" name="status" id="CheckedOut" value="Đã trả phòng" >
-            <label class="form-check-label" for="CheckedOut">
-              Đã trả phòng
-            </label>
-          </div>
-          <div class="form-check ">
-            <input class="form-check-input" type="radio" name="status" id="cancel" value="cancel" >
-            <label class="form-check-label" for="cancel">
-              Đã hủy
-            </label>
-          </div>
-          <button class="btn btn-primary">Sửa trạng thái</button>
-    </form>
+
+  <form action="/manager/<%=hotel._id%>/booking/status_booking/<%=id%>" method="POST">
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="status" id="CheckedIn" value="Đã nhận phòng" checked>
+      <label class="form-check-label" for="CheckedIn">
+        Đã nhận phòng
+      </label>
+    </div>
+    <div class="form-check ">
+      <input class="form-check-input" type="radio" name="status" id="CheckedOut" value="Đã trả phòng">
+      <label class="form-check-label" for="CheckedOut">
+        Đã trả phòng
+      </label>
+    </div>
+    <div class="form-check ">
+      <input class="form-check-input" type="radio" name="status" id="cancel" value="cancel">
+      <label class="form-check-label" for="cancel">
+        Đã hủy
+      </label>
+    </div>
+    <button class="btn btn-primary">Sửa trạng thái</button>
+  </form>
+  <a class="btn btn-warning shadow-none" href="/manager/<%=hotel._id%>/booking">
+    Trở về
+</a>
 </div>

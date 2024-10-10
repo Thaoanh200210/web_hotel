@@ -15,17 +15,18 @@
                         <input class="form-control shadow-none" name="tenkhachhang" type="text" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Ngày nhận phòng</label>
-                        <input class="form-control shadow-none" name="checkin" type="datetime-local" required>
+                        <label class="form-label ">Email</label>
+                        <input class="form-control shadow-none" name="email" type="text" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Ngày trả phòng</label>
-                        <input class="form-control shadow-none" name="checkin" type="datetime-local" required>
+                        <label class="form-label ">CCCD</label>
+                        <input class="form-control shadow-none" name="chungminhnhandan" type="text" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Ngày trả phòng</label>
-                        <input class="form-control shadow-none" name="checkin" type="text" required>
+                        <label class="form-label ">Số điện thoại</label>
+                        <input class="form-control shadow-none" name="sdt" type="text" required>
                     </div>
+                    
                     
                 </div>
 
@@ -35,9 +36,27 @@
                         <select class="form-select shadow-none" name="sophong"  multiple required>
                             <% for (room of rooms) {%>
                                 <option value="<%= room._id %>">
-                                    <%= room.name %>
+                                    <%= room.number_room %>
                                 </option>
                                 <% } %>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ngày nhận phòng</label>
+                        <input class="form-control shadow-none" name="ngaydau" type="datetime-local" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ngày trả phòng</label>
+                        <input class="form-control shadow-none" name="ngayket" type="datetime-local" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Hình thức thanh toán:</label>
+                        <select class="form-control form-select mr-sm-2" name="luachon"  >
+                            <%for( let selection of selections ) { %>
+                            <option  value="<%= selection._id %>" >
+                                <%= selection.name %>
+                            </option>
+                            <% } %>
                         </select>
                     </div>
                 </div>

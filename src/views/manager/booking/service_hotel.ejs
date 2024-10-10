@@ -1,0 +1,38 @@
+<div class="container">
+  <div>Dịch vụ khách hàng đã sử dụng</div>
+  <form action="/manager/<%=hotel._id%>/booking/status_booking/<%=booking._id%>/service_hotel/add-handler-service-quantity" method="POST" class="d-flex flex-column">
+    <table class="table">
+      <thead>
+        <tr>
+          <th></th>
+          <th class="c-bg-primary">Loại dịch vụ</th>
+          <th class="c-bg-primary">Giá dịch vụ</th>
+          <th class="c-bg-primary">Số lượng</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(service_hotel of service_hotels) {%>
+        <tr>
+          <td><input type="checkbox" value="<%=service_hotel._id%>" name="dichvuphong"></td>
+          <td><%=service_hotel.name %></td>
+          <td><%=parseInt(service_hotel.price).toLocaleString('it-IT', {style: 'currency', currency: 'VND'}) %></td>
+          <td>
+            <input style="width: 70px;" class="form-control shadow-none" name="soluong" type="number" min="1" >
+          </td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+
+    <div class="text-center my-1">
+      <div class="d-flex justify-content-center gap-4">
+        <a class="btn btn-warning shadow-none" href="/manager/<%=hotel._id%>/booking/status_booking/<%=booking._id%>">
+          Trở về
+        </a>
+        <button class="btn btn-dark shadow-none" type="submit">
+          Thêm dịch vụ
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

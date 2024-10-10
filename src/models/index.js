@@ -18,8 +18,14 @@ const { User } = require("./user");
 const {Employee} = require("./employee");
 const {Discount} = require("./discount");
 const {City} = require("./city");
+const {Final} = require("./final");
+const {ServiceQuantity} = require("./service_quantity");
+
+
 module.exports = {
     Employee,
+    ServiceQuantity,
+    Final,
     Booking,
     DetailBooking,
     Event,

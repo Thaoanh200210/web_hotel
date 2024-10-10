@@ -103,6 +103,9 @@ router.route("/user/customer").get(manager.customer);
 router.route("/booking/status_booking/add-handler").post(manager.addBookingHandler);
 router.route("/booking/add").get(manager.addBooking);
 router.route("/booking/status_booking/:id").get(manager.editBookingStatus).post(manager.editStatusBookingHandler);
+router.route("/booking/status_booking/:id/service_hotel").get(manager.serviceHotelBooking);
+router.route("/booking/status_booking/:id/service_hotel/add-handler-service-quantity").post(manager.addHandlerServiceQuantity);
+
 router.route("/booking").get(manager.booking);
 
 
