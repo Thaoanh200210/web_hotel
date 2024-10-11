@@ -1,5 +1,3 @@
-
-
 <div class="container">
   <div class="row">
     <div class="col-5">
@@ -71,34 +69,50 @@
   </div>
 
   <div class="row">
-    <div class="col-6">
+    <div class="col-7">
       <div class="pd-5">
-        <a style="color: red" href="/manager/<%=hotel._id%>/booking/status_booking/<%=id%>/service_hotel">Dịch vụ khách sạn</a>
+        <a style="color: red" href="/manager/<%=hotel._id%>/booking/status_booking/<%=id%>/service_hotel">Chọn dịch vụ
+          khách sạn khách sử dụng</a>
 
       </div>
 
-      <table class="table">
+      <table class="table table-bordered">
         <thead>
           <tr>
             <th class="c-bg-primary">Loại dịch vụ</th>
             <th class="c-bg-primary">Giá dịch vụ</th>
             <th class="c-bg-primary">Số lượng</th>
+            <th class="c-bg-primary">Tiền</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           <% for(service_quantity of service_quantitys) {%>
-          <tr>
-            <td><%=service_quantity.service_hotel.name %></td>
-            <td><%=parseInt(service_quantity.service_hotel.price).toLocaleString('it-IT', {style: 'currency', currency: 'VND'}) %></td>
-            <td><%=service_quantity.quatity %></td>
-            
-          </tr>
-          <% } %>
+            <tr>
+              <td>
+                <%=service_quantity.service_hotel.name %>
+              </td>
+              <td><%=parseInt(service_quantity.service_hotel.price).toLocaleString('it-IT', {style: 'currency' ,
+                  currency: 'VND' }) %></td>
+              <td>
+                <%=service_quantity.quatity %>
+              </td>
+              <td>
+                <%= (parseInt(service_quantity.service_hotel.price) * service_quantity.quatity).toLocaleString('it-IT',
+                  {style: 'currency' , currency: 'VND' }) %>
+              </td>
+              <td>
+                <button
+                  onclick="deleteConfirmButtonClk('/manager/<%=hotel._id%>/booking/status_booking/<%=id%>/service_hotel/delete/<%=service_quantity._id %>','Bạn có muốn xóa thông tin dịch vụ này không?')"
+                  class="btn btn-danger">Xóa</button>
+              </td>
+            </tr>
+            <% } %>
         </tbody>
       </table>
     </div>
 
-    <div class="col-6"></div>
+    <div class="col-5"></div>
   </div>
 
   <form action="/manager/<%=hotel._id%>/booking/status_booking/<%=id%>" method="POST">
@@ -120,9 +134,13 @@
         Đã hủy
       </label>
     </div>
-    <button class="btn btn-primary">Sửa trạng thái</button>
+    <div>
+      <a class="btn btn-warning shadow-none" href="/manager/<%=hotel._id%>/booking">
+        Trở về
+      </a>
+      <button class="btn btn-primary">Sửa trạng thái</button>
+    </div>
+
   </form>
-  <a class="btn btn-warning shadow-none" href="/manager/<%=hotel._id%>/booking">
-    Trở về
-</a>
+
 </div>

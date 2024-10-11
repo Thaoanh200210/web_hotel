@@ -27,6 +27,7 @@ const getTypeRoomByIdAndHotel = require("../services/get_type_of_room_by_id_and_
 const getCurrentEvent = require("../services/get_current_event")
 const getServiceById = require("../services/get_service_by_id")
 const getServiceHotelById = require("../services/get_service_hotel_by_id")
+const getServiceQuantityById = require("../services/get_service_quantity_by_id")
 const getRoomById = require("../services/get_room_by_id")
 const getDiscountById = require("../services/get_discount_by_id")
 const getBookingDetailById = require("../services/get_detail_booking_by_id")
@@ -70,6 +71,7 @@ const deleteEvent = require("../services/delete_event");
 const deleteSelection = require("../services/delete_selection")
 const deleteService = require("../services/delete_service")
 const deleteServiceHotel = require("../services/delete_service_hotel")
+const deleteServiceQuantity = require("../services/delete_service_quantity")
 const deleteTypeRoom = require("../services/delete_type_room")
 const deleteDiscount = require("../services/delete_discount");
 const deleteUser = require("../services/delete_user");
@@ -890,43 +892,107 @@ class ManagerController {
         })
     }
 
+    // async addHandlerServiceQuantity(req, res) {
+    //     let booking = await getBookingById(req.params.id, false);
+    //     let detailBooking = await getBookingDetailById(req.params.id)
+    //     let serviceHotel = req.body.dichvuphong;
+    //     let serviceHotelID = await getServiceHotelById(serviceHotel);
+
+    //     let soluong = req.body.soluong;
+    //     // Kiểm tra và lấy giá trị số lượng duy nhất
+    //     let selectedQuantity = 0;
+
+    //     if (Array.isArray(soluong)) {
+    //         // Nếu là mảng, tìm số lượng khác rỗng
+    //         selectedQuantity = soluong.find(q => q !== '') || 0; // Lấy giá trị đầu tiên không rỗng
+    //     } else {
+    //         // Nếu không phải là mảng, chỉ cần lấy giá trị
+    //         selectedQuantity = soluong || 0;
+    //     }
+
+    //     // Chuyển đổi sang số nếu cần
+    //     selectedQuantity = parseInt(selectedQuantity, 10);
+
+    //     let serviceQuantity = {
+    //         detail_booking: detailBooking._id,
+    //         service_hotel: serviceHotelID._id,
+    //         quatity: selectedQuantity,
+    //     }
+    //     await createServiceQuantity(serviceQuantity);
+    //     let cookies = new CookieProvider(req, res);
+    //     cookies.setCookie(
+    //         constants.has_message,
+    //         JSON.stringify(message("Bạn đã thêm dịch vụ thành công!", constantMesages.successCustom)),
+    //         1
+    //     );
+    //     res.redirect("/manager/" + req.hotel._id + "/booking/status_booking/" + booking._id);
+
+    // }
     async addHandlerServiceQuantity(req, res) {
-        let booking = await getBookingById(req.params.id, false);
-        let detailBooking = await getBookingDetailById(req.params.id)
-        let serviceHotel = req.body.dichvuphong;
-        let serviceHotelID = await getServiceHotelById(serviceHotel);
+        try {
+            // Lấy thông tin booking và chi tiết booking
+            let booking = await getBookingById(req.params.id, false);
+            let detailBooking = await getBookingDetailById(req.params.id);
+            let serviceHotels = req.body.dichvuphong; // Mảng các dịch vụ đã chọn
+            let soluong = req.body.soluong; // Mảng số lượng tương ứng
+    
+            // Kiểm tra xem serviceHotels và soluong có phải là mảng và có cùng độ dài không
+            if (Array.isArray(serviceHotels) && Array.isArray(soluong) && serviceHotels.length === soluong.length) {
+                // Lặp qua từng dịch vụ đã chọn
+                for (let i = 0; i < serviceHotels.length; i++) {
+                    // Lấy thông tin dịch vụ theo ID
+                    let serviceHotel = await getServiceHotelById(serviceHotels[i]);
+    
+                    // Kiểm tra nếu dịch vụ tồn tại và số lượng là hợp lệ
+                    if (serviceHotel) {
+                        let selectedQuantity = soluong[i] !== '' ? parseInt(soluong[i], 10) : 0;
+    
+                        // Chỉ thêm nếu số lượng lớn hơn 0
+                        if (selectedQuantity > 0) {
+                            let serviceQuantity = {
+                                detail_booking: detailBooking._id,
+                                service_hotel: serviceHotel._id,
+                                quatity: selectedQuantity, // Sửa lỗi chính tả từ "quatity" thành "quantity"
+                            };
+                            await createServiceQuantity(serviceQuantity);
+                        }
+                    }
+                }
+            }
+    
+            // Thiết lập cookie và chuyển hướng về trang quản lý
+            let cookies = new CookieProvider(req, res);
+            cookies.setCookie(
+                constants.has_message,
+                JSON.stringify(message("Bạn đã thêm dịch vụ thành công!", constantMesages.successCustom)),
+                1
+            );
+            res.redirect("/manager/" + req.hotel._id + "/booking/status_booking/" + booking._id);
+        } catch (error) {
+            console.error("Error in addHandlerServiceQuantity:", error);
+            res.status(500).send("Có lỗi xảy ra, vui lòng thử lại sau.");
+        }
+    }
+    
+    
+    async deleteserviceHotelBookingHandler(req, res) {
 
-        let soluong = req.body.soluong;
-        // Kiểm tra và lấy giá trị số lượng duy nhất
-        let selectedQuantity = 0;
-
-        if (Array.isArray(soluong)) {
-            // Nếu là mảng, tìm số lượng khác rỗng
-            selectedQuantity = soluong.find(q => q !== '') || 0; // Lấy giá trị đầu tiên không rỗng
-        } else {
-            // Nếu không phải là mảng, chỉ cần lấy giá trị
-            selectedQuantity = soluong || 0;
+        try {
+            let originServiceQuantity = await getServiceQuantityById(req.params.id);
+            await deleteServiceQuantity(originServiceQuantity._id.toString())
+        } catch (e) {
+            console.log(e);
         }
 
-        // Chuyển đổi sang số nếu cần
-        selectedQuantity = parseInt(selectedQuantity, 10);
-
-        let serviceQuantity = {
-            detail_booking: detailBooking._id,
-            service_hotel: serviceHotelID._id,
-            quatity: selectedQuantity,
-        }
-        await createServiceQuantity(serviceQuantity);
         let cookies = new CookieProvider(req, res);
         cookies.setCookie(
             constants.has_message,
-            JSON.stringify(message("Bạn đã thêm dịch vụ thành công!", constantMesages.successCustom)),
+            JSON.stringify(message("Bạn đã xóa thông tin dịch vụ thành công!", constantMesages.successCustom)),
             1
         );
-        res.redirect("/manager/" + req.hotel._id + "/booking/status_booking/" + booking._id);
+        res.redirect("/manager/" + req.hotel._id + "/booking");
 
     }
-
     async addBooking(req, res) {
         let rooms = await getAllRooms({
             hotel: req.hotel,
@@ -1044,7 +1110,6 @@ class ManagerController {
         let services = await getAllService({
             hotel: req.hotel,
         });
-        console.log("Service: ", services);
         res.render("index-manager", {
             page: "manager/index",
             roomPage: "cosovatchat/management",
@@ -1352,7 +1417,9 @@ class ManagerController {
     async deleteServiceHotelHandler(req, res) {
         try {
             let originServiceHotel = await getServiceHotelById(req.params.id);
+            console.log("id service hotel:", originServiceHotel._id)
             await deleteServiceHotel(originServiceHotel._id.toString())
+            console.log("sau khi xoa service hotel:", originServiceHotel)
         } catch (e) {
             console.log(e);
         }
