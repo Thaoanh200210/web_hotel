@@ -22,6 +22,7 @@ const getAllService = require("../services/get_all_service")
 const getAllServiceHotel = require("../services/get_all_service_hotel")
 const getAllServiceQuantity = require("../services/get_all_service_quantity")
 const getAllTypeRoom = require("../services/get_all_type_of_rooms")
+const getAllDetailBookingByIdBookings = require("../services/get_all_detail_booking_by_id_booking")
 const getTypeRoomById = require("../services/get_type_room_by_id")
 const getTypeRoomByIdAndHotel = require("../services/get_type_of_room_by_id_and_hotel")
 const getCurrentEvent = require("../services/get_current_event")
@@ -40,6 +41,7 @@ const getImageByFilter = require("../services/get_image_by_filter")
 const getAllDiscounts = require("../services/get_all_discount")
 const getCityByID = require("../services/get_city_by_id")
 const createBookingDetails = require("../services/create_booking_detail")
+const createBookings = require("../services/create_booking")
 const createRoom = require("../services/create_room")
 const createUser = require("../services/create_user")
 const createEvent = require("../services/create_event")
@@ -792,7 +794,7 @@ class ManagerController {
     async booking(req, res) {
         let bookings = await getAllBookings(req.hotel);
         let details = await getAllBookingDetails(req.hotel);
-
+        bookings.sort((a, b) => new Date(b.check_in) - new Date(a.check_in));
         let getStatus = (booking) => {
             if (booking.deleteAt || booking.status == "Đã hủy") {
                 return 'Đã bị hủy';
@@ -826,11 +828,49 @@ class ManagerController {
         })
     }
 
+    // async editBookingStatus(req, res) {
+    //     let booking = await getBookingById(req.params.id);
+    //     let detail = await getBookingDetailById(req.params.id);
+    //     let service_hotels = await getAllServiceHotel({ hotel: req.hotel });
+    //     let service_quantitys = await getAllServiceQuantity({ detail_booking: detail });
+    //     let getStatus = (booking) => {
+    //         if (booking.deleteAt || booking.status == "Đã hủy") {
+    //             return 'Đã bị hủy';
+    //         } else if (booking.status == BookingStatusEnum.CheckedOut) {
+    //             return 'Đã trả phòng';
+    //         } else if (booking.status == BookingStatusEnum.CheckedIn) {
+    //             return 'Đang nhận phòng';
+    //         } else if (booking.status == BookingStatusEnum.Reserved) {
+    //             return 'Đã đặt phòng';
+    //         }
+    //     }
+
+    //     res.render("index-manager", {
+    //         page: "manager/index",
+    //         roomPage: "booking/status_booking",
+    //         id: req.params.id,
+    //         booking: booking,
+    //         detail: detail,
+    //         service_quantitys: service_quantitys,
+    //         service_hotels: service_hotels,
+    //         getStatus: getStatus,
+    //         // getRoom: getRoom,
+    //         ...defaultManagerNav(),
+    //         ...defaultData(req)
+    //     })
+    // }
+
     async editBookingStatus(req, res) {
         let booking = await getBookingById(req.params.id);
-        let detail = await getBookingDetailById(req.params.id);
+        let details = await getAllDetailBookingByIdBookings({
+            booking: booking._id,
+        }); // Lấy tất cả chi tiết phòng của booking
+        console.log("details:",details);
+        if (!Array.isArray(details)) {
+            details = [details]; // Nếu details không phải là mảng, chuyển nó thành mảng
+        }
         let service_hotels = await getAllServiceHotel({ hotel: req.hotel });
-        let service_quantitys = await getAllServiceQuantity({ detail_booking: detail });
+        let service_quantitys = await getAllServiceQuantity({ detail_booking: details });
         let getStatus = (booking) => {
             if (booking.deleteAt || booking.status == "Đã hủy") {
                 return 'Đã bị hủy';
@@ -842,21 +882,21 @@ class ManagerController {
                 return 'Đã đặt phòng';
             }
         }
-
+    
         res.render("index-manager", {
             page: "manager/index",
             roomPage: "booking/status_booking",
             id: req.params.id,
             booking: booking,
-            detail: detail,
+            details: details, // Truyền mảng details vào view
             service_quantitys: service_quantitys,
             service_hotels: service_hotels,
             getStatus: getStatus,
-            // getRoom: getRoom,
             ...defaultManagerNav(),
             ...defaultData(req)
-        })
+        });
     }
+    
 
     async editStatusBookingHandler(req, res) {
         let booking = await getBookingById(req.params.id, false);
@@ -935,18 +975,18 @@ class ManagerController {
             let detailBooking = await getBookingDetailById(req.params.id);
             let serviceHotels = req.body.dichvuphong; // Mảng các dịch vụ đã chọn
             let soluong = req.body.soluong; // Mảng số lượng tương ứng
-    
+
             // Kiểm tra xem serviceHotels và soluong có phải là mảng và có cùng độ dài không
             if (Array.isArray(serviceHotels) && Array.isArray(soluong) && serviceHotels.length === soluong.length) {
                 // Lặp qua từng dịch vụ đã chọn
                 for (let i = 0; i < serviceHotels.length; i++) {
                     // Lấy thông tin dịch vụ theo ID
                     let serviceHotel = await getServiceHotelById(serviceHotels[i]);
-    
+
                     // Kiểm tra nếu dịch vụ tồn tại và số lượng là hợp lệ
                     if (serviceHotel) {
                         let selectedQuantity = soluong[i] !== '' ? parseInt(soluong[i], 10) : 0;
-    
+
                         // Chỉ thêm nếu số lượng lớn hơn 0
                         if (selectedQuantity > 0) {
                             let serviceQuantity = {
@@ -959,7 +999,7 @@ class ManagerController {
                     }
                 }
             }
-    
+
             // Thiết lập cookie và chuyển hướng về trang quản lý
             let cookies = new CookieProvider(req, res);
             cookies.setCookie(
@@ -973,8 +1013,8 @@ class ManagerController {
             res.status(500).send("Có lỗi xảy ra, vui lòng thử lại sau.");
         }
     }
-    
-    
+
+
     async deleteserviceHotelBookingHandler(req, res) {
 
         try {
@@ -994,16 +1034,21 @@ class ManagerController {
 
     }
     async addBooking(req, res) {
+        let booking = await getBookingById(req.params.id);
         let rooms = await getAllRooms({
             hotel: req.hotel,
         });
         let selections = await getAllSelection({
             hotel: req.hotel,
         });
+        let userID = booking.customer._id;
+
         res.render("index-manager", {
             page: "manager/index",
             roomPage: "booking/add",
             rooms: rooms,
+            booking: booking,
+            userID: userID,
             selections: selections,
             ...defaultManagerNav(),
             ...defaultData(req)
@@ -1012,12 +1057,19 @@ class ManagerController {
     }
 
     async addBookingHandler(req, res) {
-        let selection = req.body.luachon;
-        let ngaydau = req.query.ngaydau;
-        let ngayket = req.query.ngayket;
-        const now = new Date();
-        let currentSelection = await getSelectionById(selection);
-        let isCheckInWithCreditCard = currentSelection.name == 'Thanh toán online qua chuyển khoản';
+        let ngaydau = req.body.ngaydau; // Lấy từ body thay vì body
+        let ngayket = req.body.ngayket; // Lấy từ body thay vì query
+        let roomID = req.body.phong;
+        console.log("roomID:", roomID);
+        if (!roomID) {
+            console.error("Không thể lấy roomID từ req.body");
+            return res.status(400).send("Room ID không hợp lệ");
+        }
+    
+ 
+        // const now = new Date();
+        
+       
         let events = await getCurrentEvent(req.hotel);
         let discounts = events.map(event => event.discount_percent);
         let maxDiscount = 0;
@@ -1027,16 +1079,16 @@ class ManagerController {
         }
 
         let discount = maxDiscount / 100;
-        let phongs = req.body.phong;
-        let roomDetails = []
+        let roomDetails  = []
         let total = 0;
         let numberOfDaysBooked = Math.floor((new Date(req.body.ngayket) - new Date(req.body.ngaydau)) / (86400 * 1000));
+        if(typeof roomID == "string"){
+            let room = await getRoomById(roomID,false);
+            console.log("room:", room);
 
-        if (typeof phongs == "string") {
-            let room = await getRoomById(phongs, false);
-            let typeRoom = await getTypeRoomByIdAndHotel(req.hotel, room.type_room._id.toString(), ngaydau, ngayket, true);
-            discount = (discount > typeRoom.discount / 100 ? discount : typeRoom.discount / 100)
-            if (discount) {
+            let typeRoom = await getTypeRoomByIdAndHotel(req.hotel,room.type_room._id.toString(),ngaydau,ngayket,true);
+            discount = (discount > typeRoom.discount/100 ? discount : typeRoom.discount/100)
+            if(discount){
                 roomDetails.push({
                     original_price: room.original_price,
                     discount_price: discount * parseInt(room.original_price) * -1,
@@ -1045,7 +1097,7 @@ class ManagerController {
                     NowDate: now,
                 });
                 total = total + (parseInt(room.original_price) - discount * parseInt(room.original_price)) * numberOfDaysBooked;
-            } else {
+            }else{
                 roomDetails.push({
                     original_price: room.original_price,
                     discount_price: 0,
@@ -1056,11 +1108,11 @@ class ManagerController {
                 total = total + parseInt(room.original_price) * numberOfDaysBooked;
             }
         } else {
-            for (let phong of phongs) {
-                let room = await getRoomById(phong, false);
-                let typeRoom = await getTypeRoomByIdAndHotel(req.hotel, room.type_room._id.toString(), ngaydau, ngayket, true);
-                discount = (discount > typeRoom.discount / 100 ? discount : typeRoom.discount / 100)
-                if (discount) {
+            for(let phong of roomID){
+                let room = await getRoomById(phong,false);
+                let typeRoom = await getTypeRoomByIdAndHotel(req.hotel,room.type_room._id.toString(),ngaydau,ngayket,true);
+                discount = (discount > typeRoom.discount/100 ? discount : typeRoom.discount/100)
+                if(discount){
                     roomDetails.push({
                         original_price: room.original_price,
                         discount_price: discount * parseInt(room.original_price) * -1,
@@ -1069,7 +1121,7 @@ class ManagerController {
                         NowDate: now,
                     });
                     total = total + (parseInt(room.original_price) - discount * parseInt(room.original_price)) * numberOfDaysBooked;
-                } else {
+                }else{
                     roomDetails.push({
                         original_price: room.original_price,
                         discount_price: 0,
@@ -1081,29 +1133,32 @@ class ManagerController {
                 }
             }
         }
-        let cookies = new CookieProvider(req, res);
-        let userString = cookies.getCookie(constants.user_info);
-        // let customer = await getUserById(JSON.parse(userString)._id) ;
-        let booking = {
-            customer: customer,
-            check_in: new Date(req.body.ngaydau).setHours(14),
-            check_out: new Date(req.body.ngayket).setHours(12),
-            customer_identify_number: req.body.chungminhnhandan,
-            total_price: total,
-        }
-        let currenrtBooking = await createBookings(booking);
-        roomDetails = roomDetails.map(x => {
-            x.booking = currenrtBooking;
-            return x;
-        })
-
-        for (let item of roomDetails) {
-            await createBookingDetails(item);
-        }
-        if (isCheckInWithCreditCard) {
-            return res.redirect("/payment/create_payment_url/" + currenrtBooking._id + "?amount=" + total)
-        }
-        return res.redirect("/manager/" + +req.hotel._id + +"/management")
+ 
+        // let bookingID = await getBookingById(req.params.id);
+        // let userID = bookingID.customer._id;
+        // let booking = {
+        //     customer: userID,
+        //     check_in: new Date(req.body.ngaydau).setHours(14),
+        //     check_out: new Date(req.body.ngayket).setHours(12),
+        //     customer_identify_number: req.body.chungminhnhandan,
+        //     total_price: total,
+        // }
+        // let currenrtBooking = await createBookings(booking);
+        // roomDetails = {
+        //     original_price: room.original_price,
+        //     discount_price: 0,
+        //     booking: currenrtBooking,
+        //     room: room,
+        //     NowDate: now,
+        // };
+        // await createBookingDetails(roomDetails);
+        // let cookies = new CookieProvider(req, res);
+        // cookies.setCookie(
+        //     constants.has_message,
+        //     JSON.stringify(message("Bạn đã đặt phòng thành công!", constantMesages.successCustom)),
+        //     1
+        // );
+        return res.redirect("/manager/" + req.hotel._id + "/booking")
     }
     //quản lý co so vat chat
     async service(req, res) {

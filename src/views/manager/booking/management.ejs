@@ -3,7 +3,7 @@
       <div class="card-header d-flex">
         <div class="card-title flex-grow-1 d-flex justify-content-between align-items-center">
             <h3>Quản lý đặt phòng</h3>
-            <a href="/manager/<%=hotel._id%>/booking/add" class="btn btn-dark">Thêm</a>
+            
         </div>
       </div>
       <!-- /.card-header -->
@@ -27,7 +27,7 @@
             <% for(let booking of bookings){ %>
             <tr>
               <td><%= i++ %></td>
-              <td><%= getRoom(details, booking._id) %></td>
+              <td><%= getRoom(details, booking._id) %> </td>
               <td><%= booking.customer.name %></td>
               <td><%= booking.check_in.toLocaleString() %></td>
               <td><%= booking.check_out.toLocaleString()  %></td>

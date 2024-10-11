@@ -10,25 +10,25 @@
         <tbody>
           <tr>
             <td>
-              <%= detail.room.number_room %>
+              Số phòng: 
+              <ul>
+                <% details.forEach(function(detail) { %>
+                  <li><%= detail.room.number_room %></li>
+                <% }) %>
+              </ul>
             </td>
           </tr>
           <tr>
-            <td>Ngày đặt phòng: <%= detail.NowDate.toLocaleString() %>
-            </td>
+            <td>Ngày đặt phòng: <%= details[0]?.NowDate.toLocaleString() %></td>
           </tr>
           <tr>
-            <td>Ngày nhận phòng: <%= booking.check_in.toLocaleString() %>
-            </td>
+            <td>Ngày nhận phòng: <%= booking.check_in.toLocaleString() %></td>
           </tr>
           <tr>
-            <td>Ngày trả: <%= booking.check_out.toLocaleString() %>
-            </td>
+            <td>Ngày trả: <%= booking.check_out.toLocaleString() %></td>
           </tr>
           <tr>
-            <td>Giá: <%= parseInt(booking.total_price).toLocaleString('it-IT', {style : 'currency' , currency : 'VND' })
-                %>
-            </td>
+            <td>Tổng giá tiền đặt phòng: <%= parseInt(booking.total_price).toLocaleString('it-IT', {style : 'currency' , currency : 'VND' }) %></td>
           </tr>
         </tbody>
       </table>
@@ -37,7 +37,7 @@
     <div class="col">
 
     </div>
-    <div class="col-5">
+    <div class="col-4">
       <table class="table table-bordered">
         <thead>
           <tr>
@@ -46,7 +46,7 @@
         </thead>
         <tbody>
           <tr>
-            <td>Số phòng: <%= booking.customer.name %>
+            <td> <%= booking.customer.name %>
             </td>
           </tr>
           <tr>
@@ -64,6 +64,10 @@
         </tbody>
       </table>
 
+    </div>
+
+    <div class="col">
+      <a href="/manager/<%=hotel._id%>/booking/status_booking/<%=id%>/add" class="btn btn-dark">Thêm đặt phòng</a>
     </div>
     <!-- <div style="color: blue; font-weight: bold ;">Đã thanh toán online: <%=  parseInt(booking.total_price).toLocaleString('it-IT', {style : 'currency', currency : 'VND'}) %></div> -->
   </div>
