@@ -866,9 +866,7 @@ class ManagerController {
             booking: booking._id,
         }); // Lấy tất cả chi tiết phòng của booking
         console.log("details:",details);
-        if (!Array.isArray(details)) {
-            details = [details]; // Nếu details không phải là mảng, chuyển nó thành mảng
-        }
+
         let service_hotels = await getAllServiceHotel({ hotel: req.hotel });
         let service_quantitys = await getAllServiceQuantity({ detail_booking: details });
         let getStatus = (booking) => {
@@ -1057,35 +1055,28 @@ class ManagerController {
     }
 
     async addBookingHandler(req, res) {
+        let selection = req.body.luachon;
         let ngaydau = req.body.ngaydau; // Lấy từ body thay vì body
         let ngayket = req.body.ngayket; // Lấy từ body thay vì query
-        let roomID = req.body.phong;
-        console.log("roomID:", roomID);
-        if (!roomID) {
-            console.error("Không thể lấy roomID từ req.body");
-            return res.status(400).send("Room ID không hợp lệ");
-        }
-    
- 
-        // const now = new Date();
+        const now = new Date();
         
-       
+        let currentSelection = await getSelectionById(selection);
+        let isCheckInWithCreditCard = currentSelection.name == 'Thanh toán online qua chuyển khoản';
         let events = await getCurrentEvent(req.hotel);
         let discounts = events.map(event => event.discount_percent);
         let maxDiscount = 0;
-
         if (discounts.length != 0) {
             maxDiscount = Math.max.apply(null, discounts);
         }
 
         let discount = maxDiscount / 100;
+        let phongs = req.body.phong;
+        console.log("roomID:", phongs);
         let roomDetails  = []
         let total = 0;
         let numberOfDaysBooked = Math.floor((new Date(req.body.ngayket) - new Date(req.body.ngaydau)) / (86400 * 1000));
-        if(typeof roomID == "string"){
-            let room = await getRoomById(roomID,false);
-            console.log("room:", room);
-
+        if(typeof phongs == "string"){
+            let room = await getRoomById(phongs,false);
             let typeRoom = await getTypeRoomByIdAndHotel(req.hotel,room.type_room._id.toString(),ngaydau,ngayket,true);
             discount = (discount > typeRoom.discount/100 ? discount : typeRoom.discount/100)
             if(discount){
@@ -1108,7 +1099,7 @@ class ManagerController {
                 total = total + parseInt(room.original_price) * numberOfDaysBooked;
             }
         } else {
-            for(let phong of roomID){
+            for(let phong of phongs){
                 let room = await getRoomById(phong,false);
                 let typeRoom = await getTypeRoomByIdAndHotel(req.hotel,room.type_room._id.toString(),ngaydau,ngayket,true);
                 discount = (discount > typeRoom.discount/100 ? discount : typeRoom.discount/100)
@@ -1134,30 +1125,34 @@ class ManagerController {
             }
         }
  
-        // let bookingID = await getBookingById(req.params.id);
-        // let userID = bookingID.customer._id;
-        // let booking = {
-        //     customer: userID,
-        //     check_in: new Date(req.body.ngaydau).setHours(14),
-        //     check_out: new Date(req.body.ngayket).setHours(12),
-        //     customer_identify_number: req.body.chungminhnhandan,
-        //     total_price: total,
-        // }
-        // let currenrtBooking = await createBookings(booking);
-        // roomDetails = {
-        //     original_price: room.original_price,
-        //     discount_price: 0,
-        //     booking: currenrtBooking,
-        //     room: room,
-        //     NowDate: now,
-        // };
-        // await createBookingDetails(roomDetails);
-        // let cookies = new CookieProvider(req, res);
-        // cookies.setCookie(
-        //     constants.has_message,
-        //     JSON.stringify(message("Bạn đã đặt phòng thành công!", constantMesages.successCustom)),
-        //     1
-        // );
+        let bookingID = await getBookingById(req.params.id);
+        let userID = bookingID.customer._id;
+        let booking = {
+            customer: userID,
+            check_in: new Date(req.body.ngaydau).setHours(14),
+            check_out: new Date(req.body.ngayket).setHours(12),
+            customer_identify_number: req.body.chungminhnhandan,
+            total_price: total,
+        }
+        let currenrtBooking = await createBookings(booking);
+        roomDetails = roomDetails.map(x => {
+            x.booking = currenrtBooking;
+            return x;
+        })
+        
+        for(let item of roomDetails){
+            await createBookingDetails(item) ;
+        }
+        if(isCheckInWithCreditCard){
+            return res.redirect("/payment/create_payment_url/" + currenrtBooking._id + "?amount=" + total)
+        }
+        await createBookingDetails(roomDetails);
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã đặt phòng thành công!", constantMesages.successCustom)),
+            1
+        );
         return res.redirect("/manager/" + req.hotel._id + "/booking")
     }
     //quản lý co so vat chat
