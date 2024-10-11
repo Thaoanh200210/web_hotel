@@ -14,10 +14,11 @@
 				</div>
 
 				<div id="availability">
-					<form action="#">
+					
+					<form id="hotelForm" action="" method="GET">
 						<div class="a-col">
 							<section>
-								<select class="form-select" name="hotelId" style="font-size: 15px; margin-top:5px">
+								<select class="form-select" name="hotelId" id="hotelSelect" style="font-size: 15px; margin-top:5px">
 									<option value="" disabled selected>Select Hotel</option>
 									<% for(let hotel of hotels){ %>
 										<option value="<%= hotel._id %>"><%= hotel.name %></option>
@@ -28,24 +29,26 @@
 						<div class="a-col alternate">
 							<div class="input-field">
 								<label for="date-start">Check In</label>
-								<input type="date"  name="startDate" class="form-control" id="date-start" style="font-size: 15px; width: 200px " />
+								<input type="date" name="ngaydau" class="form-control" id="date-start" style="font-size: 15px; width: 200px" />
 							</div>
 						</div>
 						<div class="a-col alternate">
 							<div class="input-field">
 								<label for="date-end">Check Out</label>
-								<input type="date" name="endDate" class="form-control" id="date-end" style="font-size: 15px; width: 200px " />
+								<input type="date" name="ngayket" class="form-control" id="date-end" style="font-size: 15px; width: 200px" />
 							</div>
 						</div>
 						<div class="a-col action">
-							<a href="#">
-								<span>Check</span>
-								Availability
-							</a>
+							<button type="submit" id="submitButton" class="styled-button" disabled>
+								<span class="button-text">Check Availability</span>
+							</button>
+							<p id="dateWarning" style="color: red; font-size: 14px; display: none; margin-top: 10px;">
+								Vui lòng chọn ngày check-in và check-out.
+							</p>
 						</div>
 					</form>
+					
 				</div>
-				
 			</div>
 		</div>
 		
@@ -266,3 +269,82 @@
   agent-id="96d5f0df-a598-45a1-add4-1b3c988d6361"
   language-code="vi"
 ></df-messenger>
+
+<style>
+    /* CSS cho nút */
+    .styled-button {
+        background-color: #007bff; /* Màu nền xanh */
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+    /* CSS cho span bên trong nút */
+    .button-text {
+        display: inline-block;
+        font-weight: bold;
+    }
+
+    /* Hiệu ứng hover cho nút */
+    .styled-button:hover:not(:disabled) {
+        background-color: #0056b3; /* Màu nền đậm hơn khi hover */
+        transform: scale(1.05); /* Phóng to nhẹ khi hover */
+    }
+
+    /* CSS khi nút bị vô hiệu hóa */
+    .styled-button:disabled {
+        background-color: #cccccc; /* Màu xám khi bị vô hiệu hóa */
+        cursor: not-allowed;
+    }
+</style>
+
+<script>
+    // Lấy các phần tử input, nút submit, thông báo và select
+    const dateStart = document.getElementById('date-start');
+    const dateEnd = document.getElementById('date-end');
+    const submitButton = document.getElementById('submitButton');
+    const dateWarning = document.getElementById('dateWarning');
+    const hotelSelect = document.getElementById('hotelSelect');
+    const hotelForm = document.getElementById('hotelForm');
+
+    // Hàm kiểm tra và cập nhật trạng thái của nút và thông báo
+    function validateDates() {
+        if (dateStart.value && dateEnd.value) {
+            // Kiểm tra nếu ngày check-out không nhỏ hơn ngày check-in
+            if (new Date(dateEnd.value) >= new Date(dateStart.value)) {
+                submitButton.disabled = false;
+                dateWarning.style.display = 'none'; // Ẩn thông báo nếu ngày hợp lệ
+            } else {
+                submitButton.disabled = true;
+                dateWarning.style.display = 'block'; // Hiện thông báo nếu ngày không hợp lệ
+                dateWarning.textContent = 'Ngày check-out phải bằng hoặc sau ngày check-in.'; // Thông báo lỗi cụ thể
+            }
+        } else {
+            submitButton.disabled = true;
+            dateWarning.style.display = 'block'; // Hiện thông báo nếu chưa chọn ngày
+            dateWarning.textContent = 'Vui lòng chọn ngày check-in và check-out.'; // Thông báo nhắc người dùng
+        }
+    }
+
+    // Hàm cập nhật action của form khi người dùng chọn một khách sạn
+    function updateFormAction() {
+        const selectedHotelId = hotelSelect.value;
+        if (selectedHotelId) {
+            hotelForm.action = `/hotel/${selectedHotelId}/room`;
+        }
+    }
+
+    // Lắng nghe sự kiện 'input' trên các trường ngày
+    dateStart.addEventListener('input', validateDates);
+    dateEnd.addEventListener('input', validateDates);
+
+    // Lắng nghe sự kiện 'change' trên select để cập nhật action của form
+    hotelSelect.addEventListener('change', updateFormAction);
+
+    // Gọi validateDates() khi trang tải để đảm bảo trạng thái chính xác ban đầu
+    validateDates();
+</script>
