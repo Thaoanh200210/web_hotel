@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row">
-    <div class="col-5">
+    <div class="col-6">
       <table class="table table-bordered">
         <thead>
           <tr>
@@ -10,34 +10,38 @@
         <tbody>
           <tr>
             <td>
-              Số phòng: 
-              <ul>
-                <% details.forEach(function(detail) { %>
-                  <li><%= detail.room.number_room %></li>
+              Số phòng:
+              <% details.forEach(function(detail) { %>
+                <p>
+                  <%= detail.room.number_room %>
+                </p>
                 <% }) %>
-              </ul>
+
             </td>
           </tr>
           <tr>
-            <td>Ngày đặt phòng: <%= details[0]?.NowDate.toLocaleString() %></td>
+            <td>Ngày đặt phòng: <%= details[0]?.NowDate.toLocaleString() %>
+            </td>
           </tr>
           <tr>
-            <td>Ngày nhận phòng: <%= booking.check_in.toLocaleString() %></td>
+            <td>Ngày nhận phòng: <%= booking.check_in.toLocaleString() %>
+            </td>
           </tr>
           <tr>
-            <td>Ngày trả: <%= booking.check_out.toLocaleString() %></td>
+            <td>Ngày trả: <%= booking.check_out.toLocaleString() %>
+            </td>
           </tr>
           <tr>
-            <td>Tổng giá tiền đặt phòng: <%= parseInt(booking.total_price).toLocaleString('it-IT', {style : 'currency' , currency : 'VND' }) %></td>
+            <td>Tiền đã đặt phòng: <%= parseInt(booking.total_price).toLocaleString('it-IT', {style : 'currency' ,
+                currency : 'VND' }) %>
+            </td>
           </tr>
         </tbody>
       </table>
 
     </div>
-    <div class="col">
-
-    </div>
-    <div class="col-4">
+    <div class="col"></div>
+    <div class="col-5">
       <table class="table table-bordered">
         <thead>
           <tr>
@@ -46,7 +50,8 @@
         </thead>
         <tbody>
           <tr>
-            <td> <%= booking.customer.name %>
+            <td>
+              <%= booking.customer.name %>
             </td>
           </tr>
           <tr>
@@ -64,18 +69,28 @@
         </tbody>
       </table>
 
-    </div>
-
-    <div class="col">
       <a href="/manager/<%=hotel._id%>/booking/status_booking/<%=id%>/add" class="btn btn-dark">Thêm đặt phòng</a>
     </div>
     <!-- <div style="color: blue; font-weight: bold ;">Đã thanh toán online: <%=  parseInt(booking.total_price).toLocaleString('it-IT', {style : 'currency', currency : 'VND'}) %></div> -->
   </div>
 
   <div class="row">
+    <div class="col-4">
+      <div class="mb-3">
+        <label class="form-label">Ngày trả phòng thực tế</label>
+        <input class="form-control shadow-none" name="ngaytraphong" type="datetime-local" required>
+      </div>
+    </div>
+    <div class="col-8">
+      <label class="form-label"></label>
+      <div style="margin-top: 11px;">Tiền thực tế phải trả: <%= %></div>
+    </div>
+  </div>
+  <div class="row">
     <div class="col-7">
       <div class="pd-5">
-        <a style="color: red" href="/manager/<%=hotel._id%>/booking/status_booking/<%=id%>/service_hotel">Chọn dịch vụ
+        <a style="color: red;font-weight: bold;"
+          href="/manager/<%=hotel._id%>/booking/status_booking/<%=id%>/service_hotel">Chọn dịch vụ
           khách sạn khách sử dụng</a>
 
       </div>
@@ -91,32 +106,79 @@
           </tr>
         </thead>
         <tbody>
-          <% for(service_quantity of service_quantitys) {%>
-            <tr>
-              <td>
-                <%=service_quantity.service_hotel.name %>
-              </td>
-              <td><%=parseInt(service_quantity.service_hotel.price).toLocaleString('it-IT', {style: 'currency' ,
-                  currency: 'VND' }) %></td>
-              <td>
-                <%=service_quantity.quatity %>
-              </td>
-              <td>
-                <%= (parseInt(service_quantity.service_hotel.price) * service_quantity.quatity).toLocaleString('it-IT',
-                  {style: 'currency' , currency: 'VND' }) %>
-              </td>
-              <td>
-                <button
-                  onclick="deleteConfirmButtonClk('/manager/<%=hotel._id%>/booking/status_booking/<%=id%>/service_hotel/delete/<%=service_quantity._id %>','Bạn có muốn xóa thông tin dịch vụ này không?')"
-                  class="btn btn-danger">Xóa</button>
-              </td>
-            </tr>
-            <% } %>
+          <% let totalServicePrice=0; %> <!-- Khởi tạo biến tổng tiền -->
+            <% for (service_quantity of service_quantitys) { %>
+              <tr>
+                <td>
+                  <%= service_quantity.service_hotel.name %>
+                </td>
+                <td>
+                  <%= parseInt(service_quantity.service_hotel.price).toLocaleString('it-IT', { style: 'currency' ,
+                    currency: 'VND' }) %>
+                </td>
+                <td>
+                  <%= service_quantity.quatity %>
+                </td>
+                <td>
+                  <% let servicePrice=parseInt(service_quantity.service_hotel.price) * service_quantity.quatity;
+                    totalServicePrice +=servicePrice; // Cộng dồn vào tổng tiền %>
+                    <%= servicePrice.toLocaleString('it-IT', { style: 'currency' , currency: 'VND' }) %>
+                </td>
+                <td>
+                  <button
+                    onclick="deleteConfirmButtonClk('/manager/<%= hotel._id %>/booking/status_booking/<%= id %>/service_hotel/delete/<%= service_quantity._id %>','Bạn có muốn xóa thông tin dịch vụ này không?')"
+                    class="btn btn-danger">Xóa</button>
+                </td>
+              </tr>
+              <% } %>
         </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" class="text-right"><strong>Tổng tiền dịch vụ</strong></td>
+            <td colspan="2">
+              <%= totalServicePrice.toLocaleString('it-IT', { style: 'currency' , currency: 'VND' }) %>
+            </td>
+          </tr>
+        </tfoot>
       </table>
     </div>
 
-    <div class="col-5"></div>
+    <div class="col-5" style="margin-top: 24px;">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th class="c-bg-primary"></th>
+            <th class="c-bg-primary">Tiền</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Đã thanh toán trên web
+            </td>
+            <td>
+              <%= parseInt(booking.total_price).toLocaleString('it-IT', {style : 'currency' , currency : 'VND' }) %>
+            </td>
+          </tr>
+          <tr>
+            <td>Tiền ở thực tế:</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Tiền dịch vụ</td>
+            <td>
+              <%= totalServicePrice.toLocaleString('it-IT', { style: 'currency' , currency: 'VND' }) %>
+            </td>
+          </tr>
+          <tr>
+            <td>Tổng thanh toán</td>
+            <td>
+             
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <form action="/manager/<%=hotel._id%>/booking/status_booking/<%=id%>" method="POST">

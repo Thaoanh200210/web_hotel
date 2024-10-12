@@ -611,6 +611,7 @@ class ManagerController {
             ...employees,
             ...subs,
         ]
+        users = Array.from(new Map(users.map(user => [user._id.toString(), user])).values());
         res.render("index-manager", {
             page: "manager/index",
             roomPage: "user/employee/management",
@@ -864,8 +865,7 @@ class ManagerController {
         let booking = await getBookingById(req.params.id);
         let details = await getAllDetailBookingByIdBookings({
             booking: booking._id,
-        }); // Lấy tất cả chi tiết phòng của booking
-        console.log("details:",details);
+        }); 
 
         let service_hotels = await getAllServiceHotel({ hotel: req.hotel });
         let service_quantitys = await getAllServiceQuantity({ detail_booking: details });
@@ -1071,7 +1071,6 @@ class ManagerController {
 
         let discount = maxDiscount / 100;
         let phongs = req.body.phong;
-        console.log("roomID:", phongs);
         let roomDetails  = []
         let total = 0;
         let numberOfDaysBooked = Math.floor((new Date(req.body.ngayket) - new Date(req.body.ngaydau)) / (86400 * 1000));
@@ -1146,7 +1145,6 @@ class ManagerController {
         if(isCheckInWithCreditCard){
             return res.redirect("/payment/create_payment_url/" + currenrtBooking._id + "?amount=" + total)
         }
-        await createBookingDetails(roomDetails);
         let cookies = new CookieProvider(req, res);
         cookies.setCookie(
             constants.has_message,
