@@ -49,6 +49,7 @@ const createDiscount = require("../services/create_discount")
 const createEmployee = require("../services/create_employee");
 const createImage = require("../services/create_image")
 const createTypeRoom = require("../services/create_type_room")
+const createFinals = require("../services/create_final")
 const createService = require("../services/create_service")
 const createServiceHotel = require("../services/create_service_hotel")
 const createSelection = require("../services/create_selection")
@@ -150,7 +151,7 @@ class ManagerController {
         originHotel.description = req.body.mieuta;
         originHotel.star = req.body.sosao;
         originHotel.city = req.body.city;
-        console.log("City", req.body.city);
+        
         if (file) {
             const imageData = await uploadImageFromLocal(file.path, 'hotel', file.filename);
             originHotel.image = imageData.img_url;
@@ -640,7 +641,7 @@ class ManagerController {
             password: req.body.matkhau
         }
         let employee = await createUser(user, req.body.role);
-        console.log("role nhan vien:", req.body.role)
+     
         await createEmployee(req.hotel, employee);
         let cookies = new CookieProvider(req, res);
         cookies.setCookie(
@@ -866,7 +867,9 @@ class ManagerController {
         let details = await getAllDetailBookingByIdBookings({
             booking: booking._id,
         }); 
-
+        let cookies = new CookieProvider(req, res);
+        let userString = cookies.getCookie(constants.user_info);
+        console.log("ten nhan vien:",userString )
         let service_hotels = await getAllServiceHotel({ hotel: req.hotel });
         let service_quantitys = await getAllServiceQuantity({ detail_booking: details });
         let getStatus = (booking) => {
@@ -1465,9 +1468,9 @@ class ManagerController {
     async deleteServiceHotelHandler(req, res) {
         try {
             let originServiceHotel = await getServiceHotelById(req.params.id);
-            console.log("id service hotel:", originServiceHotel._id)
+           
             await deleteServiceHotel(originServiceHotel._id.toString())
-            console.log("sau khi xoa service hotel:", originServiceHotel)
+         
         } catch (e) {
             console.log(e);
         }

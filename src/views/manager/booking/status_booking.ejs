@@ -174,7 +174,7 @@
             </td>
             <td>
               <div id="thanhtoantrenweb">
-              <%= parseInt(booking.total_price).toLocaleString('it-IT', {style : 'currency' , currency : 'VND' }) %>
+                <%= parseInt(booking.total_price).toLocaleString('it-IT', {style : 'currency' , currency : 'VND' }) %>
               </div>
             </td>
           </tr>
@@ -188,14 +188,20 @@
             <td>Tiền dịch vụ</td>
             <td>
               <div id="tiendichvu">
-              <%= totalServicePrice.toLocaleString('it-IT', { style: 'currency' , currency: 'VND' }) %>
-            </div>
+                <%= totalServicePrice.toLocaleString('it-IT', { style: 'currency' , currency: 'VND' }) %>
+              </div>
             </td>
           </tr>
           <tr>
-            <td>Tổng thanh toán</td>
+            <td id="tongthanhtoan">Tổng thanh toán</td>
             <td>
               <div id="final_price"></div>
+            </td>
+          </tr>
+          <tr>
+            <td id="">Người xử lý giao dịch</td>
+            <td>
+              <div><%= user.name %></div>
             </td>
           </tr>
         </tbody>
@@ -241,17 +247,11 @@
       const checkOut = new Date(this.getAttribute('data-check-out'));
       const details = JSON.parse(this.getAttribute('data-details'));
 
-      console.log('Ngày trả phòng:', ngayTraPhong);
-      console.log('Ngày nhận phòng:', checkIn);
-      console.log('Ngày trả dự kiến:', checkOut);
-      console.log('Chi tiết phòng:', details);
-
       let totalActualPayment = 0;
 
       details.forEach(function (detail) {
         const originalPrice = parseInt(detail.original_price);
         const discount = Math.abs(parseFloat(detail.discount_price / detail.original_price)); // Tính phần trăm giảm giá
-
         let numberOfDaysStayed = 0;
 
         // Tính số ngày đã ở
@@ -265,24 +265,59 @@
 
         // Tính tiền thực tế sau khi áp dụng giảm giá
         const discountedPrice = originalPrice - (originalPrice * discount);
-        const actualPayment = discountedPrice * numberOfDaysStayed;
+        let actualPayment = discountedPrice * numberOfDaysStayed;
+
+        // Thêm chi phí nếu ngay trả phòng < ngày checkout
+        if (ngayTraPhong.getTime() < checkOut.getTime()) {
+          actualPayment += (originalPrice * 0.3);
+        }
 
         totalActualPayment += actualPayment;
       });
-
-      console.log('Tổng tiền thực tế:', totalActualPayment);
-
+      // Cập nhật hiển thị số tiền thực tế phải trả
       document.getElementById('actualPayment').textContent = totalActualPayment.toLocaleString('it-IT', {
         style: 'currency',
         currency: 'VND'
       });
 
+      // Cập nhật giá trị vào <div id="tienthucte"></div>
       const actualPaymentDiv = document.getElementById('tienthucte');
       actualPaymentDiv.textContent = totalActualPayment.toLocaleString('it-IT', {
         style: 'currency',
         currency: 'VND'
       });
+
+      // Tính toán final_price
+      const thanhtoantrenweb = parseInt(document.getElementById('thanhtoantrenweb').innerText.replace(/[^\d]/g, ''));
+      const tienthucte = totalActualPayment; // Giá trị thực tế đã tính
+      const tiendichvu = parseInt(document.getElementById('tiendichvu').innerText.replace(/[^\d]/g, '')); // Tiền dịch vụ
+
+      let final_price = 0;
+      let finalLabel = "Tổng thanh toán"; // Mặc định là "Tổng thanh toán"
+      let tien = 0;
+
+      if (thanhtoantrenweb > tienthucte) {
+        tien = (thanhtoantrenweb - tienthucte);
+        final_price = -tien + tiendichvu;
+      } else {
+        final_price = (tienthucte - thanhtoantrenweb) + tiendichvu;
+      }
+
+      // Cập nhật tiêu đề dòng tổng thanh toán
+      if (final_price > 0) {
+        finalLabel = "Tiền khách phải trả";
+      } else if (final_price < 0) {
+        finalLabel = "Hoàn lại cho khách";
+      }
+
+      // Cập nhật nội dung của final_price
+      document.getElementById('final_price').textContent = final_price.toLocaleString('it-IT', {
+        style: 'currency',
+        currency: 'VND'
+      });
+
+      // Cập nhật dòng tiêu đề cho tổng thanh toán
+      document.getElementById('tongthanhtoan').textContent = finalLabel; // Update here
     });
   };
-
 </script>

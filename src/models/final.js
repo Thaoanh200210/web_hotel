@@ -12,6 +12,12 @@ const FinalSchema = new Schema(
             ref: "detail_bookings",
             required: true 
         },
+        nhanvien: { 
+            type: mongoose.Schema.Types.ObjectId, 
+            autopopulate: true, //giúp đọc luôn dữ liệu của cả bảng chứ không chỉ lấy id
+            ref: "users",
+            required: true 
+        },
         deleteAt: {type:Date},
     },
     { versionKey: false }
