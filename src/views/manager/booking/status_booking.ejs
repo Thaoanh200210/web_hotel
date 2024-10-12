@@ -12,11 +12,10 @@
             <td>
               Số phòng:
               <% details.forEach(function(detail) { %>
-                <p>
+                <span style="margin-right: 10px;">
                   <%= detail.room.number_room %>
-                </p>
+                </span>
                 <% }) %>
-
             </td>
           </tr>
           <tr>
@@ -31,11 +30,23 @@
             <td>Ngày trả: <%= booking.check_out.toLocaleString() %>
             </td>
           </tr>
-          <tr>
-            <td>Tiền đã đặt phòng: <%= parseInt(booking.total_price).toLocaleString('it-IT', {style : 'currency' ,
-                currency : 'VND' }) %>
-            </td>
-          </tr>
+          <% let totalOriginalPrice=0; let totalDiscountPrice=0; details.forEach(function(detail) { totalOriginalPrice
+            +=parseInt(detail.original_price); totalDiscountPrice +=parseInt(detail.discount_price); }); %>
+            <tr>
+              <td>Tổng tiền gốc:
+                <%= totalOriginalPrice.toLocaleString('it-IT', { style: 'currency' , currency: 'VND' }) %>
+              </td>
+            </tr>
+            <tr>
+              <td>Tổng tiền đã giảm giá:
+                <%= (totalDiscountPrice * -1).toLocaleString('it-IT', { style: 'currency' , currency: 'VND' }) %>
+              </td>
+            </tr>
+            <tr>
+              <td>Tiền đã thanh toán trên web:
+                <%= parseInt(booking.total_price).toLocaleString('it-IT', { style: 'currency' , currency: 'VND' }) %>
+              </td>
+            </tr>
         </tbody>
       </table>
 
@@ -78,12 +89,17 @@
     <div class="col-4">
       <div class="mb-3">
         <label class="form-label">Ngày trả phòng thực tế</label>
-        <input class="form-control shadow-none" name="ngaytraphong" type="datetime-local" required>
+        <input class="form-control shadow-none" id="ngaytraphong" name="ngaytraphong" type="datetime-local" required
+          data-check-in="<%= booking.check_in %>" data-check-out="<%= booking.check_out %>"
+          data-total-price="<%= booking.total_price %>" data-details='<%= JSON.stringify(details) %>'>
+
       </div>
     </div>
     <div class="col-8">
       <label class="form-label"></label>
-      <div style="margin-top: 11px;">Tiền thực tế phải trả: <%= %></div>
+      <div style="margin-top: 11px;">
+        Tiền thực tế phải trả: <span id="actualPayment">0 VND</span>
+      </div>
     </div>
   </div>
   <div class="row">
@@ -157,23 +173,29 @@
             <td>Đã thanh toán trên web
             </td>
             <td>
+              <div id="thanhtoantrenweb">
               <%= parseInt(booking.total_price).toLocaleString('it-IT', {style : 'currency' , currency : 'VND' }) %>
+              </div>
             </td>
           </tr>
           <tr>
             <td>Tiền ở thực tế:</td>
-            <td></td>
+            <td>
+              <div id="tienthucte"></div>
+            </td>
           </tr>
           <tr>
             <td>Tiền dịch vụ</td>
             <td>
+              <div id="tiendichvu">
               <%= totalServicePrice.toLocaleString('it-IT', { style: 'currency' , currency: 'VND' }) %>
+            </div>
             </td>
           </tr>
           <tr>
             <td>Tổng thanh toán</td>
             <td>
-             
+              <div id="final_price"></div>
             </td>
           </tr>
         </tbody>
@@ -210,3 +232,57 @@
   </form>
 
 </div>
+
+<script>
+  window.onload = function () {
+    document.getElementById('ngaytraphong').addEventListener('change', function () {
+      const ngayTraPhong = new Date(this.value);
+      const checkIn = new Date(this.getAttribute('data-check-in'));
+      const checkOut = new Date(this.getAttribute('data-check-out'));
+      const details = JSON.parse(this.getAttribute('data-details'));
+
+      console.log('Ngày trả phòng:', ngayTraPhong);
+      console.log('Ngày nhận phòng:', checkIn);
+      console.log('Ngày trả dự kiến:', checkOut);
+      console.log('Chi tiết phòng:', details);
+
+      let totalActualPayment = 0;
+
+      details.forEach(function (detail) {
+        const originalPrice = parseInt(detail.original_price);
+        const discount = Math.abs(parseFloat(detail.discount_price / detail.original_price)); // Tính phần trăm giảm giá
+
+        let numberOfDaysStayed = 0;
+
+        // Tính số ngày đã ở
+        if (ngayTraPhong.getTime() === checkOut.getTime()) {
+          numberOfDaysStayed = Math.floor((checkOut - checkIn) / (86400 * 1000));
+        } else if (ngayTraPhong.getTime() < checkOut.getTime()) {
+          numberOfDaysStayed = Math.floor((ngayTraPhong - checkIn) / (86400 * 1000));
+        } else {
+          numberOfDaysStayed = Math.floor((ngayTraPhong - checkIn) / (86400 * 1000));
+        }
+
+        // Tính tiền thực tế sau khi áp dụng giảm giá
+        const discountedPrice = originalPrice - (originalPrice * discount);
+        const actualPayment = discountedPrice * numberOfDaysStayed;
+
+        totalActualPayment += actualPayment;
+      });
+
+      console.log('Tổng tiền thực tế:', totalActualPayment);
+
+      document.getElementById('actualPayment').textContent = totalActualPayment.toLocaleString('it-IT', {
+        style: 'currency',
+        currency: 'VND'
+      });
+
+      const actualPaymentDiv = document.getElementById('tienthucte');
+      actualPaymentDiv.textContent = totalActualPayment.toLocaleString('it-IT', {
+        style: 'currency',
+        currency: 'VND'
+      });
+    });
+  };
+
+</script>

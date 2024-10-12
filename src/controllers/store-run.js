@@ -356,6 +356,7 @@ class StoreRunController{
         let total = 0;
         let numberOfDaysBooked = Math.floor((new Date(req.body.ngayket) - new Date(req.body.ngaydau))  / (86400 * 1000));
 
+        
         if(typeof phongs == "string"){
             let room = await getRoomById(phongs,false);
             let typeRoom = await getTypeRoomByIdAndHotel(req.hotel,room.type_room._id.toString(),ngaydau,ngayket,true);
