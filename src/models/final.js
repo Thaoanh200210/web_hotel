@@ -6,10 +6,10 @@ const FinalSchema = new Schema(
         // trim: chuỗi kh được có khoảng cách ở đầu cuối, required bắt buộc
         final_price: { type: String, trim: true, required: true },
         NowDate: {type: Date, trim: true, required: true},
-        detail: { 
+        booking: { 
             type: mongoose.Schema.Types.ObjectId, 
             autopopulate: true, //giúp đọc luôn dữ liệu của cả bảng chứ không chỉ lấy id
-            ref: "detail_bookings",
+            ref: "bookings",
             required: true 
         },
         nhanvien: { 

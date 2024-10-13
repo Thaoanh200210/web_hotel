@@ -34,6 +34,7 @@ const getDiscountById = require("../services/get_discount_by_id")
 const getBookingDetailById = require("../services/get_detail_booking_by_id")
 const getBookingById = require("../services/get_booking_by_id")
 const getReviewById = require("../services/get_review_by_id")
+const getFinalByBookingId = require("../services/get_final_by_booking_id")
 const getEventById = require("../services/get_event_by_id")
 const getUserById = require("../services/get_user_by_id")
 const getSelectionById = require("../services/get_selection_by_id")
@@ -49,7 +50,7 @@ const createDiscount = require("../services/create_discount")
 const createEmployee = require("../services/create_employee");
 const createImage = require("../services/create_image")
 const createTypeRoom = require("../services/create_type_room")
-const createFinals = require("../services/create_final")
+const createFinal = require("../services/create_final")
 const createService = require("../services/create_service")
 const createServiceHotel = require("../services/create_service_hotel")
 const createSelection = require("../services/create_selection")
@@ -867,6 +868,9 @@ class ManagerController {
         let details = await getAllDetailBookingByIdBookings({
             booking: booking._id,
         }); 
+        let final = await getFinalByBookingId({
+            booking: booking._id,
+        });
         let cookies = new CookieProvider(req, res);
         let userString = cookies.getCookie(constants.user_info);
         console.log("ten nhan vien:",userString )
@@ -902,11 +906,22 @@ class ManagerController {
     async editStatusBookingHandler(req, res) {
         let booking = await getBookingById(req.params.id, false);
         let detailBooking = await getBookingDetailById(req.params.id)
+        let { final_price, process_user, ngaytraphong } = req.body
+        let user = await getUserById(process_user)
+        console.log(final_price, "....", process_user, "....", ngaytraphong)
         if (req.body.status != "cancel") {
             booking.status = req.body.status;
             detailBooking.status = req.body.status;
             await updateBooking(booking);
             await updateBookingDetail(detailBooking)
+            if (req.body.status === "Đã trả phòng") {
+                await createFinal({
+                    final_price: final_price,
+                    NowDate: ngaytraphong,
+                    booking: booking,
+                    nhanvien: user,
+                })
+            }
         } else {
             await deleteBooking(booking);
         }
@@ -1031,8 +1046,7 @@ class ManagerController {
             JSON.stringify(message("Bạn đã xóa thông tin dịch vụ thành công!", constantMesages.successCustom)),
             1
         );
-        res.redirect("/manager/" + req.hotel._id + "/booking");
-
+        return res.redirect(req.get('referer'))
     }
     async addBooking(req, res) {
         let booking = await getBookingById(req.params.id);
