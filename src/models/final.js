@@ -5,6 +5,7 @@ const FinalSchema = new Schema(
     {
         // trim: chuỗi kh được có khoảng cách ở đầu cuối, required bắt buộc
         final_price: { type: String, trim: true, required: true },
+        tienthucte: { type: String, trim: true, required: true },
         NowDate: {type: Date, trim: true, required: true},
         booking: { 
             type: mongoose.Schema.Types.ObjectId, 

@@ -873,7 +873,6 @@ class ManagerController {
         });
         let cookies = new CookieProvider(req, res);
         let userString = cookies.getCookie(constants.user_info);
-        console.log("ten nhan vien:",userString )
         let service_hotels = await getAllServiceHotel({ hotel: req.hotel });
         let service_quantitys = await getAllServiceQuantity({ detail_booking: details });
         let getStatus = (booking) => {
@@ -893,6 +892,7 @@ class ManagerController {
             roomPage: "booking/status_booking",
             id: req.params.id,
             booking: booking,
+            final:final,
             details: details, // Truyền mảng details vào view
             service_quantitys: service_quantitys,
             service_hotels: service_hotels,
@@ -905,21 +905,30 @@ class ManagerController {
 
     async editStatusBookingHandler(req, res) {
         let booking = await getBookingById(req.params.id, false);
-        let detailBooking = await getBookingDetailById(req.params.id)
-        let { final_price, process_user, ngaytraphong } = req.body
+        let detailBookings = await getAllDetailBookingByIdBookings({
+            booking: booking._id,
+        }); 
+        let { final_price, process_user, ngaytraphong,thuctephaitra } = req.body
         let user = await getUserById(process_user)
-        console.log(final_price, "....", process_user, "....", ngaytraphong)
         if (req.body.status != "cancel") {
             booking.status = req.body.status;
-            detailBooking.status = req.body.status;
+            
             await updateBooking(booking);
-            await updateBookingDetail(detailBooking)
+
+            for( let detailBooking of detailBookings){
+                detailBooking.status = req.body.status;
+                console.log("booking id", booking._id)
+                await updateBookingDetail(detailBooking._id,
+                    detailBooking)
+            }
+
             if (req.body.status === "Đã trả phòng") {
                 await createFinal({
                     final_price: final_price,
                     NowDate: ngaytraphong,
                     booking: booking,
                     nhanvien: user,
+                    tienthucte:thuctephaitra,
                 })
             }
         } else {
@@ -1237,6 +1246,7 @@ class ManagerController {
     async deleteServiceHandler(req, res) {
         try {
             let originService = await getServiceById(req.params.id);
+            console.log("co so vat chat", originService)
             await deleteService(originService._id.toString())
         } catch (e) {
             console.log(e);

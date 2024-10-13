@@ -33,12 +33,32 @@ async function getAllTypeRoomByHotel(hotel, startDate= "", endDate= "") {
                     "$eq": "Đang đặt" // Tìm status "Đang đặt"
                 }
             });
-            detailBookings =  detailBookings.filter((detail)=>{
-                if (detail.booking.check_out <= new Date(startDate) && detail.booking.check_out >= new Date(Date.now()) || detail.booking.check_in >= new Date(endDate)) {
-                    return false;
-                } else
-                return true;
-             });
+            // detailBookings =  detailBookings.filter((detail)=>{
+                
+            //     if (detail.booking.check_out <= new Date(startDate) && detail.booking.check_out >= new Date(Date.now()) || detail.booking.check_in >= new Date(endDate)) {
+            //         return false;
+            //     } else
+            //     return true;
+            //  });
+            detailBookings = detailBookings.filter((detail) => {
+                // Convert booking check-out and check-in dates to Date objects
+                let checkOutDate = new Date(detail.booking.check_out);
+                let checkInDate = new Date(detail.booking.check_in);
+                let currentDate = new Date();
+            
+                // Create a new Date object from startDate and add 1 day
+                let startDateAdjusted = new Date(startDate);
+                startDateAdjusted.setDate(startDateAdjusted.getDate() + 1); // Add one day
+            
+                // Check the conditions for filtering
+                if (
+                    (checkOutDate <= startDateAdjusted && checkOutDate >= currentDate) ||
+                    checkInDate >= new Date(endDate)
+                ) {
+                    return false; // Exclude this detailBooking
+                }
+                return true; // Include this detailBooking
+            });
              let roomBooked = detailBookings.map((detail)=>{
                 if (detail.status === "Đang đặt") {
                     return detail.room._id.toString();

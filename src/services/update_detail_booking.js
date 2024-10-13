@@ -1,8 +1,8 @@
 const {DetailBookingRepository} = require('../repositories/index');
 
-async function updateBookingDetail(data) {
+async function updateBookingDetail(id,data) {
     const bookingRepo = new DetailBookingRepository();
-    return await bookingRepo.updateOne(data._id, data);
+    return await bookingRepo.updateOne(id, data);
 }
 
 

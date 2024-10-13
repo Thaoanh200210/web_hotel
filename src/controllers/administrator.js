@@ -202,10 +202,24 @@ class AdminController{
     //hotel
     async hotel(req,res) {
         let hotels = await getAllHotel();
+        let citys = [];
+        for (let hotel of hotels) {
+            if (hotel.city) {
+                console.log("id city:", hotel.city)
+                let cityData = await getCityById( hotel.city );
+                if (cityData && cityData.name) {
+                    citys[hotel._id] = cityData.name; 
+                }
+            }
+        }
+        console.log("city:",citys);
+
+
         res.render("index-manager",{
             page: "admin/index",
             roomPage: "hotel/management",
             hotels: hotels,
+            citys:citys,
             ...defaultAdminNav(),
             ...defaultData(req)
         })

@@ -85,22 +85,32 @@
     </div>
     <!-- <div style="color: blue; font-weight: bold ;">Đã thanh toán online: <%=  parseInt(booking.total_price).toLocaleString('it-IT', {style : 'currency', currency : 'VND'}) %></div> -->
   </div>
-
+  <div class="row">
+    <div>Lưu ý: Nếu ngày trả phòng sớm hơn ngày checkout đã đặt, khách hàng phải trả tiền = ( tiền phòng * số ngày ) + (tiền phòng * 30%)</div>
+  </div>
   <div class="row">
     <div class="col-4">
       <div class="mb-3">
         <label class="form-label">Ngày trả phòng thực tế</label>
-        <input class="form-control shadow-none" id="ngaytraphong" name="ngaytraphong" type="datetime-local" required
-          data-check-in="<%= booking.check_in %>" data-check-out="<%= booking.check_out %>"
-          data-total-price="<%= booking.total_price %>" data-details='<%= JSON.stringify(details) %>'>
-
+        <input class="form-control shadow-none" 
+               id="ngaytraphong" 
+               name="ngaytraphong" 
+               value="<%= final ? final.NowDate.toISOString().slice(0, 16) : '' %>" 
+               type="datetime-local" 
+               data-check-in="<%= booking.check_in %>" 
+               data-check-out="<%= booking.check_out %>"
+               data-total-price="<%= booking.total_price %>" 
+               data-details='<%= JSON.stringify(details) %>'>
       </div>
+      
     </div>
     <div class="col-8">
       <label class="form-label"></label>
       <div style="margin-top: 11px;">
-        Tiền thực tế phải trả: <span id="actualPayment">0 VND</span>
+        Tiền thực tế phải trả: 
+        <input readonly type="text" name="thuctephaitra" value="<%= final ? final.tienthucte : '0 VND' %>" id="thuctephaitra" >
       </div>
+      
     </div>
   </div>
   <div class="row">
@@ -181,7 +191,7 @@
           <tr>
             <td>Tiền ở thực tế:</td>
             <td>
-              <div id="tienthucte"></div>
+              <input readonly type="text" name="tienthucte" value="<%= final ? final.tienthucte : '0 VND' %>" id="tienthucte" >
             </td>
           </tr>
           <tr>
@@ -195,13 +205,16 @@
           <tr>
             <td id="tongthanhtoan">Tổng thanh toán</td>
             <td>
-              <input type="text" name="final_price" id="final_price">
+              <input readonly type="text" 
+              value="<%= final ? final.final_price.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) : '' %>" 
+              name="final_price" 
+              id="final_price">
             </td>
           </tr>
           <tr>
             <td id="">Người xử lý giao dịch</td>
             <td>
-              <input name="process_user" hidden value="<%= user._id %>"><div><%= user.name %></div>
+              <input name="process_user"  hidden value="<%= user._id %>"><div><%= user.name %></div>
             </td>
           </tr>
         </tbody>
@@ -210,20 +223,24 @@
   </div>
 
   
+  <div id="statusSection" style="<%= booking.status === 'Đã trả phòng' ? 'display: none;' : '' %>">
     <div class="form-check">
-      <input class="form-check-input" type="radio" name="status" id="CheckedIn" value="Đã nhận phòng" checked>
+      <input class="form-check-input" type="radio" name="status" id="CheckedIn" value="Đã nhận phòng" 
+             <%= booking.status === 'Đã nhận phòng' ? 'checked' : '' %>>
       <label class="form-check-label" for="CheckedIn">
         Đã nhận phòng
       </label>
     </div>
-    <div class="form-check ">
-      <input class="form-check-input" type="radio" name="status" id="CheckedOut" value="Đã trả phòng">
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="status" id="CheckedOut" value="Đã trả phòng" 
+             <%= booking.status === 'Đã trả phòng' ? 'checked' : '' %>>
       <label class="form-check-label" for="CheckedOut">
         Đã trả phòng
       </label>
     </div>
-    <div class="form-check ">
-      <input class="form-check-input" type="radio" name="status" id="cancel" value="cancel">
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="status" id="cancel" value="Đã hủy" 
+             <%= booking.status === 'Đã hủy' ? 'checked' : '' %>>
       <label class="form-check-label" for="cancel">
         Đã hủy
       </label>
@@ -234,6 +251,8 @@
       </a>
       <button class="btn btn-primary">Sửa trạng thái</button>
     </div>
+  </div>
+  
 
   </form>
 
@@ -275,14 +294,14 @@
         totalActualPayment += actualPayment;
       });
       // Cập nhật hiển thị số tiền thực tế phải trả
-      document.getElementById('actualPayment').textContent = totalActualPayment.toLocaleString('it-IT', {
+
+      document.getElementById('thuctephaitra').value = totalActualPayment.toLocaleString('it-IT', {
         style: 'currency',
         currency: 'VND'
       });
-
       // Cập nhật giá trị vào <div id="tienthucte"></div>
       const actualPaymentDiv = document.getElementById('tienthucte');
-      actualPaymentDiv.textContent = totalActualPayment.toLocaleString('it-IT', {
+      actualPaymentDiv.value = totalActualPayment.toLocaleString('it-IT', {
         style: 'currency',
         currency: 'VND'
       });

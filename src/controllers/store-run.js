@@ -428,6 +428,12 @@ class StoreRunController{
         if(isCheckInWithCreditCard){
             return res.redirect("/payment/create_payment_url/" + currenrtBooking._id + "?amount=" + total)
         }
+       
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã đặt phòng thành công!",constantMesages.successCustom)),
+            1
+        );
         return res.redirect("/hotel/"+ req.hotel._id.toString() +"/room")
     }
     

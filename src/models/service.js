@@ -12,6 +12,7 @@ const ServiceSchema = new Schema(
             ref: "hotels",
             required: true 
         },
+        deleteAt: {type:Date},
     },
     { versionKey: false }
 );
