@@ -41,9 +41,9 @@
             <td class="two-line-ellipsis"><%= hotel.description  %></td></td>
             <td>
                 <% if (hotel.isActive === false ) { %>
-                  <a href="/administrator/hotel/activate/<%= hotel._id %>" class="btn btn-primary">Kich hoat</a>
+                  <a href="/administrator/hotel/activate/<%= hotel._id %>" class="btn btn-primary">Kích hoạt</a>
                 <% } else { %>
-                  <button onclick="deleteConfirmButtonClk('/administrator/hotel/negate/<%= hotel._id %>','Bạn có muốn vo hieu khách sạn này không?')" class="btn btn-primary">Vo hieu</button>
+                  <button onclick="deleteConfirmButtonClk('/administrator/hotel/negate/<%= hotel._id %>','Bạn có muốn vô hiệu khách sạn này không?')" class="btn btn-primary">Vô Hiệu</button>
                 <% } %>
                 <button  onclick="deleteConfirmButtonClk('/administrator/hotel/delete/<%=hotel._id %>','Bạn có muốn xóa thông tin khách sạn này không?')" class="btn btn-danger">Xóa</button>
               </td>

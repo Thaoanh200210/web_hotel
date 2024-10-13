@@ -151,10 +151,12 @@
                     <%= servicePrice.toLocaleString('it-IT', { style: 'currency' , currency: 'VND' }) %>
                 </td>
                 <td>
-                  <button
-                    onclick="deleteConfirmButtonClk('/manager/<%= hotel._id %>/booking/status_booking/<%= id %>/service_hotel/delete/<%= service_quantity._id %>','Bạn có muốn xóa thông tin dịch vụ này không?')"
-                    class="btn btn-danger">Xóa</button>
-                </td>
+                  <% if (booking.status !== 'Đã trả phòng') { %> <!-- Check booking status -->
+                      <button
+                          onclick="deleteConfirmButtonClk('/manager/<%= hotel._id %>/booking/status_booking/<%= id %>/service_hotel/delete/<%= service_quantity._id %>','Bạn có muốn xóa thông tin dịch vụ này không?')"
+                          class="btn btn-danger">Xóa</button>
+                  <% } %>
+              </td>
               </tr>
               <% } %>
         </tbody>

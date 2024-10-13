@@ -20,8 +20,10 @@
 							<section>
 								<select class="form-select" name="hotelId" id="hotelSelect" style="font-size: 15px; margin-top:5px">
 									<option value="" disabled selected>Select Hotel</option>
-									<% for(let hotel of hotels){ %>
-										<option value="<%= hotel._id %>"><%= hotel.name %></option>
+									<% for (let hotel of hotels) { %>
+										<% if (hotel.isActive) { %>
+											<option value="<%= hotel._id %>"><%= hotel.name %></option>
+										<% } %>
 									<% } %>
 								</select>
 							</section>
