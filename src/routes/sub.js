@@ -45,7 +45,14 @@ router.route("/customer/delete/:id").get(sub.deleteCustomerHandler);
 router.route("/customer").get(sub.customer);
 
 //quản lý đặt phòng
+
+router.route("/booking/status_booking/:id/add-handler").post(sub.addBookingHandler);
+router.route("/booking/status_booking/:id/add").get(sub.addBooking);
 router.route("/booking/status_booking/:id").get(sub.editBookingStatus).post(sub.editStatusBookingHandler);
+router.route("/booking/status_booking/:id/service_hotel").get(sub.serviceHotelBooking);
+router.route("/booking/status_booking/:id/service_hotel/add-handler-service-quantity").post(sub.addHandlerServiceQuantity);
+router.route("/booking/status_booking/:id/service_hotel/delete/:id").get(sub.deleteserviceHotelBookingHandler);
+
 router.route("/booking").get(sub.booking);
 
 

@@ -7,40 +7,54 @@
         </div>
     </div>
     <div class="card-body">
-        <form action="/sub/<%=hotel._id%>/room/add-handler" enctype="multipart/form-data" method="POST" class="d-flex flex-column">
+        <form action="/sub/<%=hotel._id%>/booking/status_booking/<%=booking._id%>/add-handler"  method="POST" class="d-flex flex-column">
             <div class="d-flex ">
                 <div class="flex-grow-1 me-3">
                     <div class="mb-3">
                         <label class="form-label ">Tên khách hàng</label>
-                        <input class="form-control shadow-none" name="tenkhachhang" type="text" required>
+                        <input class="form-control shadow-none" name="tenkhachhang" value="<%= booking.customer.name %>" type="text" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Ngày nhận phòng</label>
-                        <input class="form-control shadow-none" name="checkin" type="datetime-local" required>
+                        <label class="form-label ">Email</label>
+                        <input class="form-control shadow-none" name="email"  value="<%= booking.customer.email %>" type="text" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Ngày trả phòng</label>
-                        <input class="form-control shadow-none" name="checkin" type="datetime-local" required>
+                        <label class="form-label ">CCCD</label>
+                        <input class="form-control shadow-none" name="chungminhnhandan"  value="<%= booking.customer.cmnd %>" type="text" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Ngày trả phòng</label>
-                        <input class="form-control shadow-none" name="checkin" type="text" required>
+                        <label class="form-label ">Số điện thoại</label>
+                        <input class="form-control shadow-none" name="sdt"  value="<%= booking.customer.phone %>" type="text" required>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Giá phòng</label>
-                        <input class="form-control shadow-none" name="giaphong" type="text" required>
-                    </div>
+                    
+                    
                 </div>
 
                 <div class="flex-grow-1 ms-3">
                     <div class="mb-3">
                         <label class="form-label">Số phòng</label>
-                        <select class="form-select shadow-none" name="sophong"  multiple required>
-                            <% for (room of Rooms) {%>
-                                <option value="<%= room._id %>">
-                                    <%= room.name %>
-                                </option>
-                                <% } %>
+                        <select class="form-select shadow-none"  name="phong"  multiple required>
+                            <% for (room of rooms) { %>
+                                <option value="<%= room._id %>" ><%= room.number_room %></option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ngày nhận phòng</label>
+                        <input class="form-control shadow-none" name="ngaydau" type="datetime-local" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ngày trả phòng</label>
+                        <input class="form-control shadow-none" name="ngayket" type="datetime-local" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Hình thức thanh toán:</label>
+                        <select class="form-control form-select mr-sm-2" name="luachon"  >
+                            <%for( let selection of selections ) { %>
+                            <option  value="<%= selection._id %>" >
+                                <%= selection.name %>
+                            </option>
+                            <% } %>
                         </select>
                     </div>
                 </div>

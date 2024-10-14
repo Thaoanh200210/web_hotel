@@ -1,0 +1,101 @@
+<!-- <div class="container">
+  <div>Dịch vụ khách hàng đã sử dụng</div>
+  <form action="/sub/<%=hotel._id%>/booking/status_booking/<%=booking._id%>/service_hotel/add-handler-service-quantity" method="POST" class="d-flex flex-column">
+    <table class="table">
+      <thead>
+        <tr>
+          <th></th>
+          <th class="c-bg-primary">Loại dịch vụ</th>
+          <th class="c-bg-primary">Giá dịch vụ</th>
+          <th class="c-bg-primary">Số lượng</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(service_hotel of service_hotels) {%>
+        <tr>
+          <td><input type="checkbox" value="<%=service_hotel._id%>" name="dichvuphong"></td>
+          <td><%=service_hotel.name %></td>
+          <td><%=parseInt(service_hotel.price).toLocaleString('it-IT', {style: 'currency', currency: 'VND'}) %></td>
+          <td>
+            <input style="width: 70px;" class="form-control shadow-none" name="soluong" type="number" min="1" >
+          </td>
+          
+        
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+
+    <div class="text-center my-1">
+      <div class="d-flex justify-content-center gap-4">
+        <a class="btn btn-warning shadow-none" href="/sub/<%=hotel._id%>/booking/status_booking/<%=booking._id%>">
+          Trở về
+        </a>
+        <button class="btn btn-dark shadow-none" type="submit">
+          Thêm dịch vụ
+        </button>
+      </div>
+    </div>
+  </form>
+</div> -->
+
+<div class="container">
+  <div>Dịch vụ khách hàng đã sử dụng</div>
+  <form action="/sub/<%=hotel._id%>/booking/status_booking/<%=booking._id%>/service_hotel/add-handler-service-quantity" method="POST" class="d-flex flex-column">
+    <table class="table">
+      <thead>
+        <tr>
+          <th></th>
+          <th class="c-bg-primary">Loại dịch vụ</th>
+          <th class="c-bg-primary">Giá dịch vụ</th>
+          <th class="c-bg-primary">Số lượng</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (let i = 0; i < service_hotels.length; i++) { let service_hotel = service_hotels[i]; %>
+        <tr>
+          <td>
+            <input type="checkbox" value="<%= service_hotel._id %>" name="dichvuphong[]" class="service-checkbox" data-index="<%= i %>">
+          </td>
+          <td><%= service_hotel.name %></td>
+          <td><%= parseInt(service_hotel.price).toLocaleString('it-IT', {style: 'currency', currency: 'VND'}) %></td>
+          <td>
+            <input style="width: 70px;" class="form-control shadow-none quantity-input" name="soluong[]" type="number" min="1" disabled data-index="<%= i %>">
+          </td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+
+    <div class="text-center my-1">
+      <div class="d-flex justify-content-center gap-4">
+        <a class="btn btn-warning shadow-none" href="/sub/<%=hotel._id%>/booking/status_booking/<%=booking._id%>">
+          Trở về
+        </a>
+        <button class="btn btn-dark shadow-none" type="submit">
+          Thêm dịch vụ
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Lấy tất cả các checkbox và ô nhập số lượng
+  const checkboxes = document.querySelectorAll('.service-checkbox');
+  const quantityInputs = document.querySelectorAll('.quantity-input');
+
+  // Lắng nghe sự kiện thay đổi trên mỗi checkbox
+  checkboxes.forEach((checkbox, index) => {
+    checkbox.addEventListener('change', (event) => {
+      // Kích hoạt hoặc vô hiệu hóa ô nhập số lượng tương ứng
+      const quantityInput = document.querySelector(`.quantity-input[data-index="${index}"]`);
+      if (event.target.checked) {
+        quantityInput.disabled = false;
+      } else {
+        quantityInput.disabled = true;
+        quantityInput.value = ''; // Reset giá trị nếu checkbox bị bỏ chọn
+      }
+    });
+  });
+</script>
