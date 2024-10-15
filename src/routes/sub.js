@@ -46,15 +46,14 @@ router.route("/customer").get(sub.customer);
 
 //quản lý đặt phòng
 
+router.route("/booking/status_booking/:id/service_hotel/delete/:id").get(sub.deleteserviceHotelBookingHandler);
+router.route("/booking/status_booking/:id/kiemtra").get(sub.findRoomEmpty);
 router.route("/booking/status_booking/:id/add-handler").post(sub.addBookingHandler);
 router.route("/booking/status_booking/:id/add").get(sub.addBooking);
-router.route("/booking/status_booking/:id").get(sub.editBookingStatus).post(sub.editStatusBookingHandler);
 router.route("/booking/status_booking/:id/service_hotel").get(sub.serviceHotelBooking);
 router.route("/booking/status_booking/:id/service_hotel/add-handler-service-quantity").post(sub.addHandlerServiceQuantity);
-router.route("/booking/status_booking/:id/service_hotel/delete/:id").get(sub.deleteserviceHotelBookingHandler);
-
+router.route("/booking/status_booking/:id").get(sub.editBookingStatus).post(sub.editStatusBookingHandler);
 router.route("/booking").get(sub.booking);
-
 
 //quản lý đánh giá
 router.route("/review/:id").get(sub.reviewDetail);

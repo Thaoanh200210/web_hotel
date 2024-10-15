@@ -1,6 +1,6 @@
-module.exports = () =>{
-    return  {
-        navTabs:[
+module.exports = () => {
+    return {
+        navTabs: [
             {
                 name: "Thống kê",
                 icon: "bi bi-gear-wide",
@@ -8,25 +8,19 @@ module.exports = () =>{
                 children: []
             },
             {
-                name: "Quản lý xét duyệt",
-                icon: "bi bi-star",
-                url: "#",
-                children: [
-                    {
-                        name: "Quản lý địa điểm thành phố",
-                        icon: "bi bi-journal",
-                        url: "/administrator/city",
-                        children: []
-                    },
-                    {
-                        name: "Quản lý đăng ký khách sạn",
-                        icon: "bi bi-journal",
-                        url: "/administrator/hotel",
-                        children: []
-                    },
-                ]
+                name: "Quản lý địa điểm thành phố",
+                icon: "bi bi-journal",
+                url: "/administrator/city",
+                children: []
             },
-            
+            {
+                name: "Quản lý đăng ký khách sạn",
+                icon: "bi bi-journal",
+                url: "/administrator/hotel",
+                children: []
+            },
+
+
             {
                 name: "Quản lý nhân viên",
                 icon: "bi bi-person-circle",

@@ -100,12 +100,14 @@ router.route("/user/customer/delete/:id").get(manager.deleteCustomerHandler);
 router.route("/user/customer").get(manager.customer);
 
 //quản lý đặt phòng
+router.route("/booking/status_booking/:id/service_hotel/delete/:id").get(manager.deleteserviceHotelBookingHandler);
+router.route("/booking/status_booking/:id/kiemtra").get(manager.findRoomEmpty);
 router.route("/booking/status_booking/:id/add-handler").post(manager.addBookingHandler);
 router.route("/booking/status_booking/:id/add").get(manager.addBooking);
-router.route("/booking/status_booking/:id").get(manager.editBookingStatus).post(manager.editStatusBookingHandler);
 router.route("/booking/status_booking/:id/service_hotel").get(manager.serviceHotelBooking);
 router.route("/booking/status_booking/:id/service_hotel/add-handler-service-quantity").post(manager.addHandlerServiceQuantity);
-router.route("/booking/status_booking/:id/service_hotel/delete/:id").get(manager.deleteserviceHotelBookingHandler);
+router.route("/booking/status_booking/:id").get(manager.editBookingStatus).post(manager.editStatusBookingHandler);
+
 
 router.route("/booking").get(manager.booking);
 

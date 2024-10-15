@@ -17,6 +17,7 @@ const getAllCity = require("../services/get_all_city")
 const getAllEvents = require("../services/get_all_event")
 const getAllReviews = require("../services/get_all_review")
 const getAllTypeRooms = require("../services/get_all_type_of_rooms")
+const getAllTypeRoomByHotel = require("../services/get_all_type_of_room_by_hotel")
 const getAllSelection = require("../services/get_all_selection")
 const getAllService = require("../services/get_all_service")
 const getAllServiceHotel = require("../services/get_all_service_hotel")
@@ -1080,6 +1081,31 @@ class ManagerController {
 
     }
 
+    async findRoomEmpty(req, res){
+        let booking = await getBookingById(req.params.id);
+        let ngaydau = req.query.ngaydau;
+        let ngayket = req.query.ngayket;
+        let events = await getCurrentEvent(req.hotel);
+        let discounts = events.map(event => event.discount_percent);
+        let maxDiscount = 0;
+        if(discounts.length !=0 ){
+            maxDiscount = Math.max.apply(null,discounts);
+        }
+        let discount =  maxDiscount/100;
+        
+        let typeRooms = await getAllTypeRoomByHotel(req.hotel, ngaydau, ngayket);
+        res.render("index-manager", {
+            page: "manager/index",
+            roomPage: "booking/find_room_empty",
+            booking: booking,
+            ngaydau:ngaydau,
+            typeRooms:typeRooms,
+            discount:discount,
+            ngayket:ngayket,
+            ...defaultManagerNav(),
+            ...defaultData(req)
+        })
+    }
     async addBookingHandler(req, res) {
         let selection = req.body.luachon;
         let ngaydau = req.body.ngaydau; // Lấy từ body thay vì body

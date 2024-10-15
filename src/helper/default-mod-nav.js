@@ -1,24 +1,17 @@
-module.exports = () =>{
-    return  {
-        navTabs:[
+module.exports = () => {
+    return {
+        navTabs: [
             {
-                name: "Quản lý xét duyệt",
-                icon: "bi bi-star",
-                url: "#",
-                children: [
-                    {
-                        name: "Quản lý địa điểm thành phố",
-                        icon: "bi bi-journal",
-                        url: "/mod/city",
-                        children: []
-                    },
-                    {
-                        name: "Quản lý đăng ký khách sạn",
-                        icon: "bi bi-journal",
-                        url: "/mod/hotel",
-                        children: []
-                    },
-                ]
+                name: "Quản lý địa điểm thành phố",
+                icon: "bi bi-journal",
+                url: "/mod/city",
+                children: []
+            },
+            {
+                name: "Quản lý đăng ký khách sạn",
+                icon: "bi bi-journal",
+                url: "/mod/hotel",
+                children: []
             },
             {
                 name: "Đăng xuất",

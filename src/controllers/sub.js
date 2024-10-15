@@ -11,6 +11,7 @@ const getAllRooms = require("../services/get_all_rooms")
 const getAllBookings = require("../services/get_all_booking")
 const getAllServiceHotel = require("../services/get_all_service_hotel")
 const getAllBookingDetails = require("../services/get_all_detai_booking")
+const getAllTypeRoomByHotel = require("../services/get_all_type_of_room_by_hotel")
 const getAllUsersByHotel = require("../services/get_all_user_by_hotel")
 const getAllUsers = require("../services/get_all_user")
 const getAllServiceQuantity = require("../services/get_all_service_quantity")
@@ -605,7 +606,31 @@ class SubController {
             ...defaultData(req)
         });
     }
-    
+    async findRoomEmpty(req, res){
+        let booking = await getBookingById(req.params.id);
+        let ngaydau = req.query.ngaydau;
+        let ngayket = req.query.ngayket;
+        let events = await getCurrentEvent(req.hotel);
+        let discounts = events.map(event => event.discount_percent);
+        let maxDiscount = 0;
+        if(discounts.length !=0 ){
+            maxDiscount = Math.max.apply(null,discounts);
+        }
+        let discount =  maxDiscount/100;
+        
+        let typeRooms = await getAllTypeRoomByHotel(req.hotel, ngaydau, ngayket);
+        res.render("index-manager", {
+            page: "sub/index",
+            roomPage: "booking/find_room_empty",
+            booking: booking,
+            ngaydau:ngaydau,
+            typeRooms:typeRooms,
+            discount:discount,
+            ngayket:ngayket,
+            ...defaultSubNav(),
+            ...defaultData(req)
+        })
+    }
 
     async editStatusBookingHandler(req, res) {
         let booking = await getBookingById(req.params.id, false);
