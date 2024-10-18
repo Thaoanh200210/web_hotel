@@ -1,22 +1,43 @@
 const { get } = require('config');
-const { BookingRepository, DetailBookingRepository} = require('../repositories/index');
+const { BookingRepository, DetailBookingRepository } = require('../repositories/index');
 const getAllTypeRoomByHotel = require("./get_all_type_of_room_by_hotel");
-async function bestTypeRoom(hotel) {
+
+async function bestTypeRoom(hotel, period = "", type = "month") {
     const bookingRepo = new BookingRepository();
     const detailBookingRepo = new DetailBookingRepository();
-    var month = new Date().getMonth();
-    var year = new Date().getFullYear();
-    var firstDay = new Date(Date.UTC(year, month, 1));
-    var lastDay = new Date(Date.UTC(year, month + 1, 0));
+    
+    let firstDay, lastDay;
+
+    if (type === "month" && period) {
+        const [inputYear, inputMonth] = period.split('-').map(Number);
+        const monthIndex = inputMonth - 1; // Tháng trong JavaScript bắt đầu từ 0 (0 = tháng 1)
+        firstDay = new Date(Date.UTC(inputYear, monthIndex, 1));
+        lastDay = new Date(Date.UTC(inputYear, monthIndex + 1, 0));
+    } else if (type === "quarter" && period) {
+        const [inputYear, inputQuarter] = period.split('-').map(Number);
+        const startMonth = (inputQuarter - 1) * 3; // Xác định tháng bắt đầu của quý
+        firstDay = new Date(Date.UTC(inputYear, startMonth, 1));
+        lastDay = new Date(Date.UTC(inputYear, startMonth + 3, 0));
+    } else if (type === "year" && period) {
+        const inputYear = parseInt(period, 10);
+        firstDay = new Date(Date.UTC(inputYear, 0, 1));
+        lastDay = new Date(Date.UTC(inputYear, 12, 0));
+    } else {
+        const currentYear = new Date().getFullYear();
+        const currentMonth = new Date().getMonth(); // Lấy tháng hiện tại
+        firstDay = new Date(Date.UTC(currentYear, currentMonth, 1));
+        lastDay = new Date(Date.UTC(currentYear, currentMonth + 1, 0));
+    }
+
     let bookings = await bookingRepo.select({
         $and: [
             {
-                check_in : {
+                check_in: {
                     $gte: firstDay
                 }
             },
             {
-                check_out:{
+                check_out: {
                     $lte: lastDay
                 }
             }
@@ -24,19 +45,16 @@ async function bestTypeRoom(hotel) {
     });
     
     let details = await detailBookingRepo.select({
-        booking: {$in:bookings},
-    })
-    details =  details.filter((detail)=>{
-        //tìm hotel
-        return detail.room.hotel._id.toString() == hotel._id.toString()
+        booking: { $in: bookings },
+    });
+    details = details.filter((detail) => {
+        return detail.room.hotel._id.toString() == hotel._id.toString();
     });
 
-
-    let type_of_rooms = details.map((detail)=>{
-        return detail.room.type_room._id.toString() 
+    let type_of_rooms = details.map((detail) => {
+        return detail.room.type_room._id.toString();
     });
 
-    //từng loại phòng được đặt bao nhiêu lần trong tháng
     const groupedByString = {};
 
     for (const str of type_of_rooms) {
@@ -46,29 +64,26 @@ async function bestTypeRoom(hotel) {
         groupedByString[str]++;
     }
 
-    //số lần được đặt nhiều nhất
     const maxCount = Math.max(...Object.values(groupedByString));
-
-    //danh sách những id của loại phòng đc đặt nhiều nhất trong tháng
     const maxCountKeys = Object.keys(groupedByString).filter(
         (key) => groupedByString[key] === maxCount
-      );
+    );
 
     let typeOfRooms = await getAllTypeRoomByHotel(hotel);
 
-    const bookedCountPerTypeRoom = {}
+    const bookedCountPerTypeRoom = {};
 
     Object.keys(groupedByString).forEach(key => {
         const value = groupedByString[key];
-        const roomName = typeOfRooms.find((typeRoom) =>{
-            return typeRoom._id.toString() === key}).name
-        bookedCountPerTypeRoom[roomName] = value
+        const roomName = typeOfRooms.find((typeRoom) => {
+            return typeRoom._id.toString() === key;
+        }).name;
+        bookedCountPerTypeRoom[roomName] = value;
     });
 
-    //Lọc những thằng typeOfRooms có id nằm trong maxcountKeys
-    typeOfRooms = typeOfRooms.filter((typeOfRoom)=>{
-        return maxCountKeys.includes(typeOfRoom._id.toString())
-    })
+    typeOfRooms = typeOfRooms.filter((typeOfRoom) => {
+        return maxCountKeys.includes(typeOfRoom._id.toString());
+    });
 
     console.log(bookedCountPerTypeRoom);
 
@@ -77,8 +92,6 @@ async function bestTypeRoom(hotel) {
         maxCount: maxCount,
         bookedCountPerTypeRoom: bookedCountPerTypeRoom,
     };
-
 }
 
-
-module.exports =  bestTypeRoom ;
+module.exports = bestTypeRoom;

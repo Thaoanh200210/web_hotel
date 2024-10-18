@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css" />
     <script defer="" referrerpolicy="origin"
         src="/cdn-cgi/zaraz/s.js?z=JTdCJTIyZXhlY3V0ZWQlMjIlM0ElNUIlNUQlMkMlMjJ0JTIyJTNBJTIyQWRtaW5MVEUlMjAzJTIwJTdDJTIwRGFzaGJvYXJkJTIyJTJDJTIyeCUyMiUzQTAuNzc4NjQ2NDMwOTUyMTI3NSUyQyUyMnclMjIlM0ExNTM2JTJDJTIyaCUyMiUzQTg2NCUyQyUyMmolMjIlM0E3MzAlMkMlMjJlJTIyJTNBMTUzNiUyQyUyMmwlMjIlM0ElMjJodHRwcyUzQSUyRiUyRmFkbWlubHRlLmlvJTJGdGhlbWVzJTJGdjMlMkZpbmRleC5odG1sJTIyJTJDJTIyciUyMiUzQSUyMmh0dHBzJTNBJTJGJTJGYWRtaW5sdGUuaW8lMkZ0aGVtZXMlMkZ2MyUyRmluZGV4My5odG1sJTIyJTJDJTIyayUyMiUzQTI0JTJDJTIybiUyMiUzQSUyMlVURi04JTIyJTJDJTIybyUyMiUzQS00MjAlMkMlMjJxJTIyJTNBJTVCJTVEJTdE"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script nonce="f92502a7-b46a-4ec5-a2c7-de941fbe97d5">
         try {
             (function (w, d) {
@@ -127,61 +128,149 @@
 </head>
 <section class="content">
     <div class="container-fluid">
-
-
+        <!-- Chung -->
         <div class="d-flex flex-column gap-5">
             <div class="d-flex gap-5">
-                <div class="small-box bg-info w-50" style="height: 300px;">
+                <div class="small-box bg-info flex-fill d-flex flex-column justify-content-between">
                     <div class="inner">
                         <h1><%= number_of_hotel %></h1>
-                        <p style="font-size: 30px;
-                        font-family: initial;">Khách sạn</p>
+                        <p style="font-size: 30px; font-family: initial;">Khách sạn</p>
                     </div>
                     <div class="icon">
-                        <svg class="ion" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" viewBox="0 0 682.667 682.667" style="enable-background:new 0 0 512 512" xml:space="preserve" class=""><g><defs><clipPath id="a" clipPathUnits="userSpaceOnUse"><path d="M0 512h512V0H0Z" fill="#000000" opacity="1" data-original="#000000"></path></clipPath></defs><g clip-path="url(#a)" transform="matrix(1.33333 0 0 -1.33333 0 682.667)"><path d="M0 0h-21.809c-10.045 0-18.189-8.143-18.189-18.188V-61.94c0-10.046 8.144-18.189 18.189-18.189H0c10.045 0 18.188 8.143 18.188 18.189v43.752C18.188-8.143 10.045 0 0 0Z" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(143.842 194.508)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h-21.809c-10.045 0-18.189-8.144-18.189-18.188v-43.753c0-10.045 8.144-18.188 18.189-18.188H0c10.045 0 18.188 8.143 18.188 18.188v43.753C18.188-8.144 10.045 0 0 0Z" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(143.842 325.137)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h-21.809c-10.045 0-18.188-8.144-18.188-18.188v-43.753c0-10.045 8.143-18.188 18.188-18.188H0c10.045 0 18.188 8.143 18.188 18.188v43.753C18.188-8.144 10.045 0 0 0Z" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(266.904 325.137)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h21.809c10.045 0 18.189-8.143 18.189-18.188V-61.94c0-10.046-8.144-18.189-18.189-18.189H0c-10.045 0-18.188 8.143-18.188 18.189v43.752C-18.188-8.143-10.045 0 0 0Z" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(368.158 194.508)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h21.809c10.045 0 18.189-8.144 18.189-18.188v-43.753c0-10.045-8.144-18.188-18.189-18.188H0c-10.045 0-18.188 8.143-18.188 18.188v43.753C-18.188-8.144-10.045 0 0 0Z" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(368.158 325.137)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0v-56.817c.628-.107 19.912 0 19.912 0" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(368.238 472)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0v-56.865" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(123.85 472)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0v-56.865" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(163.2 472)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h39.351" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(123.85 444.543)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h-23.742v-56.346H0" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(341.466 471.48)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h-21.991" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(339.715 443.308)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h31.404" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(260.26 472)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0v-55.049" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(275.898 470.184)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0c0-15.703-12.73-28.432-28.433-28.432-15.702 0-28.432 12.729-28.432 28.432s12.73 28.433 28.432 28.433C-12.73 28.433 0 15.703 0 0Z" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(243.713 443.567)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h284.859c9.055 0 17.58-2.254 25.06-6.218v87.099c0 22.368-18.132 40.5-40.501 40.5H15.44c-22.367 0-40.5-18.132-40.5-40.5V-6.218A53.355 53.355 0 0 0 0 0Z" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(113.57 383.119)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0v-72.927c1.162.134 2.341.21 3.539.21h384.994a30.85 30.85 0 0 0 3.538-.21v179.795" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(59.964 146.664)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0v45.981c0 29.605-24 53.605-53.606 53.605h-284.859c-29.606 0-53.606-24-53.606-53.605v-152.849" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(452.036 283.532)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0v95.521c0 13.83-11.211 25.04-25.04 25.04h-50.101c-13.829 0-25.04-11.21-25.04-25.04V0z" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(306.09 73.947)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h-384.994c-16.891 0-30.585-13.693-30.585-30.584V-49.45c0-9.387 7.61-16.997 16.998-16.997H13.587c9.388 0 16.997 7.61 16.997 16.997v18.866C30.584-13.693 16.891 0 0 0Z" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(448.497 73.947)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path></g></g></svg>
-                       
+                        <svg class="ion" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" viewBox="0 0 682.667 682.667" style="enable-background:new 0 0 512 512" xml:space="preserve"><g><defs><clipPath id="a" clipPathUnits="userSpaceOnUse"><path d="M0 512h512V0H0Z" fill="#000000" opacity="1" data-original="#000000"></path></clipPath></defs><g clip-path="url(#a)" transform="matrix(1.33333 0 0 -1.33333 0 682.667)"><path d="M0 0h-21.809c-10.045 0-18.189-8.143-18.189-18.188V-61.94c0-10.046 8.144-18.189 18.189-18.189H0c10.045 0 18.188 8.143 18.188 18.189v43.752C18.188-8.143 10.045 0 0 0Z" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(143.842 194.508)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h-21.809c-10.045 0-18.189-8.144-18.189-18.188v-43.753c0-10.045 8.144-18.188 18.189-18.188H0c10.045 0 18.188 8.143 18.188 18.188v43.753C18.188-8.144 10.045 0 0 0Z" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(143.842 325.137)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h-21.809c-10.045 0-18.188-8.144-18.188-18.188v-43.753c0-10.045 8.143-18.188 18.188-18.188H0c10.045 0 18.188 8.143 18.188 18.188v43.753C18.188-8.144 10.045 0 0 0Z" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(266.904 325.137)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h21.809c10.045 0 18.189-8.143 18.189-18.188V-61.94c0-10.046-8.144-18.189-18.189-18.189H0c-10.045 0-18.188 8.143-18.188 18.189v43.752C-18.188-8.143-10.045 0 0 0Z" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(368.158 194.508)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h21.809c10.045 0 18.189-8.144 18.189-18.188v-43.753c0-10.045-8.144-18.188-18.189-18.188H0c-10.045 0-18.188 8.143-18.188 18.188v43.753C-18.188-8.144-10.045 0 0 0Z" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(368.158 325.137)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0v-56.817c.628-.107 19.912 0 19.912 0" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(368.238 472)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0v-56.865" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(123.85 472)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0v-56.865" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(163.2 472)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h39.351" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(123.85 444.543)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h-23.742v-56.346H0" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(341.466 471.48)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h-21.991" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(277.735 444.543)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path></g></g></svg>
                     </div>
                 </div>
-
-                <div class="small-box bg-success w-50 " style="height: 300px;">
+        
+                <div class="small-box bg-danger flex-fill d-flex flex-column justify-content-between">
                     <div class="inner">
-                        <h1><%=number_of_type_room %></h1>
-                        <p style="font-size: 30px;
-                        font-family: initial;">Loại phòng</p>
+                        <h1><%= number_of_type_room %></h1>
+                        <p style="font-size: 30px; font-family: initial;">Loại phòng</p>
                     </div>
                     <div class="icon">
-                        <i class="ion ion-stats-bars"></i>
-                        <ion-icon name="bed-outline"></ion-icon>
+                        <svg class="ion" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" viewBox="0 0 682.667 682.667" style="enable-background:new 0 0 512 512" xml:space="preserve"><g><defs><clipPath id="a" clipPathUnits="userSpaceOnUse"><path d="M0 512h512V0H0Z" fill="#000000" opacity="1" data-original="#000000"></path></clipPath></defs><g clip-path="url(#a)" transform="matrix(1.33333 0 0 -1.33333 0 682.667)"><path d="M0 0h-21.809c-10.045 0-18.189-8.143-18.189-18.188V-61.94c0-10.046 8.144-18.189 18.189-18.189H0c10.045 0 18.188 8.143 18.188 18.189v43.752C18.188-8.143 10.045 0 0 0Z" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(143.842 194.508)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h-21.809c-10.045 0-18.189-8.144-18.189-18.188v-43.753c0-10.045 8.144-18.188 18.189-18.188H0c10.045 0 18.188 8.143 18.188 18.188v43.753C18.188-8.144 10.045 0 0 0Z" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(143.842 325.137)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h-21.809c-10.045 0-18.188-8.144-18.188-18.188v-43.753c0-10.045 8.143-18.188 18.188-18.188H0c10.045 0 18.188 8.143 18.188 18.188v43.753C18.188-8.144 10.045 0 0 0Z" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(266.904 325.137)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h21.809c10.045 0 18.189-8.143 18.189-18.188V-61.94c0-10.046-8.144-18.189-18.189-18.189H0c-10.045 0-18.188 8.143-18.188 18.189v43.752C-18.188-8.143-10.045 0 0 0Z" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(368.158 194.508)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h21.809c10.045 0 18.189-8.144 18.189-18.188v-43.753c0-10.045-8.144-18.188-18.189-18.188H0c-10.045 0-18.188 8.143-18.188 18.188v43.753C-18.188-8.144-10.045 0 0 0Z" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(368.158 325.137)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0v-56.817c.628-.107 19.912 0 19.912 0" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(368.238 472)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0v-56.865" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(123.85 472)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0v-56.865" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(163.2 472)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h39.351" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(123.85 444.543)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h-23.742v-56.346H0" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(341.466 471.48)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h-21.991" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(541.888 472)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h-21.991" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(541.888 444.543)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path></g></g></svg>
                     </div>
                 </div>
-
-            </div>
-            <div class="d-flex gap-5">
-
-                <div class="small-box bg-warning w-50 " style="height: 300px;">
+        
+                <div class="small-box bg-success flex-fill d-flex flex-column justify-content-between">
                     <div class="inner">
-                        <h3><%=number_of_service %></h3>
-                        <p style="font-size: 30px;
-                        font-family: initial;">Dịch vụ</p>
+                        <h1><%= number_of_service %></h1>
+                        <p style="font-size: 30px; font-family: initial;">Dịch vụ</p>
                     </div>
                     <div class="icon">
-                        <i class="ion ion-wifi"></i>
+                        <svg class="ion" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" viewBox="0 0 682.667 682.667" style="enable-background:new 0 0 512 512" xml:space="preserve"><g><defs><clipPath id="a" clipPathUnits="userSpaceOnUse"><path d="M0 512h512V0H0Z" fill="#000000" opacity="1" data-original="#000000"></path></clipPath></defs><g clip-path="url(#a)" transform="matrix(1.33333 0 0 -1.33333 0 682.667)"><path d="M0 0v-56.817c.628-.107 19.912 0 19.912 0" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(368.238 472)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h-21.991" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(541.888 472)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path><path d="M0 0h-21.991" style="stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" transform="translate(541.888 444.543)" fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round;stroke-miterlimit:10" stroke-dasharray="none" stroke-opacity="" data-original="#000000" class=""></path></g></g></svg>
                     </div>
                 </div>
-                <div class="small-box bg-danger w-50"style="height: 300px;">
-                    <div class="inner">
-                        <h3><%=number_of_selection %></h3>
-                        <p style="font-size: 30px;
-                        font-family: initial;">Phương thức thanh toán</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-card"></i>
-                    </div>
-                </div>
-
             </div>
         </div>
+        <!-- Form chọn -->
+        <form action="/administrator/statistical" method="GET" class="mb-4">
+            <div class="form-group">
+                <label for="periodType">Chọn loại thời gian:</label>
+                <select id="periodType" name="type" class="form-control">
+                    <option value="month" selected>Tháng</option>
+                    <option value="quarter">Quý</option>
+                    <option value="year">Năm</option>
+                </select>
+            </div>
         
-
+            <div class="form-group" id="monthInput">
+                <label for="month">Chọn tháng:</label>
+                <input type="month" id="month" name="month" class="form-control" value="<%= new Date().toISOString().slice(0, 7) %>">
+            </div>
+        
+            <div class="form-group d-none" id="quarterInput">
+                <label for="quarter">Chọn quý:</label>
+                <select id="quarter" name="quarter" class="form-control">
+                    <option value="<%= new Date().getFullYear() %>-1">Quý 1</option>
+                    <option value="<%= new Date().getFullYear() %>-2">Quý 2</option>
+                    <option value="<%= new Date().getFullYear() %>-3">Quý 3</option>
+                    <option value="<%= new Date().getFullYear() %>-4">Quý 4</option>
+                </select>
+            </div>
+        
+            <div class="form-group d-none" id="yearInput">
+                <label for="year">Chọn năm:</label>
+                <input type="number" id="year" name="year" class="form-control" value="<%= new Date().getFullYear() %>" min="2000" max="2100">
+            </div>
+        
+            <button type="submit" class="btn btn-primary mt-2">Xem thống kê</button>
+            <button type="button" id="resetButton" class="btn btn-secondary mt-2">Xóa phân loại</button>
+        </form>
+        <!-- Biểu đồ -->
+        <div class="chart-container" style="position: relative; height:400px; width:800px;">
+            <canvas id="bookingChart"></canvas>
+        </div>
     </div>
 </section>
+
+<script>
+    const result = <%- JSON.stringify(statistic_result) %>;
+    const name = <%- JSON.stringify(hotel_names) %>;
+    const type = <%- JSON.stringify(type) %>;
+    const month = <%- JSON.stringify(month) %>;
+    const quarter = <%- JSON.stringify(quarter) %>;
+    const year = <%- JSON.stringify(year) %>;
+    const visualData = {
+        month:  {title: 'tháng', value: month},
+        quarter: {title: 'quý', value: quarter},
+        year: {title: 'năm', value: year}
+    }
+    const title = `Số lượt booking vào ${visualData[type].title} ${visualData[type].value}`
+    const labels = Object.values(name);
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: title,
+            data: Object.values(result).map(item => item.totalBookings),
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    };
+
+    // Cấu hình biểu đồ
+    const config = {
+        type: 'bar',
+        data: data,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    };
+
+    const bookingChart = new Chart(
+        document.getElementById('bookingChart'),
+        config
+    );
+    const periodTypeSelect = document.getElementById('periodType');
+    const monthInput = document.getElementById('monthInput');
+    const quarterInput = document.getElementById('quarterInput');
+    const yearInput = document.getElementById('yearInput');
+
+    periodTypeSelect.addEventListener('change', function() {
+        switch (this.value) {
+            case 'month':
+                monthInput.classList.remove('d-none');
+                quarterInput.classList.add('d-none');
+                yearInput.classList.add('d-none');
+                break;
+            case 'quarter':
+                monthInput.classList.add('d-none');
+                quarterInput.classList.remove('d-none');
+                yearInput.classList.add('d-none');
+                break;
+            case 'year':
+                monthInput.classList.add('d-none');
+                quarterInput.classList.add('d-none');
+                yearInput.classList.remove('d-none');
+                break;
+        }
+    });
+
+    resetButton.addEventListener('click', function() {
+        window.location.href = '/administrator/statistical';
+    });
+</script>

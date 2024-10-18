@@ -14,6 +14,7 @@ const getAllCity = require("../services/get_all_city")
 const getAllService = require("../services/get_all_service")
 const getAllSelection = require("../services/get_all_selection")
 const getAllTypeRoom = require("../services/get_all_type_of_rooms")
+const getAllBooking = require('../services/get_all_booking')
 const getHotelById = require("../services/get_hotel_by_id")
 const getTypeRoomById = require("../services/get_type_room_by_id")
 const getServiceById = require("../services/get_service_by_id")
@@ -48,24 +49,78 @@ const numberOfServices = require("../services/number_of_service")
 const uploadImageFromLocal = require("../services/upload_image_from_local")
 
 class AdminController{
-
-    async statistical(req,res){
+    async statistical(req, res) {
+        let type = req.query.type;
+        let month = req.query.month;
+        let quarter = req.query.quarter;
+        let year = req.query.year;
+    
         let number_of_hotel = await numberOfHotels();
         let number_of_service = await numberOfServices();
         let number_of_type_room = await numberOfTypeOfRooms();
         let number_of_selection = await numberOfSelections();
-
-        res.render("index-manager",{
+    
+        let hotels = await getAllHotel(true);
+        let hotel_bookings = {};
+        let hotel_names = {};
+        let statistic_result = {};
+    
+        for (let hotel of hotels) {
+            let bookings = await getAllBooking(hotel);
+            hotel_bookings[hotel._id] = bookings;
+            hotel_names[hotel._id] = hotel.name;
+    
+            // Filter bookings based on the selected time period
+            let filteredBookings = [];
+            if (type === 'month' && month) {
+                let [yearInput, monthInput] = month.split('-').map(Number);
+                filteredBookings = bookings.filter(booking => {
+                    let checkIn = new Date(booking.check_in);
+                    return checkIn.getFullYear() === yearInput && (checkIn.getMonth() + 1) === monthInput;
+                });
+            } else if (type === 'quarter' && quarter) {
+                let [yearInput, quarterInput] = quarter.split('-').map(Number);
+                let startMonth = (quarterInput - 1) * 3;
+                let endMonth = startMonth + 2;
+                filteredBookings = bookings.filter(booking => {
+                    let checkIn = new Date(booking.check_in);
+                    return checkIn.getFullYear() === yearInput &&
+                           checkIn.getMonth() >= startMonth && checkIn.getMonth() <= endMonth;
+                });
+            } else if (type === 'year' && year) {
+                let yearInput = parseInt(year);
+                filteredBookings = bookings.filter(booking => {
+                    let checkIn = new Date(booking.check_in);
+                    return checkIn.getFullYear() === yearInput;
+                });
+            } else {
+                filteredBookings = bookings; 
+            }
+    
+            statistic_result[hotel._id] = {
+                totalBookings: filteredBookings.length,
+            };
+        }
+        console.log(statistic_result);
+    
+        res.render("index-manager", {
             page: "admin/index",
             roomPage: "statistical/management",
-            number_of_hotel:number_of_hotel,
-            number_of_service:number_of_service,
-            number_of_type_room:number_of_type_room,
-            number_of_selection:number_of_selection,
+            number_of_hotel: number_of_hotel,
+            number_of_service: number_of_service,
+            number_of_type_room: number_of_type_room,
+            number_of_selection: number_of_selection,
+            statistic_result: statistic_result,
+            hotel_names: hotel_names,
+            type: type,
+            month: month, 
+            year: year,
+            quarter: quarter,
             ...defaultAdminNav(),
             ...defaultData(req),
-        })
+        });
     }
+    
 
     async city(req, res) {
         let citys = await getAllCity();

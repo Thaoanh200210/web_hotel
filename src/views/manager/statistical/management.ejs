@@ -3,159 +3,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AdminLTE 3 | Dashboard</title>
 
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&amp;display=fallback"
-        rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&amp;display=fallback" rel="stylesheet">
     <link href="plugins/fontawesome-free/css/all.min.css" rel="stylesheet">
-
     <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
-
     <link href="plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet">
-
     <link href="plugins/icheck-bootstrap/icheck-bootstrap.min.css" rel="stylesheet">
-
     <link href="plugins/jqvmap/jqvmap.min.css" rel="stylesheet">
-
     <link href="dist/css/adminlte.min.css?v=3.2.0" rel="stylesheet">
-
     <link href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css" rel="stylesheet">
-
     <link href="plugins/daterangepicker/daterangepicker.css" rel="stylesheet">
-
     <link href="plugins/summernote/summernote-bs4.min.css" rel="stylesheet">
-
-    <!-- Chart -->
-    <link href="plugins/fontawesome-free/css/all.min.css" rel="stylesheet">
-    <link href="dist/css/adminlte.min.css?v=3.2.0" rel="stylesheet">
-
-    <!-- Link Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script
-        src="/cdn-cgi/zaraz/s.js?z=JTdCJTIyZXhlY3V0ZWQlMjIlM0ElNUIlNUQlMkMlMjJ0JTIyJTNBJTIyQWRtaW5MVEUlMjAzJTIwJTdDJTIwRGFzaGJvYXJkJTIyJTJDJTIyeCUyMiUzQTAuNzc4NjQ2NDMwOTUyMTI3NSUyQyUyMnclMjIlM0ExNTM2JTJDJTIyaCUyMiUzQTg2NCUyQyUyMmolMjIlM0E3MzAlMkMlMjJlJTIyJTNBMTUzNiUyQyUyMmwlMjIlM0ElMjJodHRwcyUzQSUyRiUyRmFkbWlubHRlLmlvJTJGdGhlbWVzJTJGdjMlMkZpbmRleC5odG1sJTIyJTJDJTIyciUyMiUzQSUyMmh0dHBzJTNBJTJGJTJGYWRtaW5sdGUuaW8lMkZ0aGVtZXMlMkZ2MyUyRmluZGV4My5odG1sJTIyJTJDJTIyayUyMiUzQTI0JTJDJTIybiUyMiUzQSUyMlVURi04JTIyJTJDJTIybyUyMiUzQS00MjAlMkMlMjJxJTIyJTNBJTVCJTVEJTdE"
-        defer referrerpolicy="origin"></script>
-    <script nonce="f92502a7-b46a-4ec5-a2c7-de941fbe97d5">
-        try {
-            (function (w, d) {
-                !(function (o, p, q, r) {
-                    o[q] = o[q] || {};
-                    o[q].executed = [];
-                    o.zaraz = { deferred: [], listeners: [] };
-                    o.zaraz.q = [];
-                    o.zaraz._f = function (s) {
-                        return async function () {
-                            var t = Array.prototype.slice.call(arguments);
-                            o.zaraz.q.push({ m: s, a: t });
-                        };
-                    };
-                    for (const u of ["track", "set", "debug"]) o.zaraz[u] = o.zaraz._f(u);
-                    o.zaraz.init = () => {
-                        var v = p.getElementsByTagName(r)[0],
-                            w = p.createElement(r),
-                            x = p.getElementsByTagName("title")[0];
-                        x && (o[q].t = p.getElementsByTagName("title")[0].text);
-                        o[q].x = Math.random();
-                        o[q].w = o.screen.width;
-                        o[q].h = o.screen.height;
-                        o[q].j = o.innerHeight;
-                        o[q].e = o.innerWidth;
-                        o[q].l = o.location.href;
-                        o[q].r = p.referrer;
-                        o[q].k = o.screen.colorDepth;
-                        o[q].n = p.characterSet;
-                        o[q].o = new Date().getTimezoneOffset();
-                        if (o.dataLayer)
-                            for (const B of Object.entries(
-                                Object.entries(dataLayer).reduce(
-                                    (C, D) => ({ ...C[1], ...D[1] }),
-                                    {}
-                                )
-                            ))
-                                zaraz.set(B[0], B[1], { scope: "page" });
-                        o[q].q = [];
-                        for (; o.zaraz.q.length;) {
-                            const E = o.zaraz.q.shift();
-                            o[q].q.push(E);
-                        }
-                        w.defer = !0;
-                        for (const F of [localStorage, sessionStorage])
-                            Object.keys(F || {})
-                                .filter((H) => H.startsWith("_zaraz_"))
-                                .forEach((G) => {
-                                    try {
-                                        o[q]["z_" + G.slice(7)] = JSON.parse(F.getItem(G));
-                                    } catch {
-                                        o[q]["z_" + G.slice(7)] = F.getItem(G);
-                                    }
-                                });
-                        w.referrerPolicy = "origin";
-                        w.src =
-                            "/cdn-cgi/zaraz/s.js?z=" +
-                            btoa(encodeURIComponent(JSON.stringify(o[q])));
-                        v.parentNode.insertBefore(w, v);
-                    };
-                    ["complete", "interactive"].includes(p.readyState)
-                        ? zaraz.init()
-                        : o.addEventListener("DOMContentLoaded", zaraz.init);
-                })(w, d, "zarazData", "script");
-            })(window, document);
-        } catch (e) {
-            throw (fetch("/cdn-cgi/zaraz/t"), e);
-        }
-    </script>
-    <style>
-        .small-box .icon>i.fa,
-        .small-box .icon>i.fab,
-        .small-box .icon>i.fad,
-        .small-box .icon>i.fal,
-        .small-box .icon>i.far,
-        .small-box .icon>i.fas,
-        .small-box .icon>i.ion {
-            font-size: 70px;
-            top: 20px;
-        }
-
-        .small-box .icon>i {
-            font-size: 90px;
-            position: absolute;
-            right: 15px;
-            top: 15px;
-            transition: -webkit-transform 0.3s linear;
-            transition: transform 0.3s linear;
-            transition: transform 0.3s linear, -webkit-transform 0.3s linear;
-        }
-
-        .small-box .icon>svg.fa,
-        .small-box .icon>svg.fab,
-        .small-box .icon>svg.fad,
-        .small-box .icon>svg.fal,
-        .small-box .icon>svg.far,
-        .small-box .icon>svg.fas,
-        .small-box .icon>svg.ion {
-            font-size: 70px;
-            top: 20px;
-            height: 70px;
-        }
-
-        .small-box .icon>svg {
-            font-size: 90px;
-            position: absolute;
-            right: 15px;
-            top: 15px;
-            transition: -webkit-transform 0.3s linear;
-            transition: transform 0.3s linear;
-            transition: transform 0.3s linear, -webkit-transform 0.3s linear;
-        }
-    </style>
 </head>
+
 <section class="content">
     <div class="container-fluid">
+        <!-- Form chọn tháng -->
+        <form action="/manager/<%= hotel._id %>/statistical" method="GET" class="mb-4">
+            <div class="form-group">
+                <label for="periodType">Chọn loại thời gian:</label>
+                <select id="periodType" name="type" class="form-control">
+                    <option value="month" selected>Tháng</option>
+                    <option value="quarter">Quý</option>
+                    <option value="year">Năm</option>
+                </select>
+            </div>
+        
+            <div class="form-group" id="monthInput">
+                <label for="month">Chọn tháng:</label>
+                <input type="month" id="month" name="month" class="form-control" value="<%= new Date().toISOString().slice(0, 7) %>">
+            </div>
+        
+            <div class="form-group d-none" id="quarterInput">
+                <label for="quarter">Chọn quý:</label>
+                <select id="quarter" name="quarter" class="form-control">
+                    <option value="<%= new Date().getFullYear() %>-1">Quý 1</option>
+                    <option value="<%= new Date().getFullYear() %>-2">Quý 2</option>
+                    <option value="<%= new Date().getFullYear() %>-3">Quý 3</option>
+                    <option value="<%= new Date().getFullYear() %>-4">Quý 4</option>
+                </select>
+            </div>
+        
+            <div class="form-group d-none" id="yearInput">
+                <label for="year">Chọn năm:</label>
+                <input type="number" id="year" name="year" class="form-control" value="<%= new Date().getFullYear() %>" min="2000" max="2100">
+            </div>
+        
+            <button type="submit" class="btn btn-primary mt-2">Xem thống kê</button>
+            <button type="button" id="resetButton" class="btn btn-secondary mt-2">Xóa phân loại</button>
+        </form>
+
+        <!-- Thống kê tổng quan -->
         <div class="row">
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>
-                            <%=number_room %>
-                        </h3>
+                        <h3><%= number_room %></h3>
                         <p>Phòng</p>
                     </div>
                     <div class="icon">
@@ -167,9 +70,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3>
-                            <%=number_of_booking %>
-                        </h3>
+                        <h3><%= number_of_booking %></h3>
                         <p>Đặt phòng</p>
                     </div>
                     <div class="icon">
@@ -181,9 +82,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-warning">
                     <div class="inner">
-                        <h3>
-                            <%=number_of_user %>
-                        </h3>
+                        <h3><%= number_of_user %></h3>
                         <p>Khách hàng</p>
                     </div>
                     <div class="icon">
@@ -195,9 +94,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-danger">
                     <div class="inner">
-                        <h3>
-                            <%=number_of_event %>
-                        </h3>
+                        <h3><%= number_of_event %></h3>
                         <p>Sự kiện</p>
                     </div>
                     <div class="icon">
@@ -206,67 +103,77 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="card">
-                <div class="card-header ui-sortable-handle" style="cursor: move;">
+
+        <!-- Biểu đồ và thông tin loại phòng -->
+        <div class="row mt-4">
+            <div class="card col-12">
+                <div class="card-header ui-sortable-handle">
                     <h3 class="card-title">
                         <i class="fas fa-chart-pie mr-1"></i>
-                        Loại phòng được đặt nhiều nhất trong tháng <%=month%>
+                        Loại phòng được đặt nhiều nhất trong <%= type === 'month' ? 'tháng' : type === 'year' ? 'năm' : 'quý' %> <%= type === 'month' ? month : type === 'quarter' ? quarter : year %>
                     </h3>
-                    
                 </div>
                 <div class="card-body">
                     <div class="tab-content p-0">
-                        <%for(typeroom of best_type_room.typeOfRooms){%>
-                            <div>Loại phòng: <%=typeroom.name %></div>
-                            <div>Số lượng đặt: <%=best_type_room.maxCount%></div>
-                        <%}%>
+                        <% for(let typeroom of best_type_room.typeOfRooms) { %>
+                            <div>Loại phòng: <%= typeroom.name %></div>
+                            <div>Số lượng đặt: <%= best_type_room.maxCount %></div>
+                        <% } %>
                     </div>
                 </div>
             </div>
-            <div class="tab-content">
-                <!-- Biểu đồ được vẽ tại đây -->
-                <canvas id="roomBookingChart" width="200" height="200"></canvas>
+        </div>
+
+        <!-- Biểu đồ -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <canvas id="roomBookingChart" width="200" height="100"></canvas>
             </div>
         </div>
     </div>
 </section>
 
+<style>
+    #roomBookingChart {
+        width: 300px; /* Chiều rộng mong muốn */
+        height: 300px; /* Chiều cao mong muốn */
+    }
+</style>
+
 <script>
-    // Giả sử biến bookedCountPerTypeRoom được truyền từ server sang
     const bookedCountPerTypeRoom = <%- JSON.stringify(best_type_room.bookedCountPerTypeRoom) %>;
 
-    // Lấy dữ liệu từ bookedCountPerTypeRoom
     const roomTypes = Object.keys(bookedCountPerTypeRoom);
     const bookingCounts = Object.values(bookedCountPerTypeRoom);
 
-    // Tạo biểu đồ
     const ctx = document.getElementById('roomBookingChart').getContext('2d');
     const roomBookingChart = new Chart(ctx, {
-        type: 'pie', 
+        type: 'pie',
         data: {
-            labels: roomTypes, 
+            labels: roomTypes,
             datasets: [{
                 label: 'Số lượng đặt phòng',
-                data: bookingCounts, 
+                data: bookingCounts,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
                     'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)'
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)'
                 ],
                 borderColor: [
                     'rgba(255, 99, 132, 1)',
                     'rgba(54, 162, 235, 1)',
                     'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)'
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
                 ],
                 borderWidth: 1
             }]
         },
         options: {
-            responsive: true,
-            aspectRatio: 3.0,
+            responsive: true, // Đảm bảo biểu đồ có thể tự động điều chỉnh
+            maintainAspectRatio: false, // Tắt tỷ lệ khung hình để có thể điều chỉnh kích thước
             plugins: {
                 legend: {
                     position: 'top',
@@ -277,5 +184,34 @@
                 }
             }
         }
+    });
+
+    const periodTypeSelect = document.getElementById('periodType');
+    const monthInput = document.getElementById('monthInput');
+    const quarterInput = document.getElementById('quarterInput');
+    const yearInput = document.getElementById('yearInput');
+
+    periodTypeSelect.addEventListener('change', function() {
+        switch (this.value) {
+            case 'month':
+                monthInput.classList.remove('d-none');
+                quarterInput.classList.add('d-none');
+                yearInput.classList.add('d-none');
+                break;
+            case 'quarter':
+                monthInput.classList.add('d-none');
+                quarterInput.classList.remove('d-none');
+                yearInput.classList.add('d-none');
+                break;
+            case 'year':
+                monthInput.classList.add('d-none');
+                quarterInput.classList.add('d-none');
+                yearInput.classList.remove('d-none');
+                break;
+        }
+    });
+
+    resetButton.addEventListener('click', function() {
+        window.location.href = '/manager/<%= hotel._id %>/statistical';
     });
 </script>

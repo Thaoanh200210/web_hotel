@@ -97,13 +97,45 @@ const { BookingStatusEnum } = require("../models/enum/booking_status");
 //=> gọi repository để truy cập vào database  thông qua models
 class ManagerController {
     //thống kê
+    // async statistical(req, res) {
+    //     var month = new Date().getMonth() + 1;
+    //     let number_room = await numberOfRoomByHotel(req.hotel);
+    //     let number_of_booking = await numberOfBookingByHotel(req.hotel);
+    //     let number_of_event = await numberOfEventByHotel(req.hotel);
+    //     let number_of_user = await numberOfUser();
+    //     let best_type_room = await bestTypeRoom(req.hotel);
+    //     res.render("index-manager", {
+    //         page: "manager/index",
+    //         roomPage: "statistical/management",
+    //         number_room: number_room,
+    //         number_of_booking: number_of_booking,
+    //         number_of_event: number_of_event,
+    //         number_of_user: number_of_user,
+    //         best_type_room: best_type_room,
+    //         month: month,
+    //         ...defaultManagerNav(),
+    //         ...defaultData(req)
+    //     })
+    // }
     async statistical(req, res) {
-        var month = new Date().getMonth() + 1;
+        // Lấy tháng từ query (nếu có) hoặc lấy tháng hiện tại
+        let month = req.query.month
+        let quarter = req.query.quarter
+        let year = req.query.year
+        let type = req.query.type
+        // Gọi các hàm để lấy dữ liệu theo tháng
         let number_room = await numberOfRoomByHotel(req.hotel);
-        let number_of_booking = await numberOfBookingByHotel(req.hotel);
-        let number_of_event = await numberOfEventByHotel(req.hotel);
-        let number_of_user = await numberOfUser();
-        let best_type_room = await bestTypeRoom(req.hotel);
+        let number_of_booking = await numberOfBookingByHotel(req.hotel, month); // Truyền thêm tham số month nếu cần thiết
+        let number_of_event = await numberOfEventByHotel(req.hotel, month); // Truyền thêm tham số month nếu cần thiết
+        let number_of_user = await numberOfUser(month); // Truyền thêm tham số month nếu cần thiết
+        let best_type_room = []
+        if (type === 'quarter') {
+            best_type_room = await bestTypeRoom(req.hotel, quarter, 'quarter'); 
+        } else if (type === 'year') {
+            best_type_room = await bestTypeRoom(req.hotel, year, 'year'); 
+        } else {
+            best_type_room = await bestTypeRoom(req.hotel, month, 'month'); 
+        }
         res.render("index-manager", {
             page: "manager/index",
             roomPage: "statistical/management",
@@ -112,11 +144,15 @@ class ManagerController {
             number_of_event: number_of_event,
             number_of_user: number_of_user,
             best_type_room: best_type_room,
+            type: type,
             month: month,
+            quarter: quarter,
+            year: year,
             ...defaultManagerNav(),
             ...defaultData(req)
-        })
+        });
     }
+    
 
     //quản lý khách sạn
     async hotel(req, res) {

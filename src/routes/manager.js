@@ -8,7 +8,7 @@ const upload = multer();
 
 let manager = new ManagerController();
 //thống kê
-router.route("/statistical").get(manager.statistical);
+router.route("/statistical").get(manager.statistical).post(manager.statistical);
 
 router.route('/hotel/edit-handler').post(uploadDisk.single('file'), manager.editHotelHandler);
 router.route("/hotel/edit").get(manager.editHotel);
