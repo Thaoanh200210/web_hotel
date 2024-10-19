@@ -6,61 +6,107 @@
             </h5>
         </div>
     </div>
-    <div class="card-body">
-        <form action="/manager/<%= hotel._id %>/hotel/edit-handler" enctype="multipart/form-data" method="POST" class="d-flex flex-column">
-            <div class="">
-                <div class="mb-3">
-                    <label class="form-label">Tên khách sạn</label>
-                    <input class="form-control shadow-none" name="tenkhachsan" type="text" value="<%=hotel.name%>" required>
-                </div>
+    <div class="container">
+        <div class="row">
+            <div class="card-body">
+                <form action="/manager/<%= hotel._id %>/hotel/edit-handler" enctype="multipart/form-data" method="POST" class="d-flex flex-column">
+                    <div class="row">
+                    <div class="col-6">
+                        <div class="">
+                            <div class="mb-3">
+                                <label class="form-label">Tên khách sạn</label>
+                                <input class="form-control shadow-none" name="tenkhachsan" type="text" value="<%=hotel.name%>" required>
+                            </div>
+            
+                            <div class="mb-3">
+                                <label for="thumb" class="form-label">Ảnh bìa hiện tại</label>
+                                <img style="height: 150px;"  src="<%= hotel.image %>" alt="Hình ảnh">
+                              </div>
+            
+                            <div class="mb-3">
+                                <label class="form-label">Ảnh bìa mới </label>
+                                <input class="form-control shadow-none" name="file" type="file" accept="image/*">
+                            </div>
+            
+                            <div class="mb-3">
+                                <label class="form-label">Địa chỉ</label>
+                                <input class="form-control shadow-none" name="diachi" type="text"  value="<%=hotel.address%>" required>
+                            </div>
+            
+                            <div class="mb-3">
+                                <label class="form-label">Số sao</label>
+                                <input class="form-control shadow-none" name="sosao" type="number" min="1" max="5" value="<%=hotel.star%>" required>
+                            </div>
+            
+                            <div class="mb-3">
+                                <label class="form-label">Thành phố</label>
+                                <select class="form-control shadow-none" name="city" required>
+                                    <p><%= hotel.city %></p>
+                                    <% for(let city of cities) { %>
+                                        <option value="<%= city._id.toString() %>" <%= city._id.toString() === hotel.city.toString() ? 'selected' : '' %>><%= city.name %></option>
+                                    <% } %>
+                                </select>
+                            </div>
+            
+                            <div class="mb-3">
+                                <label class="form-label">Mô tả và thông tin liên hệ của khách sạn</label>
+                                <input class="form-control shadow-none" name="mieuta" type="text" value="<%=hotel.description%>" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label class="form-label">Số điện thoại khách sạn</label>
+                            <input class="form-control shadow-none" name="sodienthoai" type="text"  value="<%=hotel.sodienthoai%>" required>
+                        </div>
 
-                <div class="mb-3">
-                    <label for="thumb" class="form-label">Ảnh bìa hiện tại</label>
-                    <img style="height: 150px;"  src="<%= hotel.image %>" alt="Hình ảnh">
-                  </div>
+                        <div class="mb-3">
+                            <label class="form-label">Thông tin nhận phòng (VD: Phục vụ 24/24, nhận phòng lúc 14h)</label>
+                            <input class="form-control shadow-none" name="timecheckin" type="text"  value="<%=hotel.timecheckin%>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Thông tin 
+                                trả phòng (VD: Phục vụ 24/24, trả phòng lúc 12h)</label>
+                            <input class="form-control shadow-none" name="timecheckout" type="text"  value="<%=hotel.timecheckout%>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Chính sách đặt, hoàn trả phòng</label>
+                            <input class="form-control shadow-none" name="chinhsachdatphong" type="text"  value="<%=hotel.chinhsachdatphong%>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Chính sách trẻ em</label>
+                            <input class="form-control shadow-none" name="chinhsachtreem" type="text"  value="<%=hotel.chinhsachtreem%>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Độ tuổi giới hạn của khách sạn</label>
+                            <input class="form-control shadow-none" name="dotuoigioihan" type="text"  value="<%=hotel.dotuoigioihan%>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Vật nuôi</label>
+                            <input class="form-control shadow-none" name="vatnuoi" type="text"  value="<%=hotel.vatnuoi%>" required>
+                        </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Ảnh bìa mới </label>
-                    <input class="form-control shadow-none" name="file" type="file" accept="image/*">
+                        <div class="mb-3">
+                            <label class="form-label">Phần trăm trả thêm nếu trả phòng sớm</label>
+                            <input class="form-control shadow-none" name="phantramtientraphong" type="text"  value="<%=hotel.phantramtientraphong%>" required>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Địa chỉ</label>
-                    <input class="form-control shadow-none" name="diachi" type="text"  value="<%=hotel.address%>" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Số sao</label>
-                    <input class="form-control shadow-none" name="sosao" type="number" min="1" max="5" value="<%=hotel.star%>" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Thành phố</label>
-                    <select class="form-control shadow-none" name="city" required>
-                        <p><%= hotel.city %></p>
-                        <% for(let city of cities) { %>
-                            <option value="<%= city._id.toString() %>" <%= city._id.toString() === hotel.city.toString() ? 'selected' : '' %>><%= city.name %></option>
-                        <% } %>
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Mô tả và thông tin liên hệ của khách sạn</label>
-                    <input class="form-control shadow-none" name="mieuta" type="text" value="<%=hotel.description%>" required>
-                </div>
+                    <div class="text-center my-1">
+                        <div class="d-flex justify-content-center gap-4">
+                            <a class="btn btn-warning shadow-none" href="/manager/<%=hotel._id%>/hotel">
+                                Trở về
+                            </a>
+                            <button class="btn btn-dark shadow-none" type="submit" name="">
+                                Sửa thông tin
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="text-center my-1">
-                <div class="d-flex justify-content-center gap-4">
-                    <a class="btn btn-warning shadow-none" href="/administrator/hotel">
-                        Trở về
-                    </a>
-                    <button class="btn btn-dark shadow-none" type="submit" name="">
-                        Sửa thông tin
-                    </button>
-                </div>
-            </div>
-        </form>
+        </div>
     </div>
+    
 
 </div>
 

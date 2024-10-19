@@ -15,6 +15,15 @@ const HotelSchema = new Schema(
         description: { type: String, trim: true, required: true },
         star: { type: Number, required: true, min: 1, max: 5 },
         slogan: { type: String, trim: true, required: true },
+        timecheckin: { type: String, trim: true, required: false },
+        timecheckout: { type: String, trim: true, required: false },
+        chinhsachdatphong: { type: String, trim: true, required: false },
+        chinhsachtreem: { type: String, trim: true, required: false },
+        dotuoigioihan: { type: String, trim: true, required: false },
+        vatnuoi: { type: String, trim: true, required: false },
+        phantramtientraphong: { type: String, trim: true, required: false },
+        sodienthoai: { type: String, trim: true, required: false },
+
         city: {
             type: String
         },

@@ -6,31 +6,87 @@
         </div>
       </div>
       <!-- /.card-header -->
-      <div class="card-body">
-        <div class="mb-3">
-          <label for="name" class="form-label">Tên</label>
-          <input disabled value="<%= hotel.name %>" type="text" class="form-control" id="name" placeholder="Lewis Hotel"/>
+
+      <div class="container">
+        <div class="row">
+          <div class="col-6">
+            <div class="card-body">
+              <div class="mb-3">
+                <label for="name" class="form-label">Tên</label>
+                <input disabled value="<%= hotel.name %>" type="text" class="form-control" id="name" placeholder="Lewis Hotel"/>
+              </div>
+              <div class="mb-3">
+                <label for="address" class="form-label">Địa chỉ</label>
+                <input disabled value="<%= hotel.address %>" type="text" class="form-control" id="address" placeholder="An Giang">
+              </div>
+              <div class="mb-3">
+                <label for="description" class="form-label">Mô tả và thông tin liên hệ của khách sạn</label>
+                <input disabled value="<%= hotel.description %>" type="text" class="form-control" id="description" placeholder="Đây là mô tả"/>
+              </div>
+              <div class="mb-3">
+                <label for="star" class="form-label">Số sao</label>
+                <input disabled value="<%= hotel.star %>" type="text" class="form-control" id="star" placeholder="5">
+              </div>
+              <div class="mb-3">
+                <label for="city" class="form-label">Thành phố</label>
+                <input disabled value="<%= city %>" type="text" class="form-control" id="city" placeholder="Hà Nội">
+              </div>
+              <div class="mb-3">
+                <label for="description" class="form-label">Số điện thoại khách sạn</label>
+                <input disabled value="<%= hotel.sodienthoai %>" type="text" class="form-control" id="sodienthoai" placeholder="Số điện thoại khách sạn"/>
+              </div>
+              <div class="mb-3">
+                <label for="thumb" class="form-label">Hình nền</label>
+                <img style="height: 150px;" src="<%= hotel.image %>" alt="Hình ảnh" >
+              </div>
+
+             
+            </div>
+          </div>
+
+          <div class="col-6">
+            <div class="card-body">
+            <div class="mb-3">
+              <label for="description" class="form-label">Thông tin nhận phòng (VD: Phục vụ 24/24, nhận phòng lúc 14h)</label>
+              <input disabled value="<%= hotel.timecheckin %>" type="text" class="form-control" id="timecheckin" placeholder="Thông tin nhận phòng"/>
+            </div>
+
+            <div class="mb-3">
+              <label for="description" class="form-label">Thông tin 
+                trả phòng (VD: Phục vụ 24/24, trả phòng lúc 12h)</label>
+              <input disabled value="<%= hotel.timecheckout %>" type="text" class="form-control" id="timecheckout" placeholder="Thông tin 
+                trả phòng"/>
+            </div>
+
+            <div class="mb-3">
+              <label for="description" class="form-label">Chính sách đặt, hoàn trả phòng</label>
+              <input disabled value="<%= hotel.chinhsachdatphong %>" type="text" class="form-control" id="chinhsachdatphong" placeholder="Chính sách đặt, hoàn trả phòng"/>
+            </div>
+
+            <div class="mb-3">
+              <label for="description" class="form-label">Độ tuổi giới hạn của khách sạn</label>
+              <input disabled value="<%= hotel.dotuoigioihan %>" type="text" class="form-control" id="dotuoigioihan" placeholder="Độ tuổi giới hạn của khách sạn"/>
+            </div>
+
+            <div class="mb-3">
+              <label for="description" class="form-label">Vật nuôi</label>
+              <input disabled value="<%= hotel.vatnuoi %>" type="text" class="form-control" id="vatnuoi" placeholder="Vật nuôi"/>
+            </div>
+
+            <div class="mb-3">
+              <label for="description" class="form-label">Chính sách trẻ em</label>
+              <input disabled value="<%= hotel.chinhsachtreem %>" type="text" class="form-control" id="chinhsachtreem" placeholder="Chính sách trẻ em"/>
+            </div>
+
+            <div class="mb-3">
+              <label for="description" class="form-label">Phần trăm trả thêm nếu trả phòng sớm</label>
+              <input disabled value="<%= hotel.phantramtientraphong %>" type="text" class="form-control" id="phantramtientraphong" placeholder="Phần trăm trả thêm nếu trả phòng sớm"/>
+            </div>
+          </div>
+          </div>
         </div>
-        <div class="mb-3">
-          <label for="address" class="form-label">Địa chỉ</label>
-          <input disabled value="<%= hotel.address %>" type="text" class="form-control" id="address" placeholder="An Giang">
-        </div>
-        <div class="mb-3">
-          <label for="description" class="form-label">Mô tả và thông tin liên hệ của khách sạn</label>
-          <input disabled value="<%= hotel.description %>" type="text" class="form-control" id="description" placeholder="Đây là mô tả"/>
-        </div>
-        <div class="mb-3">
-          <label for="star" class="form-label">Số sao</label>
-          <input disabled value="<%= hotel.star %>" type="text" class="form-control" id="star" placeholder="5">
-        </div>
-        <div class="mb-3">
-          <label for="city" class="form-label">Thành phố</label>
-          <input disabled value="<%= city %>" type="text" class="form-control" id="city" placeholder="Hà Nội">
-        </div>
-        <div class="mb-3">
-          <label for="thumb" class="form-label">Hình nền</label>
-          <img style="height: 150px;" src="<%= hotel.image %>" alt="Hình ảnh" >
-        </div>
+
       </div>
+      
       <!-- /.card-body -->
     </div>

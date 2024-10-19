@@ -188,8 +188,14 @@ class ManagerController {
         originHotel.address = req.body.diachi;
         originHotel.description = req.body.mieuta;
         originHotel.star = req.body.sosao;
-        originHotel.city = req.body.city;
-        
+        originHotel.timecheckin = req.body.timecheckin;
+        originHotel.timecheckout = req.body.timecheckout;
+        originHotel.chinhsachdatphong = req.body.chinhsachdatphong;
+        originHotel.chinhsachtreem = req.body.chinhsachtreem;
+        originHotel.dotuoigioihan = req.body.dotuoigioihan;
+        originHotel.vatnuoi = req.body.vatnuoi;
+        originHotel.phantramtientraphong = req.body.phantramtientraphong;
+        originHotel.sodienthoai = req.body.sodienthoai;
         if (file) {
             const imageData = await uploadImageFromLocal(file.path, 'hotel', file.filename);
             originHotel.image = imageData.img_url;

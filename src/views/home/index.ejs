@@ -31,13 +31,13 @@
 						<div class="a-col alternate">
 							<div class="input-field">
 								<label for="date-start">Check In</label>
-								<input type="date" name="ngaydau" class="form-control" id="date-start" style="font-size: 15px; width: 200px" />
+								<input type="date" name="ngaydau" class="form-control" id="date-start" style="font-size: 15px; width: 200px" min="" />
 							</div>
 						</div>
 						<div class="a-col alternate">
 							<div class="input-field">
 								<label for="date-end">Check Out</label>
-								<input type="date" name="ngayket" class="form-control" id="date-end" style="font-size: 15px; width: 200px" />
+								<input type="date" name="ngayket" class="form-control" id="date-end" style="font-size: 15px; width: 200px" min="" />
 							</div>
 						</div>
 						<div class="a-col action">
@@ -315,6 +315,12 @@
     const dateWarning = document.getElementById('dateWarning');
     const hotelSelect = document.getElementById('hotelSelect');
     const hotelForm = document.getElementById('hotelForm');
+	const today = new Date().toISOString().split('T')[0]; // Lấy ngày hiện tại (YYYY-MM-DD)
+
+    // Đặt giá trị min cho ngày check-in là ngày hiện tại
+    dateStart.min = today;
+
+   
 
     // Hàm kiểm tra và cập nhật trạng thái của nút và thông báo
     function validateDates() {
@@ -331,7 +337,7 @@
         } else {
             submitButton.disabled = true;
             dateWarning.style.display = 'block'; // Hiện thông báo nếu chưa chọn ngày
-            dateWarning.textContent = 'Vui lòng chọn ngày check-in và check-out.'; // Thông báo nhắc người dùng
+            dateWarning.textContent = 'Vui lòng chọn khách sạn, ngày check-in và check-out.'; // Thông báo nhắc người dùng
         }
     }
 
@@ -344,8 +350,14 @@
     }
 
     // Lắng nghe sự kiện 'input' trên các trường ngày
-    dateStart.addEventListener('input', validateDates);
-    dateEnd.addEventListener('input', validateDates);
+ // Khi người dùng chọn ngày check-in, cập nhật giá trị min cho ngày check-out
+ dateStart.addEventListener('input', function() {
+	dateEnd.min = dateStart.value; // Ngày check-out phải lớn hơn hoặc bằng ngày check-in
+	validateDates();
+});
+
+// Kiểm tra tính hợp lệ của ngày và bật/tắt nút submit
+dateEnd.addEventListener('input', validateDates);
 
     // Lắng nghe sự kiện 'change' trên select để cập nhật action của form
     hotelSelect.addEventListener('change', updateFormAction);
