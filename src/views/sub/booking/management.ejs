@@ -1,51 +1,89 @@
-
 <div class="card">
-      <div class="card-header d-flex">
-        <div class="card-title flex-grow-1 d-flex justify-content-between align-items-center">
-            <h3>Quản lý đặt phòng</h3>
-            
-        </div>
-      </div>
-      <!-- /.card-header -->
-      <div class="card-body">
-        <table id="datatable" class="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <th>STT</th>
-              <th>Số phòng </th>
-              <th>Tên khách hàng</th>
-              <th>Ngày nhận phòng</th>
-              <th>Ngày trả phòng</th>
-              <th>Giá phòng</th>
-              <th>Số chứng minh nhân dân</th>
-              <th>Trạng thái</th>
-              <th>Quản lý </th>
-            </tr>
-          </thead>
-          <tbody>
-            <% var i=1; %>
-            <% for(let booking of bookings){ %>
-            <tr>
-              <td><%= i++ %></td>
-              <td><%= getRoom(details, booking._id) %> </td>
-              <td><%= booking.customer.name %></td>
-              <td><%= booking.check_in.toLocaleString() %></td>
-              <td><%= booking.check_out.toLocaleString()  %></td>
-              <td><%=  parseInt(booking.total_price).toLocaleString('it-IT', {style : 'currency', currency : 'VND'}) %></td>
-              <td><%= booking.customer_identify_number %></td>
-              <td><%= getStatus(booking)  %></td>
-              <td><a class="btn btn-success" href="/sub/<%=hotel._id%>/booking/status_booking/<%=booking._id%>">
-                Chi tiết </a></td>
-              <!-- <td>
-                <% if(getStatus(booking) == "Đã đặt phòng" || getStatus(booking) == "Đã nhận phòng") {%>
-                <a class="btn btn-success" href="/sub/<%=hotel._id%>/booking/status_booking/<%=booking._id%>">
-                  Sửa trạng thái</a> 
-                <%}%>
-              </td> -->
-            </tr>
-            <% } %>
-          </tbody>
-        </table>
-      </div>
-      <!-- /.card-body -->
+  <div class="card-header d-flex">
+    <div
+      class="card-title flex-grow-1 d-flex justify-content-between align-items-center"
+    >
+      <h3>Quản lý đặt phòng</h3>
     </div>
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body">
+    <table id="datatable" class="table table-bordered">
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Số phòng</th>
+          <th>Tên khách hàng</th>
+          <th>Ngày nhận phòng</th>
+          <th>Ngày trả phòng</th>
+          <th>Giá phòng</th>
+          <th>Số chứng minh nhân dân</th>
+          <th>Trạng thái</th>
+          <th>Quản lý</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% var i=1; %> <% for(let booking of bookings){ %>
+        <tr>
+          <td><%= i++ %></td>
+          <td><%= getRoom(details, booking._id) %></td>
+          <td><%= booking.customer.name %></td>
+          <td><%= booking.check_in.toLocaleString() %></td>
+          <td><%= booking.check_out.toLocaleString() %></td>
+          <td>
+            <%= parseInt(booking.total_price).toLocaleString('it-IT', {style :
+            'currency', currency : 'VND'}) %>
+          </td>
+          <td><%= booking.customer_identify_number %></td>
+          <td>
+            <% let status = getStatus(booking); %>
+            <span style="font-weight: bold;"
+              class="<%= status === 'Đã đặt phòng' ? 'text-primary' : (status === 'Đang nhận phòng' ? 'text-warning' : (status === 'Đã trả phòng' ? 'text-success' : 'text-danger')) %>"
+            >
+              <%= status %>
+            </span>
+          </td>
+          <td>
+            <a
+              class="btn btn-custom"
+              href="/sub/<%=hotel._id%>/booking/status_booking/<%=booking._id%>"
+            >
+              Chi tiết
+            </a>
+          </td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+  <!-- /.card-body -->
+</div>
+
+<style>
+  /* Đảm bảo rằng nền bảng và các ô là màu trắng */
+  #datatable {
+    background-color: white;
+  }
+
+  #datatable th,
+  #datatable td {
+    background-color: white; /* Nền trắng cho tất cả ô */
+    border: 1px solid black; /* Đường viền đen cho tất cả các ô */
+  }
+
+  /* Tùy chọn: Nếu muốn khoảng cách giữa các ô rõ hơn */
+  #datatable td {
+    padding: 8px;
+  }
+
+  .btn-custom {
+    background-color: #20476e; /* Màu xanh da trời */
+    color: white; /* Màu chữ */
+    transition: background-color 0.3s, color 0.3s; /* Hiệu ứng chuyển đổi */
+  }
+  
+  .btn-custom:hover {
+    background-color: rgb(127, 112, 112); /* Màu nền khi hover */
+    color: #edf1f4; /* Màu chữ khi hover */
+  }
+</style>

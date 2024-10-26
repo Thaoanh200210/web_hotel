@@ -7,6 +7,14 @@ const bodyParser = require("body-parser");
 const route = require("./src/index");
 const listEndpoints = require("express-list-endpoints");
 const app = express();
+const session = require('express-session');
+
+app.use(session({
+    secret: 'your_secret_key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Set to true if using HTTPS
+}));
 app.set("views", "./src/views");
 app.use(cookieParser("secret"));
 app.get("/routing", (req, res) => {

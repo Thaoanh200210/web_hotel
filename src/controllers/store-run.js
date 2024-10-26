@@ -411,8 +411,8 @@ class StoreRunController{
         let customer = await getUserById(JSON.parse(userString)._id) ;
         let booking ={
             customer: customer,
-            check_in: new Date(req.body.ngaydau).setHours(14),
-            check_out: new Date(req.body.ngayket).setHours(12),
+            check_in: new Date(req.body.ngaydau).setHours(14, 0, 0, 0),  // Đặt giờ check-in là 14h, phút/giây/milisec là 0
+            check_out: new Date(req.body.ngayket).setHours(12, 0, 0, 0),
             customer_identify_number: req.body.chungminhnhandan,
             total_price: total,
         }
@@ -457,6 +457,8 @@ class StoreRunController{
     async historicalBooking(req,res){
         let user =  await getUserById(req.user._id);
         let bookings = await getBookingByUser(user,true);
+
+
         let checkPayment = (payments) => {
             let check = false;
             for(let payment of payments){

@@ -7,7 +7,7 @@
 </style>
 <div class="container" style="width: 1400px">
   <h3 style="font-family: initial; color: red; font-weight: bold;" ><div>Lưu ý: Sau 3 ngày đặt trên web, bạn sẽ không thể hủy phòng. Nếu muốn hủy xin bạn hãy xem thông tin khách sạn bạn đã đặt, liên hệ qua số điện thoại hoặc gmail của khách sạn để hủy. </div></h3>
-  <table class="table table-striped border border-dark text-center">
+  <table class="table table-striped border border-dark text-center shadow-table">
     <tbody>
       <tr>
         <td class="cot1">Mã đặt phòng</td>
@@ -23,11 +23,13 @@
         <td class="cot1"></td>
       </tr>
       <% 
-        const today = new Date(); 
-        for(let booking of bookings){
-          const bookingDate = new Date(booking.details[0].NowDate);
-          const cancelable = (today - bookingDate) <= 3 * 24 * 60 * 60 * 1000 && booking.status != "Đã hủy"; // kiểm tra nếu ngày đặt phòng không quá 3 ngày trước hôm nay
-      %>
+    const today = new Date();
+    bookings.sort((a, b) => new Date(b.details[0].NowDate) - new Date(a.details[0].NowDate)); // Sắp xếp theo ngày đặt từ mới đến cũ
+
+    for(let booking of bookings){
+        const bookingDate = new Date(booking.details[0].NowDate);
+        const cancelable = (today - bookingDate) <= 3 * 24 * 60 * 60 * 1000 && booking.status != "Đã hủy"; // kiểm tra nếu ngày đặt phòng không quá 3 ngày trước hôm nay
+%>
       <tr>
         <td><%=booking._id%></td>
         <td><%=booking.details[0].room.hotel.name%></td>
@@ -40,7 +42,7 @@
           <div class="fw-bold <%=checkPayment(booking.payments) ? 'text-success': 'text-danger' %> "><%=checkPayment(booking.payments) ? "Đã thanh toán": "Chưa thanh toán"; %></div>
         </td>
         <td>
-          <a href="/review/<%= booking._id %>" class="<%= checkPayment(booking.payments)? '': 'd-none' %> btn btn-success">Đánh giá</a>
+          <a href="/review/<%= booking._id %>" class="<%=  (booking.status === 'Đã trả phòng' || booking.status === 'Đã nhận phòng') ? '' : 'd-none' %> btn btn-success">Đánh giá</a>
         </td>
         <td><div><%=booking.status%></div></td>
         <td>
@@ -53,3 +55,92 @@
     </tbody>
   </table>
 </div>
+<style>
+  .container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  h3 {
+    font-family: 'Arial', sans-serif;
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  table.table {
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    width: 100%;
+  }
+
+  table.table thead th, table.table tbody td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  table.table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  table.table tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  /* Thêm đổ bóng cho bảng */
+  .shadow-table {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Đảm bảo các cột giữa có chiều ngang bằng nhau */
+  .cot1:not(:first-child):not(:last-child) {
+    width: calc(100% / 9); /* 9 cột giữa */
+  }
+
+  /* Nút Đánh giá mềm mại hơn với hiệu ứng chuyển màu */
+  .btn-success {
+    background-color: #5bc0de; /* Xanh dương nhạt */
+    border: none;
+    border-radius: 25px; /* Làm tròn viền cho nút */
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+
+  .btn-success:hover {
+    background-color: white; /* Chuyển sang màu trắng khi hover */
+    color: #5bc0de; /* Đổi màu chữ thành xanh dương */
+    border: 2px solid #5bc0de; /* Thêm viền xanh dương khi hover */
+  }
+
+  /* Nút Hủy đặt phòng */
+  .btn-primary {
+    background-color: #007bff;
+    border: none;
+    border-radius: 25px;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.4s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+
+  /* Các cột của bảng */
+  .cot1 {
+    font-weight: bold;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+</style>

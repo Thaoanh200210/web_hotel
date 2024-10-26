@@ -1,3 +1,4 @@
+
 <div style="background: #f3f3f3">
 	<%- include("./shared/header") %>
 	<div id="fh5co-wrapper">
@@ -49,6 +50,7 @@
 					</form>
 					
 				</div>
+
 				<div>
 					<p id="dateWarning" style="color: rgb(10, 43, 226); font-weight: bold; font-size: 14px; display: none; margin-top: 20px;">
 						Vui lòng chọn khách sạn, ngày check-in và check-out.
@@ -80,7 +82,7 @@
 			</div>
 		</div>
 
-		<div id="featured-province" class="fh5co-bg-color">
+		<div id="featured-province" class="">
 			<div class="container">
 				<div class="row">
 					<div class="col-md-12">
@@ -91,25 +93,25 @@
 				</div>
 		
 				<div class="row">
-					<% cities.forEach((city, index) => { %>
-						<div class="col-md-3">
-							<a href="/hotels/<%= city._id %>" style="display: block; margin-bottom: 28px;">
-								<div class="f-city" style="width: 100%; height: 100%;">
-									<div class="image" style="background-image: url('<%= city.image %>'); height: 120px; background-size: cover; background-position: center;">
-									</div>
-								</div>
-								<div class="descrip text-center">
-									<h3><%= city.name %></h3>
-								</div>
-							</a>
-						</div>
-						<% if ((index + 1) % 4 === 0) { %>
-							</div><div class="row">
-						<% } %>
-					<% }); %>
-				</div>
-				
-		
+    <% cities.forEach((city, index) => { %>
+        <div class="col-md-3">
+            <a href="/hotels/<%= city._id %>" style="display: block; margin-bottom: 28px;">
+                <div class="f-city" style="width: 100%; height: 100%;">
+                    <div class="image" style="background-image: url('<%= city.image %>'); height: 120px; background-size: cover; background-position: center; border-radius: 21px;">
+                    </div>
+                </div>
+                <div class="descrip text-center">
+                    <h3 style="color: rgb(112, 92, 92); border:  padding: 0; padding-top: 5px;; display: inline-block; font-family: 'Roboto', sans-serif; font-weight: 700; line-height: 1.2; margin: 0;">
+                        <%= city.name %>
+                    </h3>
+                </div>
+            </a>
+        </div>
+        <% if ((index + 1) % 4 === 0) { %>
+            </div><div class="row">
+        <% } %>
+    <% }); %>
+</div>	
 			</div>
 		</div>
 		
@@ -123,9 +125,9 @@
 						</div>
 					</div>
 				</div>
-	
+		
 				<div class="row">
-					<div class="feature-full-1col">
+					<div class="feature-full-1col" >
 						<div class="image" style="background-image: url('<%=hotels[0].image%>');">
 							<div class="descrip text-center">
 								<p><small>Giá chỉ từ</small><span><%=getPriceOfHotel(hotels[0])%>/đêm</span></p>
@@ -136,8 +138,9 @@
 							<p><%=hotels[0].description%></p>
 							<p><a href="/hotel/<%=hotels[0]._id%>/room" class="btn btn-primary btn-luxe-primary">Xem chi tiết <i class="ti-angle-right"></i></a></p>
 						</div>
-					</div>
 	
+					</div>
+		
 					<div class="feature-full-2col">
 						<div class="f-hotel">
 							<div class="image" style="background-image: url('<%=hotels[1].image%>');">
@@ -149,7 +152,7 @@
 								<h3><%=hotels[1].name%></h3>
 								<p><%=hotels[1].description%></p>
 								<p><a href="/hotel/<%=hotels[1]._id%>/room" class="btn btn-primary btn-luxe-primary">Xem chi tiết <i class="ti-angle-right"></i></a></p>
-						</div>
+							</div>
 						</div>
 						<div class="f-hotel">
 							<div class="image" style="background-image: url('<%=hotels[2].image%>');">
@@ -161,11 +164,10 @@
 								<h3><%=hotels[2].name%></h3>
 								<p><%=hotels[2].description%></p>
 								<p><a href="/hotel/<%=hotels[2]._id%>/room" class="btn btn-primary btn-luxe-primary">Xem chi tiết <i class="ti-angle-right"></i></a></p>
-						</div>
+							</div>
 						</div>
 					</div>
 				</div>
-	
 			</div>
 		</div>
 	
@@ -276,6 +278,46 @@
 ></df-messenger>
 
 <style>
+	.f-hotel {
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Hiệu ứng chuyển đổi */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ */
+    border-radius: 8px; /* Làm tròn góc */
+    overflow: hidden; /* Ẩn phần thừa */
+    margin: 15px; /* Khoảng cách giữa các khách sạn */
+  }
+
+  .f-hotel:hover {
+    transform: translateY(-5px); /* Di chuyển lên khi hover */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); /* Tăng cường bóng đổ khi hover */
+  }
+
+  .image {
+    height: 300px; /* Chiều cao cố định cho hình ảnh */
+    background-size: cover; /* Tự động điều chỉnh kích thước hình ảnh */
+    background-position: center; /* Căn giữa hình ảnh */
+  }
+
+  .desc {
+    padding: 15px; /* Khoảng cách cho phần mô tả */
+    text-align: center; /* Căn giữa text */
+  }
+
+  .btn-luxe-primary {
+    transition: background-color 0.3s ease, color 0.3s ease; /* Hiệu ứng chuyển màu cho nút */
+  }
+
+  .btn-luxe-primary:hover {
+    background-color: #ff6f61; /* Màu nền khi hover */
+    color: white; /* Màu chữ khi hover */
+  }
+	.image {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+a:hover .image {
+    transform: scale(1.05);
+    opacity: 0.8;
+}
     /* CSS cho nút */
     .styled-button {
         background-color: #007bff; /* Màu nền xanh */

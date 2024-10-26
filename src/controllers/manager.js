@@ -953,6 +953,7 @@ class ManagerController {
         }); 
         let { final_price, process_user, ngaytraphong,thuctephaitra } = req.body
         let user = await getUserById(process_user)
+        console.log("nhân viên:", user.name)
         if (req.body.status != "cancel") {
             booking.status = req.body.status;
             

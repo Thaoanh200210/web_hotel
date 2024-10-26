@@ -13,6 +13,8 @@ const getAllServiceHotel = require("../services/get_all_service_hotel")
 const getAllBookingDetails = require("../services/get_all_detai_booking")
 const getAllTypeRoomByHotel = require("../services/get_all_type_of_room_by_hotel")
 const getAllUsersByHotel = require("../services/get_all_user_by_hotel")
+const getBookingDetailById = require("../services/get_detail_booking_by_id")
+
 const getAllUsers = require("../services/get_all_user")
 const getAllServiceQuantity = require("../services/get_all_service_quantity")
 const getAllReviews = require("../services/get_all_review")
