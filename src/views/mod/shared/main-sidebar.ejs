@@ -1,48 +1,89 @@
-<div class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-  <div class="app-wrapper">
-    <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-      <div class="sidebar-brand">
-        <a href="/admin/" class="brand-link">
-          <span class="brand-text fw-light">TRANG QUẢN TRỊ</span>
-        </a>
-      </div>
-      <div class="sidebar-wrapper">
-        <nav class="mt-2">
-          <ul
-            class="nav sidebar-menu flex-column"
-            data-lte-toggle="treeview"
-            role="menu"
-            data-accordion="false"
-          >
-          <% for(let nav of navTabs){ %>
-            <li class="nav-item">
-              <a href="<%= nav.url %>" class="nav-link">
-                <i class="nav-icon <%= nav.icon %>"></i>
-                <p>
-                  <%= nav.name %>
-                  <% if(nav.children.length > 0){  %>
-                  <i class="nav-arrow bi bi-chevron-right"></i>
-                  <% } %>
-                </p>
-              </a>
-              
-              <% if(nav.children.length > 0){  %>
-              <ul class="nav nav-treeview">
-                <% for(let navChild of nav.children){ %>
-                <li class="nav-item">
-                  <a href="<%= navChild.url %>" class="nav-link">
-                    <i class="nav-icon <%= navChild.icon %>"></i>
-                    <p><%= navChild.name %></p>
-                  </a>
-                </li>
-                <% } %>
-              </ul>
-              <% } %>
-            </li>
-          <% } %>
-          </ul>
-        </nav>
-      </div>
-    </aside>
+<aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="light">
+  <div class="sidebar-brand" style="background-color: rgb(129, 123, 116);">
+      <a href="/admin/" class="brand-link" >
+          <span class="brand-text fw-dart" >TRANG QUẢN TRỊ</span>
+      </a>
   </div>
-</div>
+  <div class="sidebar-wrapper">
+      <nav class="mt-2">
+          <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
+              <% for(let nav of navTabs){ %>
+                  <li class="nav-item">
+                      <a href="<%= nav.url %>" class="nav-link <%= nav.isActive ? 'active' : '' %>">
+                          <i class="nav-icon <%= nav.icon %>"></i>
+                          <p>
+                              <%= nav.name %>
+                              <% if(nav.children.length > 0){  %>
+                              <i class="nav-arrow bi bi-chevron-right"></i>
+                              <% } %>
+                          </p>
+                      </a>
+
+                      <% if(nav.children.length > 0){  %>
+                      <ul class="nav nav-treeview">
+                          <% for(let navChild of nav.children){ %>
+                              <li class="nav-item">
+                                  <a href="<%= navChild.url %>" class="nav-link <%= navChild.isActive ? 'active' : '' %>">
+                                      <i class="nav-icon <%= navChild.icon %>"></i>
+                                      <p><%= navChild.name %></p>
+                                  </a>
+                              </li>
+                          <% } %>
+                      </ul>
+                      <% } %>
+                  </li>
+              <% } %>
+          </ul>
+      </nav>
+  </div>
+</aside>
+<style>
+ 
+
+/* Logo và tiêu đề */
+.sidebar-brand {
+    background-color: rgb(129, 123, 116);
+    color: #000;
+}
+
+.sidebar-brand .brand-text {
+    color: #000;
+    font-weight: bold;
+}
+
+/* Màu chữ đen mặc định cho các mục điều hướng */
+.nav-link {
+    color: #000; /* Màu chữ đen cho mục không active */
+    background-color: transparent;
+    transition: background-color 0.3s, color 0.3s;
+    padding: 8px 10px;
+    border-radius: 5px;
+}
+
+/* Đổi màu nền và màu chữ chỉ cho mục đang active */
+.nav-link.active {
+    background-color: #64b5f6; /* Nền xanh dương đậm hơn cho mục active */
+    color: #ffffff; /* Màu chữ trắng khi active */
+}
+
+/* Màu đen cho icon mặc định */
+.nav-icon {
+    color:#a7acb1;
+}
+
+/* Đổi màu icon chỉ khi active */
+.nav-link.active .nav-icon {
+    color: #ffffff;
+}
+
+/* Màu đen cho mũi tên mở rộng */
+.nav-arrow {
+    color: #554f4f;
+}
+
+.nav-link.active .nav-arrow {
+    color: #ffffff;
+}
+
+
+</style>

@@ -32,6 +32,7 @@ const getServiceByID = require("../services/get_service_by_id")
 const getSelectionByID = require("../services/get_selection_by_id")
 const getAllSelections = require("../services/get_all_selection")
 const getHotelById = require("../services/get_hotels_by_city")
+const getAllServices = require("../services/get_all_service")
 
 //controller nơi nhận dữ liệu từ request(req) => vào Service xử lý dữ liệu 
 //=> gọi repository để truy cập vào database  thông qua models
@@ -213,6 +214,10 @@ class StoreRunController{
         let reviews = await getAllReviews(req.hotel);
         let events = await getCurrentEvent(req.hotel);
         let hotel = await getHotelById(req.params.id);
+        let services = await getAllServices({
+            hotel: req.hotel,
+        });
+        console.log("co so vat chat", services)
         const {hotelId} = req.params;
         let service_hotels = await getAllServiceHotel({hotel: hotelId})
 
@@ -280,6 +285,7 @@ class StoreRunController{
             cleanlinessScore:cleanlinessScore,
             moneyScore: moneyScore,
             discount:discount,
+            services:services,
             hotel:hotel,
             service_hotels:service_hotels,
             ngaydau:ngaydau,

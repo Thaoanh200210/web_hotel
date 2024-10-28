@@ -315,7 +315,7 @@
 
       // Tạo biến mới cho ngày trả phòng thêm 1 ngày
       const ngayTraPhongTinhToan = new Date(ngayTraPhong);
-      ngayTraPhongTinhToan.setDate(ngayTraPhongTinhToan.getDate() + 1);
+      ngayTraPhongTinhToan.setDate(ngayTraPhongTinhToan.getDate() );
 
       let totalActualPayment = 0;
 
@@ -384,5 +384,12 @@
     });
 
   };
-
+  document.getElementById('CheckedOut').addEventListener('click', function (event) {
+  const ngayTraPhong = document.getElementById('ngaytraphong').value;
+  if (!ngayTraPhong) {
+    alert('Vui lòng chọn ngày trả phòng thực tế trước khi chuyển trạng thái sang "Đã trả phòng".');
+    event.preventDefault();
+    return false;
+  }
+});
 </script>

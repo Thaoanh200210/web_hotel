@@ -1,49 +1,98 @@
 <div class="layout-fixed sidebar-expand-lg bg-body-tertiary">
   <div class="app-wrapper">
-    <aside style="min-height: fit-content;" class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+    <aside style="min-height: fit-content;" class="app-sidebar shadow" data-bs-theme="light">
       <div class="sidebar-brand">
         <a href="/manager/" class="brand-link">
           <span class="brand-text fw-light"><%= hotel.name %></span>
         </a>
-  
       </div>
       <div class="sidebar-wrapper">
         <nav class="mt-2">
-          <ul
-            class="nav sidebar-menu flex-column"
-            data-lte-toggle="treeview"
-            role="menu"
-            data-accordion="false"
-          >
-          <% for(let nav of navTabs){ %>
-            <li class="nav-item">
-              <a href="<%= nav.url.replace('/manager','/manager/' + hotel._id.toString()) %>" class="nav-link">
-                <i class="nav-icon <%= nav.icon %>"></i>
-                <p>
-                  <%= nav.name %>
-                  <% if(nav.children.length > 0){  %>
-                  <i class="nav-arrow bi bi-chevron-right"></i>
+          <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
+            <% for(let nav of navTabs){ %>
+              <li class="nav-item">
+                <a href="<%= nav.url.replace('/manager','/manager/' + hotel._id.toString()) %>"
+                   class="nav-link <%= nav.isActive ? 'active' : '' %>">
+                  <i class="nav-icon <%= nav.icon %>"></i>
+                  <p>
+                    <%= nav.name %>
+                    <% if(nav.children.length > 0){  %>
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                    <% } %>
+                  </p>
+                </a>
+
+                <% if(nav.children.length > 0){  %>
+                <ul class="nav nav-treeview">
+                  <% for(let navChild of nav.children){ %>
+                  <li class="nav-item">
+                    <a href="<%= navChild.url.replace('/manager','/manager/' + hotel._id.toString()) %>"
+                       class="nav-link <%= navChild.isActive ? 'active' : '' %>">
+                      <i class="nav-icon <%= navChild.icon %>"></i>
+                      <p><%= navChild.name %></p>
+                    </a>
+                  </li>
                   <% } %>
-                </p>
-              </a>
-              
-              <% if(nav.children.length > 0){  %>
-              <ul class="nav nav-treeview">
-                <% for(let navChild of nav.children){ %>
-                <li class="nav-item">
-                  <a href="<%= navChild.url.replace('/manager','/manager/' + hotel._id.toString()) %>" class="nav-link">
-                    <i class="nav-icon <%= navChild.icon %>"></i>
-                    <p><%= navChild.name %></p>
-                  </a>
-                </li>
+                </ul>
                 <% } %>
-              </ul>
-              <% } %>
-            </li>
-          <% } %>
+              </li>
+            <% } %>
           </ul>
         </nav>
       </div>
     </aside>
   </div>
 </div>
+
+<style>
+  /* Sidebar với gradient từ xanh dương nhạt sang trắng */
+  .app-sidebar {
+    background: linear-gradient(to bottom, #b3e5fc, #ffffff); /* Gradient từ xanh dương nhạt sang trắng */
+    color: #000;
+  }
+
+  /* Logo và tiêu đề */
+  .sidebar-brand {
+      background: linear-gradient(to right, #ffffff, rgb(207, 207, 221)); /* Gradient từ trắng sang xanh từ trái sang phải */
+      color: #000; /* Màu chữ đen */
+  }
+
+  .sidebar-brand .brand-text {
+      color: #000; /* Màu chữ trong tiêu đề */
+      font-weight: bold; /* Làm chữ đậm */
+  }
+
+  /* Màu chữ đen mặc định cho các mục điều hướng */
+  .nav-link {
+    color: #000;
+    background-color: transparent;
+    transition: background-color 0.3s, color 0.3s;
+    padding: 8px 10px;
+    border-radius: 5px;
+  }
+
+  /* Đổi màu nền và màu chữ cho mục đang active */
+  .nav-link.active {
+    background-color: #64b5f6; /* Nền xanh đậm hơn cho mục active */
+    color: #0a0a0a;
+  }
+
+  /* Màu đen cho icon mặc định */
+  .nav-icon {
+    color: #000;
+  }
+
+  /* Đổi màu icon khi active */
+  .nav-link.active .nav-icon {
+    color: #181818;
+  }
+
+  /* Màu đen cho mũi tên mở rộng */
+  .nav-arrow {
+    color: #000;
+  }
+
+  .nav-link.active .nav-arrow {
+    color: #0d0d0d;
+  }
+</style>

@@ -42,6 +42,7 @@ const deleteSelection = require("../services/delete_selection")
 const deleteService = require("../services/delete_service")
 const deleteTypeRoom = require("../services/delete_type_room")
 const numberOfHotels = require("../services/number_of_hotel")
+const numberOfCitys = require("../services/number_of_city")
 const numberOfRooms = require("../services/number_of_room")
 const numberOfSelections = require("../services/number_of_selection")
 const numberOfTypeOfRooms = require("../services/number_of_type_of_room")
@@ -59,6 +60,7 @@ class AdminController{
         let number_of_service = await numberOfServices();
         let number_of_type_room = await numberOfTypeOfRooms();
         let number_of_selection = await numberOfSelections();
+        let number_of_city = await numberOfCitys();
     
         let hotels = await getAllHotel(true);
         let hotel_bookings = {};
@@ -110,6 +112,7 @@ class AdminController{
             number_of_service: number_of_service,
             number_of_type_room: number_of_type_room,
             number_of_selection: number_of_selection,
+            number_of_city:number_of_city,
             statistic_result: statistic_result,
             hotel_names: hotel_names,
             type: type,
