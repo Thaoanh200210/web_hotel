@@ -1,8 +1,8 @@
 const {SelectionRepository} = require('../repositories/index');
 
-async function getAllSelections(filter) {
+async function getAllSelections() {
     const selectionRepo = new SelectionRepository();
-    return await selectionRepo.select(filter);
+    return await selectionRepo.selectAll();
 }
 
 

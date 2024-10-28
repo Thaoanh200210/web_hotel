@@ -54,8 +54,7 @@
             <div class="mb-3">
               <label for="description" class="form-label">Thông tin 
                 trả phòng (VD: Phục vụ 24/24, trả phòng lúc 12h)</label>
-              <input disabled value="<%= hotel.timecheckout %>" type="text" class="form-control" id="timecheckout" placeholder="Thông tin 
-                trả phòng"/>
+              <input disabled value="<%= hotel.timecheckout %>" type="text" class="form-control" id="timecheckout" placeholder="Thông tin trả phòng"/>
             </div>
 
             <div class="mb-3">
@@ -75,12 +74,13 @@
 
             <div class="mb-3">
               <label for="description" class="form-label">Chính sách trẻ em</label>
-              <input disabled value="<%= hotel.chinhsachtreem %>" type="text" class="form-control" id="chinhsachtreem" placeholder="Chính sách trẻ em"/>
-            </div>
+              <textarea disabled class="form-control" placeholder="Chính sách trẻ em" id="chinhsachtreem" rows="3" required><%= hotel.chinhsachtreem %></textarea>
+          </div>
+          
 
             <div class="mb-3">
               <label for="description" class="form-label">Phần trăm trả thêm nếu trả phòng sớm</label>
-              <input disabled value="<%= hotel.phantramtientraphong %>" type="text" class="form-control" id="phantramtientraphong" placeholder="Phần trăm trả thêm nếu trả phòng sớm"/>
+              <input disabled value="<%= hotel.phantramtientraphong %>" type="number" class="form-control" id="phantramtientraphong" placeholder="Phần trăm trả thêm nếu trả phòng sớm"/>
             </div>
           </div>
           </div>

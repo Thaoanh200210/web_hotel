@@ -231,17 +231,10 @@
             <tr>
               <td id="">Người xử lý giao dịch</td>
               <td>
-                <% if (user.role === 'employee') { %>
-                  <input name="process_user" hidden value="<%= user._id %>">
-                  <div>
-                    <%= user.name %>
-                  </div>
-                <% } else if (user.role === 'customer') { %>
-                  <input name="process_user" hidden value="">
-                  <div>
-                    Không áp dụng cho khách hàng
-                  </div>
-                <% } %>
+                <input name="process_user" hidden value="<%= user._id %>">
+                <div>
+                  <%= user.name %>
+                </div>
               </td>
             </tr>
           </tbody>

@@ -461,83 +461,83 @@ class AdminController{
     //     res.redirect("/administrator/service/");
     // }
 
-    // //quản lý lựa chọn
-    // async selection(req,res){
-    //     let selections = await getAllSelection();
-    //     res.render("index-manager",{
-    //         page: "admin/index",
-    //         roomPage: "selection/management",
-    //         selections: selections,
-    //         ...defaultAdminNav(),
-    //         ...defaultData(req)
-    //     })
-    // }
+    //quản lý lựa chọn
+    async selection(req,res){
+        let selections = await getAllSelection();
+        res.render("index-manager",{
+            page: "admin/index",
+            roomPage: "selection/management",
+            selections: selections,
+            ...defaultAdminNav(),
+            ...defaultData(req)
+        })
+    }
 
-    // async addSelection(req, res) {
-    //     res.render("index-manager",{
-    //         page: "admin/index",
-    //         roomPage: "selection/add",
-    //         ...defaultAdminNav(),
-    //         ...defaultData(req)
-    //     })
-    // }
+    async addSelection(req, res) {
+        res.render("index-manager",{
+            page: "admin/index",
+            roomPage: "selection/add",
+            ...defaultAdminNav(),
+            ...defaultData(req)
+        })
+    }
 
-    // async addSelectionHandler(req,res){
-    //     let selection = {
-    //         name : req.body.tendichvu,
-    //         icon: req.body.icon,
-    //     }
-    //     await createSelection(selection);
-    //     let cookies = new CookieProvider(req, res);
-    //     cookies.setCookie(
-    //         constants.has_message,
-    //         JSON.stringify(message("Bạn đã thêm lựa chọn mới thành công!",constantMesages.successCustom)),
-    //         1
-    //     );
-    //     res.redirect("/administrator/selection/");
-    // }
+    async addSelectionHandler(req,res){
+        let selection = {
+            name : req.body.tendichvu,
+            icon: req.body.icon,
+        }
+        await createSelection(selection);
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã thêm lựa chọn mới thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/administrator/selection/");
+    }
 
-    // async editSelection(req, res) {
-    //     let selection = await getSelectionById(req.params.id);
-    //     res.render("index-manager",{
-    //         page: "admin/index",
-    //         roomPage: "selection/edit",
-    //         selection: selection,
-    //         ...defaultAdminNav(),
-    //         ...defaultData(req)
-    //     })
-    // }
-    // async editSelectionHandler(req,res){
-    //     let originSelection = await getSelectionById(req.params.id);
+    async editSelection(req, res) {
+        let selection = await getSelectionById(req.params.id);
+        res.render("index-manager",{
+            page: "admin/index",
+            roomPage: "selection/edit",
+            selection: selection,
+            ...defaultAdminNav(),
+            ...defaultData(req)
+        })
+    }
+    async editSelectionHandler(req,res){
+        let originSelection = await getSelectionById(req.params.id);
 
-    //     originSelection.name = req.body.tendichvu;
-    //     originSelection.icon = req.body.icon;
-    //     await updateSelection(originSelection);
-    //     let cookies = new CookieProvider(req, res);
-    //     cookies.setCookie(
-    //         constants.has_message,
-    //         JSON.stringify(message("Bạn đã sửa thông tin lựa chọn thành công!",constantMesages.successCustom)),
-    //         1
-    //     );
-    //     res.redirect("/administrator/selection/");
-    // }
+        originSelection.name = req.body.tendichvu;
+        originSelection.icon = req.body.icon;
+        await updateSelection(originSelection);
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã sửa thông tin lựa chọn thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/administrator/selection/");
+    }
 
-    // async deleteSelectionHandler(req, res) {
-    //     try {
-    //         let originSelection = await getSelectionById(req.params.id);
-    //         await deleteSelection(originSelection._id.toString())
-    //     } catch(e){
-    //         console.log(e);
-    //     }
+    async deleteSelectionHandler(req, res) {
+        try {
+            let originSelection = await getSelectionById(req.params.id);
+            await deleteSelection(originSelection._id.toString())
+        } catch(e){
+            console.log(e);
+        }
         
-    //     let cookies = new CookieProvider(req, res);
-    //     cookies.setCookie(
-    //         constants.has_message,
-    //         JSON.stringify(message("Bạn đã xóa thông tin lựa chọn thành công!",constantMesages.successCustom)),
-    //         1
-    //     );
-    //     res.redirect("/administrator/selection/");
-    // }
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã xóa thông tin lựa chọn thành công!",constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/administrator/selection/");
+    }
 
     // //quản lý loại phòng
     // async TypeRoom(req,res){

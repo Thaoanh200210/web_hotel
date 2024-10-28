@@ -11,6 +11,7 @@ const getAllRooms = require("../services/get_all_rooms")
 const getAllBookings = require("../services/get_all_booking")
 const getAllBookingDetails = require("../services/get_all_detai_booking")
 const getAllUsersByHotel = require("../services/get_all_user_by_hotel")
+const getAllUserBookingInHotels = require("../services/get_all_user_booking_in_hotel")
 const getAllRole = require("../services/get_all_role")
 const getAllUsers = require("../services/get_all_user")
 const getAllCity = require("../services/get_all_city")
@@ -241,9 +242,7 @@ class ManagerController {
         let serviceRooms = await getAllService({
             hotel: req.hotel,
         });
-        let selectionRooms = await getAllSelection({
-            hotel: req.hotel,
-        });
+        let selectionRooms = await getAllSelection();
         res.render("index-manager", {
             page: "manager/index",
             roomPage: "room/add",
@@ -335,9 +334,7 @@ class ManagerController {
         let serviceRooms = await getAllService({
             hotel: req.hotel,
         });
-        let selectionRooms = await getAllSelection({
-            hotel: req.hotel,
-        });
+        let selectionRooms = await getAllSelection();
         const status = ['Đang hoạt động', 'Dừng hoạt động'];
 
         res.render("index-manager", {
@@ -750,15 +747,30 @@ class ManagerController {
 
     //quản lý khách hàng
     async customer(req, res) {
-        let users = await getAllUsers();
+        let bookings = await getAllBookings(req.hotel); // Lấy tất cả các booking của khách sạn
+        
+        // Sử dụng Set để lưu trữ ID khách hàng không trùng lặp
+        const customerMap = new Map();
+    
+        bookings.forEach(booking => {
+            if (booking.customer && !customerMap.has(booking.customer._id.toString())) {
+                customerMap.set(booking.customer._id.toString(), booking.customer);
+            }
+        });
+    
+        // Lấy danh sách khách hàng duy nhất từ Map
+        const uniqueCustomers = Array.from(customerMap.values());
+    
+    
         res.render("index-manager", {
             page: "manager/index",
             roomPage: "user/customer/management",
-            users: users,
+            users: uniqueCustomers,
             ...defaultManagerNav(),
             ...defaultData(req)
-        })
+        });
     }
+    
 
     async addCustomer(req, res) {
         res.render("index-manager", {
@@ -1331,85 +1343,85 @@ class ManagerController {
     }
 
     //quản lý lựa chọn
-    async selection(req, res) {
-        let selections = await getAllSelection({
-            hotel: req.hotel,
-        });
-        res.render("index-manager", {
-            page: "manager/index",
-            roomPage: "selection/management",
-            selections: selections,
-            ...defaultManagerNav(),
-            ...defaultData(req)
-        })
-    }
+    // async selection(req, res) {
+    //     let selections = await getAllSelection({
+    //         hotel: req.hotel,
+    //     });
+    //     res.render("index-manager", {
+    //         page: "manager/index",
+    //         roomPage: "selection/management",
+    //         selections: selections,
+    //         ...defaultManagerNav(),
+    //         ...defaultData(req)
+    //     })
+    // }
 
-    async addSelection(req, res) {
-        res.render("index-manager", {
-            page: "manager/index",
-            roomPage: "selection/add",
-            ...defaultManagerNav(),
-            ...defaultData(req)
-        })
-    }
+    // async addSelection(req, res) {
+    //     res.render("index-manager", {
+    //         page: "manager/index",
+    //         roomPage: "selection/add",
+    //         ...defaultManagerNav(),
+    //         ...defaultData(req)
+    //     })
+    // }
 
-    async addSelectionHandler(req, res) {
-        let selection = {
-            hotel: req.hotel,
-            name: req.body.tendichvu,
-            icon: req.body.icon,
-        }
-        await createSelection(selection);
-        let cookies = new CookieProvider(req, res);
-        cookies.setCookie(
-            constants.has_message,
-            JSON.stringify(message("Bạn đã thêm lựa chọn mới thành công!", constantMesages.successCustom)),
-            1
-        );
-        res.redirect("/manager/" + req.hotel._id + "/selection");
-    }
+    // async addSelectionHandler(req, res) {
+    //     let selection = {
+    //         hotel: req.hotel,
+    //         name: req.body.tendichvu,
+    //         icon: req.body.icon,
+    //     }
+    //     await createSelection(selection);
+    //     let cookies = new CookieProvider(req, res);
+    //     cookies.setCookie(
+    //         constants.has_message,
+    //         JSON.stringify(message("Bạn đã thêm lựa chọn mới thành công!", constantMesages.successCustom)),
+    //         1
+    //     );
+    //     res.redirect("/manager/" + req.hotel._id + "/selection");
+    // }
 
-    async editSelection(req, res) {
-        let selection = await getSelectionById(req.params.id);
-        res.render("index-manager", {
-            page: "manager/index",
-            roomPage: "selection/edit",
-            selection: selection,
-            ...defaultManagerNav(),
-            ...defaultData(req)
-        })
-    }
-    async editSelectionHandler(req, res) {
-        let originSelection = await getSelectionById(req.params.id);
-        originSelection.hotel = req.hotel;
-        originSelection.name = req.body.tendichvu;
-        originSelection.icon = req.body.icon;
-        await updateSelection(originSelection);
-        let cookies = new CookieProvider(req, res);
-        cookies.setCookie(
-            constants.has_message,
-            JSON.stringify(message("Bạn đã sửa thông tin lựa chọn thành công!", constantMesages.successCustom)),
-            1
-        );
-        res.redirect("/manager/" + req.hotel._id + "/selection");
-    }
+    // async editSelection(req, res) {
+    //     let selection = await getSelectionById(req.params.id);
+    //     res.render("index-manager", {
+    //         page: "manager/index",
+    //         roomPage: "selection/edit",
+    //         selection: selection,
+    //         ...defaultManagerNav(),
+    //         ...defaultData(req)
+    //     })
+    // }
+    // async editSelectionHandler(req, res) {
+    //     let originSelection = await getSelectionById(req.params.id);
+    //     originSelection.hotel = req.hotel;
+    //     originSelection.name = req.body.tendichvu;
+    //     originSelection.icon = req.body.icon;
+    //     await updateSelection(originSelection);
+    //     let cookies = new CookieProvider(req, res);
+    //     cookies.setCookie(
+    //         constants.has_message,
+    //         JSON.stringify(message("Bạn đã sửa thông tin lựa chọn thành công!", constantMesages.successCustom)),
+    //         1
+    //     );
+    //     res.redirect("/manager/" + req.hotel._id + "/selection");
+    // }
 
-    async deleteSelectionHandler(req, res) {
-        try {
-            let originSelection = await getSelectionById(req.params.id);
-            await deleteSelection(originSelection._id.toString())
-        } catch (e) {
-            console.log(e);
-        }
+    // async deleteSelectionHandler(req, res) {
+    //     try {
+    //         let originSelection = await getSelectionById(req.params.id);
+    //         await deleteSelection(originSelection._id.toString())
+    //     } catch (e) {
+    //         console.log(e);
+    //     }
 
-        let cookies = new CookieProvider(req, res);
-        cookies.setCookie(
-            constants.has_message,
-            JSON.stringify(message("Bạn đã xóa thông tin lựa chọn thành công!", constantMesages.successCustom)),
-            1
-        );
-        res.redirect("/manager/" + req.hotel._id + "/selection");
-    }
+    //     let cookies = new CookieProvider(req, res);
+    //     cookies.setCookie(
+    //         constants.has_message,
+    //         JSON.stringify(message("Bạn đã xóa thông tin lựa chọn thành công!", constantMesages.successCustom)),
+    //         1
+    //     );
+    //     res.redirect("/manager/" + req.hotel._id + "/selection");
+    // }
 
     //quản lý loại phòng
     async TypeRoom(req, res) {

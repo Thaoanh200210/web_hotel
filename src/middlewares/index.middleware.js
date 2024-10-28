@@ -63,52 +63,66 @@ class Middleware {
         next()
     }
 
-    async login(req, res, next){
-        if(req.body.email && req.body.matkhau){
-            
+    async login(req, res, next) {
+        if (req.body.email && req.body.matkhau) {
             let user = await loginUser({
                 email: req.body.email,
                 password: req.body.matkhau,
             });
-            if(user!=null){
+    
+            if (user != null) {
                 let cookies = new CookieProvider(req, res);
+                
+                // Xóa cookie thông tin người dùng đã lưu trước đó
+                cookies.setCookie(constants.user_info, '', 0); // Xóa cookie
+                
+                // Lưu thông tin người dùng vào cookie
                 cookies.setCookie(
                     constants.has_message,
-                    JSON.stringify(message("Bạn đã đăng nhập tài khoản thành công!",constantMesages.successCustom)),
+                    JSON.stringify(message("Bạn đã đăng nhập tài khoản thành công!", constantMesages.successCustom)),
                     1
                 );
                 cookies.setCookie(
-                    //giữ thông tin người dùng đăng nhập 
                     constants.user_info,
                     JSON.stringify(user),
                     10000
-                )
-                if(user.role.name == RoleEnum.Customer){
-                }else if(user.role.name == RoleEnum.Employee){
+                );
+    
+                let redirectUrl = "";
+    
+                if (user.role.name == RoleEnum.Customer) {
+                    redirectUrl = "/"; // Chuyển hướng đến trang cho khách hàng
+                } else if (user.role.name == RoleEnum.Employee) {
                     let employee = await getEmployeeByUser(user);
-                    return res.redirect("/manager/"+ employee.hotel._id.toString() + "/room");
-                }else if(user.role.name == RoleEnum.Sub){
+                    redirectUrl = "/manager/" + employee.hotel._id.toString() + "/room";
+                    cookies.setCookie(constants.user_role, 'employee', 10000); // Lưu vai trò
+                } else if (user.role.name == RoleEnum.Sub) {
                     let employee = await getEmployeeByUser(user);
-                    return res.redirect("/sub/"+ employee.hotel._id.toString() + "/room");
-                }else if(user.role.name == RoleEnum.Admin){
-                    return res.redirect("/administrator/hotel");
-                }else if(user.role.name == RoleEnum.Mod){
-                    console.log("Hello");
-                    return res.redirect("/mod/city");
+                    redirectUrl = "/sub/" + employee.hotel._id.toString() + "/room";
+                    cookies.setCookie(constants.user_role, 'sub', 10000); // Lưu vai trò
+                } else if (user.role.name == RoleEnum.Admin) {
+                    redirectUrl = "/administrator/hotel";
+                    cookies.setCookie(constants.user_role, 'admin', 10000); // Lưu vai trò
+                } else if (user.role.name == RoleEnum.Mod) {
+                    redirectUrl = "/mod/city";
+                    cookies.setCookie(constants.user_role, 'mod', 10000); // Lưu vai trò
                 }
-                
-            }else{
+    
+                return res.redirect(redirectUrl); // Chuyển hướng đến trang mục tiêu
+            } else {
                 let cookies = new CookieProvider(req, res);
                 cookies.setCookie(
                     constants.has_message,
-                    JSON.stringify(message("Bạn đã đăng nhập thất bại!",constantMesages.errorCustom)),
+                    JSON.stringify(message("Bạn đã đăng nhập thất bại!", constantMesages.errorCustom)),
                     1
                 );
             }
+            
             return res.redirect(req.originalUrl);
         }
-        next()
+        next();
     }
+    
 
     //lấy thông tin ng dùng
     async authenticate(req, res, next){

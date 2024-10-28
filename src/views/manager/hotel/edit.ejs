@@ -75,8 +75,10 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Chính sách trẻ em</label>
-                            <input class="form-control shadow-none" name="chinhsachtreem" type="text"  value="<%=hotel.chinhsachtreem%>" required>
+                            <!-- <input class="form-control shadow-none" name="chinhsachtreem" type="text" value="<%= hotel.chinhsachtreem %>" required> -->
+                            <textarea name="chinhsachtreem" rows="3" cols="75" required><%= hotel.chinhsachtreem %></textarea>
                         </div>
+                        
                         <div class="mb-3">
                             <label class="form-label">Độ tuổi giới hạn của khách sạn</label>
                             <input class="form-control shadow-none" name="dotuoigioihan" type="text"  value="<%=hotel.dotuoigioihan%>" required>
@@ -88,7 +90,7 @@
 
                         <div class="mb-3">
                             <label class="form-label">Phần trăm trả thêm nếu trả phòng sớm</label>
-                            <input class="form-control shadow-none" name="phantramtientraphong" type="text"  value="<%=hotel.phantramtientraphong%>" required>
+                            <input class="form-control shadow-none" name="phantramtientraphong" type="number"  value="<%=hotel.phantramtientraphong%>" required>
                         </div>
                     </div>
                 </div>

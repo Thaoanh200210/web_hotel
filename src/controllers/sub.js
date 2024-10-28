@@ -414,15 +414,30 @@ class SubController {
 
     //quản lý khách hàng
     async customer(req, res) {
-        let users = await getAllUsers();
+        let bookings = await getAllBookings(req.hotel); // Lấy tất cả các booking của khách sạn
+        
+        // Sử dụng Set để lưu trữ ID khách hàng không trùng lặp
+        const customerMap = new Map();
+    
+        bookings.forEach(booking => {
+            if (booking.customer && !customerMap.has(booking.customer._id.toString())) {
+                customerMap.set(booking.customer._id.toString(), booking.customer);
+            }
+        });
+    
+        // Lấy danh sách khách hàng duy nhất từ Map
+        const uniqueCustomers = Array.from(customerMap.values());
+    
+    
         res.render("index-manager", {
             page: "sub/index",
             roomPage: "customer/management",
-            users: users,
+            users: uniqueCustomers,
             ...defaultSubNav(),
             ...defaultData(req)
-        })
+        });
     }
+    
 
     async addCustomer(req, res) {
         res.render("index-manager", {

@@ -32,13 +32,13 @@ router.route("/room/detail/:id").get(manager.roomDetail);
 router.route("/room").get(manager.room);
 
 
-//quản lý lựa chọn
-router.route("/selection/add-handler").post(manager.addSelectionHandler);
-router.route("/selection/add").get(manager.addSelection);
-router.route("/selection/edit-handler/:id").post(manager.editSelectionHandler);
-router.route("/selection/edit/:id").get(manager.editSelection);
-router.route("/selection/delete/:id").get(manager.deleteSelectionHandler);
-router.route("/selection").get(manager.selection);
+// //quản lý lựa chọn
+// router.route("/selection/add-handler").post(manager.addSelectionHandler);
+// router.route("/selection/add").get(manager.addSelection);
+// router.route("/selection/edit-handler/:id").post(manager.editSelectionHandler);
+// router.route("/selection/edit/:id").get(manager.editSelection);
+// router.route("/selection/delete/:id").get(manager.deleteSelectionHandler);
+// router.route("/selection").get(manager.selection);
 
 //quản lý loại phòng
 router.route("/type_room/add-handler").post(manager.addTypeRoomHandler);

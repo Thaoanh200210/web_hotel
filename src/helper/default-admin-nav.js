@@ -39,12 +39,12 @@ module.exports = () => {
             //     url: "/administrator/type_room",
             //     children: []
             // },
-            // {
-            //     name: "Quản lý lựa chọn",
-            //     icon: "bi bi-star",
-            //     url: "/administrator/selection",
-            //     children: []
-            // },
+            {
+                name: "Quản lý lựa chọn",
+                icon: "bi bi-star",
+                url: "/administrator/selection",
+                children: []
+            },
             {
                 name: "Đăng xuất",
                 icon: "bi bi-box-arrow-left",
