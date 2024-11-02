@@ -32,9 +32,11 @@
                 review.moneyScore + 
                 review.cleanlinessScore)/6)/10 %></td>
               <td><%= review.comment %></td>
-              <td></td>
+              <td><%= review.date.toLocaleString() %></td>
               <td>
-                <a href="/sub/<%=hotel._id%>/review/<%=review._id %>"  class="btn btn-success">Xem chi tiết</a >              </td>
+                <a href="/sub/<%=hotel._id%>/review/<%=review._id %>"  class="btn btn-success">Xem chi tiết</a >              
+                  <button  onclick="deleteConfirmButtonClk('/sub/<%=hotel._id%>/review/delete/<%=review._id %>','Bạn có muốn xóa đánh giá này không?')" class="btn btn-danger">Xóa</button>
+                </td>
             </tr>
             <% } %>
           </tbody>

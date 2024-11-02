@@ -17,6 +17,7 @@ const getAllTypeRoomByHotel = require("../services/get_all_type_of_room_by_hotel
 const getAllServiceHotel  = require("../services/get_all_service_hotel")
 const updateUser = require("../services/update_user");
 const getAllReviews = require("../services/get_all_review")
+const createFinal = require("../services/create_final")
 const getBookingById = require("../services/get_booking_by_id")
 const getBookingByUser = require("../services/get_booking_by_user")
 const getCurrentEvent = require("../services/get_current_event")
@@ -347,7 +348,7 @@ class StoreRunController{
         let ngayket = req.query.ngayket;
         const now = new Date();
         let currentSelection = await getSelectionById(selection);
-        let isCheckInWithCreditCard = currentSelection.name == 'Thanh toán online qua chuyển khoản';
+        let isCheckInWithCreditCard = currentSelection.name == 'Thanh toán qua chuyển khoản';
         let events = await getCurrentEvent(req.hotel);
         let discounts = events.map(event => event.discount_percent);
         let maxDiscount = 0;
@@ -492,8 +493,10 @@ class StoreRunController{
         let user =  await getUserById(req.user._id);
         let booking = await getBookingById(req.params.bookingId,false);
         let room = await getRoomById(req.body.phong);
+        const now = new Date();
         let review ={
             customer: user,
+            date: now,
             booking: booking,
             employeeScore: req.body.nhanvien,
             sactificationScore: req.body.tiennghi,

@@ -45,6 +45,7 @@
                 <% } else { %>
                   <button onclick="deleteConfirmButtonClk('/administrator/hotel/negate/<%= hotel._id %>','Bạn có muốn vô hiệu khách sạn này không?')" class="btn btn-primary">Vô Hiệu</button>
                 <% } %>
+                <a href="/administrator/hotel/detail/<%=hotel._id %>"  class="btn btn-success">Xem chi tiết</a >
                 <button  onclick="deleteConfirmButtonClk('/administrator/hotel/delete/<%=hotel._id %>','Bạn có muốn xóa thông tin khách sạn này không?')" class="btn btn-danger">Xóa</button>
               </td>
           </tr>

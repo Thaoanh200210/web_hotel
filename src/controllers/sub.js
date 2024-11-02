@@ -14,7 +14,6 @@ const getAllBookingDetails = require("../services/get_all_detai_booking")
 const getAllTypeRoomByHotel = require("../services/get_all_type_of_room_by_hotel")
 const getAllUsersByHotel = require("../services/get_all_user_by_hotel")
 const getBookingDetailById = require("../services/get_detail_booking_by_id")
-
 const getAllUsers = require("../services/get_all_user")
 const getAllServiceQuantity = require("../services/get_all_service_quantity")
 const getAllReviews = require("../services/get_all_review")
@@ -39,6 +38,7 @@ const getFinalByBookingId = require("../services/get_final_by_booking_id")
 const getAllDiscounts = require("../services/get_all_discount")
 const createRoom = require("../services/create_room")
 const createUser = require("../services/create_user")
+const createFinal = require("../services/create_final")
 const createDiscount = require("../services/create_discount")
 const createImage = require("../services/create_image")
 const createServiceRoom = require("../services/create_service_room")
@@ -58,6 +58,7 @@ const getAllDetailBookingByIdBookings = require("../services/get_all_detail_book
 const deleteImageByFilter = require("../services/delete_image_by_filter");
 const deleteRoom = require("../services/delete_room");
 const deleteDiscount = require("../services/delete_discount");
+const deleteReview = require("../services/delete_review")
 const deleteUser = require("../services/delete_user");
 const deleteBooking = require("../services/delete_booking");
 const constants = require("../constants")
@@ -949,6 +950,23 @@ class SubController {
         })
     }
 
+    async deleteReviewHandler(req, res) {
+        try {
+            let originServiceHotel = await getReviewById(req.params.id);
+            await deleteReview(originServiceHotel._id.toString())
+         
+        } catch (e) {
+            console.log(e);
+        }
+
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã xóa đánh giá thành công!", constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/sub/" + req.hotel._id + "/review");
+    }
 
 }
 module.exports = { SubController }

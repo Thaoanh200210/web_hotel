@@ -114,6 +114,8 @@ router.route("/booking").get(manager.booking);
 
 //quản lý đánh giá
 router.route("/review/:id").get(manager.reviewDetail);
+router.route("/review/delete/:id").get(manager.deleteReviewHandler);
+
 router.route("/review").get(manager.review);
 
 

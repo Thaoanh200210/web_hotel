@@ -10,6 +10,7 @@ const ReviewSchema = new Schema(
         comfortScore: { type: Number, trim: true, required: true },
         moneyScore: { type: Number, trim: true, required: true },
         cleanlinessScore: { type: Number, trim: true, required: true },
+        date: { type: Date, trim: true, required: true },   
         comment: { type: String, trim: true},
         customer: { 
             type: mongoose.Schema.Types.ObjectId, 

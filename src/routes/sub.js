@@ -57,6 +57,8 @@ router.route("/booking").get(sub.booking);
 
 //quản lý đánh giá
 router.route("/review/:id").get(sub.reviewDetail);
+router.route("/review/delete/:id").get(sub.deleteReviewHandler);
+
 router.route("/review").get(sub.review);
 
 

@@ -81,6 +81,7 @@ const deleteServiceQuantity = require("../services/delete_service_quantity")
 const deleteTypeRoom = require("../services/delete_type_room")
 const deleteDiscount = require("../services/delete_discount");
 const deleteUser = require("../services/delete_user");
+const deleteReview = require("../services/delete_review")
 const deleteEmployee = require("../services/delete_employee");
 const deleteBooking = require("../services/delete_booking");
 const numberOfRoomByHotel = require("../services/number_of_room_by_hotel")
@@ -1612,6 +1613,24 @@ class ManagerController {
             ...defaultManagerNav(),
             ...defaultData(req)
         })
+    }
+
+    async deleteReviewHandler(req, res) {
+        try {
+            let originServiceHotel = await getReviewById(req.params.id);
+            await deleteReview(originServiceHotel._id.toString())
+         
+        } catch (e) {
+            console.log(e);
+        }
+
+        let cookies = new CookieProvider(req, res);
+        cookies.setCookie(
+            constants.has_message,
+            JSON.stringify(message("Bạn đã xóa đánh giá thành công!", constantMesages.successCustom)),
+            1
+        );
+        res.redirect("/manager/" + req.hotel._id + "/review");
     }
 }
 module.exports = { ManagerController }
