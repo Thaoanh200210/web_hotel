@@ -24,7 +24,7 @@ async function getTypeRoomById(hotel, id, startDate, endDate, populate) {
                     "$in": rooms, // Tìm những room nằm trong danh sách rooms
                 },
                 status: {
-                    "$eq": "Đang đặt" // Tìm status "Đang đặt"
+                    "$in": ["Đang đặt", "Đã nhận phòng"], // Tìm những status nằm trong danh sách
                 }
             });            
             console.log("Before::", detailBookings.length);
@@ -57,9 +57,10 @@ async function getTypeRoomById(hotel, id, startDate, endDate, populate) {
             });
              //danh sách room đã được đặt.
             let roomBooked = detailBookings.map((detail)=>{
-                if (detail.status === 'Đang đặt') {
+                if (detail.status === 'Đang đặt' || detail.status === "Đã nhận phòng" ) {
                     return detail.room._id.toString();
                 }
+                
             });
 
             //lấy danh sách rooms kh có những phòng đã được đặt.

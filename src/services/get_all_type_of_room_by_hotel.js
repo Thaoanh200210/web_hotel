@@ -29,8 +29,13 @@ async function getAllTypeRoomByHotel(hotel, startDate= "", endDate= "") {
                 room: {
                     "$in": rooms,
                 },
+                // status: {
+                //     // "$eq": "Đang đặt",
+                //     // "$eq": "Đã nhận phòng",
+                //     // Tìm status "Đang đặt"
+                // }
                 status: {
-                    "$eq": "Đang đặt" // Tìm status "Đang đặt"
+                    "$in": ["Đang đặt", "Đã nhận phòng"], // Tìm những status nằm trong danh sách
                 }
             });
             // detailBookings =  detailBookings.filter((detail)=>{
@@ -60,7 +65,7 @@ async function getAllTypeRoomByHotel(hotel, startDate= "", endDate= "") {
                 return true; // Include this detailBooking
             });
              let roomBooked = detailBookings.map((detail)=>{
-                if (detail.status === "Đang đặt") {
+                if (detail.status === "Đang đặt" || detail.status === "Đã nhận phòng") {
                     return detail.room._id.toString();
                 }
              });

@@ -43,12 +43,13 @@ class Middleware {
 
     async registration(req, res, next){
         let cookies = new CookieProvider(req, res);
-        if(req.body.ten && req.body.email && req.body.sodienthoai && req.body.matkhau){
+        if(req.body.ten && req.body.email && req.body.sodienthoai && req.body.matkhau && req.body.cmnd){
             let user = {
                 name: req.body.ten,
                 phone: req.body.sodienthoai,
                 email: req.body.email,
-                password: req.body.matkhau
+                password: req.body.matkhau,
+                cmnd: req.body.cmnd,
             }
             await createUser(user);
             

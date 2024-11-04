@@ -49,7 +49,7 @@
             <div class="fw-bold fs-2"><%= typeRoom.name %> </div>
             <div class="pb-2">Số lượng khách: <% for(let i =0;i< typeRoom.number_guest; i++ ){%> <i class="bi bi-person-fill"></i> <% }%></div>
             <div class="pb-2 text-success fw-semibold fs-4" >Giá phòng: <%- getPriceOfTypeOfRoom(typeRoom.rooms, (discount > typeRoom.discount/100 ? discount : typeRoom.discount/100)) %> cho 1 đêm</div>
-            <div class="pb-2">Dịch vụ phòng: </div>
+            <div class="pb-2">Cơ sở vật chất phòng: </div>
             <div class="d-flex gap-4 flex-wrap pb-2">
                 <%for( let service of getServiceOfTypeOfRoom(typeRoom.rooms) ) { %>
                     <div class="d-flex justify-content-center align-items-center gap-2">
@@ -93,7 +93,7 @@
                               <td>
                                 <a class="h3" data-bs-toggle="modal" data-bs-target="#roomDetailModal" title="Xem chi tiết phòng" onclick="setIframe(this,'<%= rooms._id%>')">
                                     <%=rooms.name%></a> 
-                                    <div class="pb-2">Dịch vụ phòng:</div>
+                                    <div class="pb-2">Cơ sở vật chất phòng:</div>
                                     <div class="d-flex gap-4 flex-wrap pb-2">
                                       <%for( let service of rooms.services) { %>
                                       <div

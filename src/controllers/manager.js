@@ -37,6 +37,7 @@ const getBookingDetailById = require("../services/get_detail_booking_by_id")
 const getBookingById = require("../services/get_booking_by_id")
 const getReviewById = require("../services/get_review_by_id")
 const getFinalByBookingId = require("../services/get_final_by_booking_id")
+const getPaymentByIdBooking = require("../services/get_payment_by_booking_id")
 const getEventById = require("../services/get_event_by_id")
 const getUserById = require("../services/get_user_by_id")
 const getSelectionById = require("../services/get_selection_by_id")
@@ -921,6 +922,7 @@ class ManagerController {
 
     async editBookingStatus(req, res) {
         let booking = await getBookingById(req.params.id);
+        let payment = await getPaymentByIdBooking({booking: booking._id})
         let details = await getAllDetailBookingByIdBookings({
             booking: booking._id,
         }); 
@@ -949,6 +951,7 @@ class ManagerController {
             id: req.params.id,
             booking: booking,
             final:final,
+            payment:payment,
             details: details, // Truyền mảng details vào view
             service_quantitys: service_quantitys,
             service_hotels: service_hotels,
@@ -1139,6 +1142,9 @@ class ManagerController {
 
     async findRoomEmpty(req, res){
         let booking = await getBookingById(req.params.id);
+        let details = await getAllDetailBookingByIdBookings({
+            booking: booking._id,
+        }); 
         let ngaydau = req.query.ngaydau;
         let ngayket = req.query.ngayket;
         let events = await getCurrentEvent(req.hotel);
@@ -1156,6 +1162,7 @@ class ManagerController {
             booking: booking,
             ngaydau:ngaydau,
             typeRooms:typeRooms,
+            details:details,
             discount:discount,
             ngayket:ngayket,
             ...defaultManagerNav(),

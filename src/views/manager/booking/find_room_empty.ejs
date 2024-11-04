@@ -1,85 +1,171 @@
-<div class="container">
-    <div>Tên khách sạn: <%= hotel.name%>
-    </div>
-    <form style="    width: 500px;" action="/manager/<%=hotel._id%>/booking/status_booking/<%=booking._id%>/kiemtra" method="GET"
-        class="d-flex flex-column py-5 px-4 c-bg-primary">
-        <div>
+<style>
+    .container {
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        margin: 0 auto;
+    }
 
-            <div class="mb-3">
-                <label class="form-label text-color">Ngày nhận phòng</label>
-                <input class="form-control shadow-none rounded start-date" name="ngaydau" type="date" required
-                    value="<%=ngaydau%>" />
-            </div>
+    .hotel-name {
+        font-size: 24px;
+        font-weight: bold;
+        color: #392d2d;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
 
-            <div class="mb-3">
-                <label class="form-label text-color">Ngày trả phòng</label>
-                <input class="form-control shadow-none rounded end-date" name="ngayket" type="date" required
-                    value="<%=ngayket%>" />
-            </div>
-        </div>
+    .baophu {
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
-        <div class="text-center my-1">
-            <div class="d-flex justify-content-center gap-4">
-                <button class="btn btn-dark shadow-none rounded w-100" style="margin-right: 0 !important; width: 40px;"
-                    type="submit" name="<%=ngayket%>">
-                    Tìm
-                </button>
-            </div>
-        </div>
-    </form>
+    .form-label {
+        font-weight: bold;
+        color: #333;
+    }
 
+    .btn-submit {
+        background: linear-gradient(45deg, #0047ab, #66a6ff);
+        color: #ffffff;
+        font-weight: bold;
+        width: 100%;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 0;
+        transition: 0.3s ease;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-submit:hover {
+        background: linear-gradient(45deg, #00378d, #5c9cfe);
+        box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+        transform: translateY(-2px);
+    }
+
+    .table {
+        margin-top: 20px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .table th {
+        background-color: #007bff;
+        color: #ffffff;
+        text-align: center;
+    }
+
+    .badge {
+        font-size: 14px;
+        padding: 5px 10px;
+        border-radius: 8px;
+    }
+
+    .back-btn {
+        background-color: #ffc107;
+        color: #ffffff;
+        font-weight: bold;
+        margin-top: 20px;
+    }
+</style>
+<div class="container" style="max-width: 1200px;width: 100%; ">
     <div class="row">
-        <table style="width: 600px;" class="table table-bordered">
-            <thead>
-                <tr>
-                    <th scope="col">Loại phòng</th>
-                    <th scope="col">Số phòng</th>
-                    <th scope="col">Giá phòng</th>
-                    <th>Giá giảm</th>
-                    <th scope="col">Tình trạng</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% for(let i=0; i < typeRooms.length; i++) { %>
-                    <% let typeRoom=typeRooms[i]; %>
-                        <% for(let j=0; j < typeRoom.rooms.length; j++) { %>
+        <div class="col-1">
+            <a class="btn back-btn shadow-none" href="/manager/<%=hotel._id%>/booking/status_booking/<%=booking._id%>">
+                Trở về
+            </a>
+        </div>
+        <div class="col-11">
+            <div class="baophu">
+                <div class="hotel-name">
+                    Tên khách sạn: <%= hotel.name %>
+                </div>
+
+                <div class="">
+                    Số phòng:
+                <% details.forEach(function(detail) { %>
+                  <span style="margin-right: 10px;">
+                    <%= detail.room.number_room %>
+                  </span>
+                  <% }) %>
+                </div>
+                <form action="/manager/<%=hotel._id%>/booking/status_booking/<%=booking._id%>/kiemtra" method="GET"
+                    class="form-container">
+                    <div class="mb-3">
+                        <label class="form-label">Ngày nhận phòng</label>
+                        <input class="form-control shadow-none rounded start-date" name="ngaydau" type="date" required
+                            value="<%=ngaydau%>" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ngày trả phòng</label>
+                        <input class="form-control shadow-none rounded end-date" name="ngayket" type="date" required
+                            value="<%=ngayket%>" />
+                    </div>
+
+                    <div class="text-center my-1">
+                        <button class="btn btn-submit shadow-none rounded" type="submit">
+                            Tìm
+                        </button>
+                    </div>
+                </form>
+
+                <div class="row">
+                    <table class="table table-bordered">
+                        <thead>
                             <tr>
-                                <% if (j===0) { %>
-                                    <td rowspan="<%= typeRoom.rooms.length %>">
-                                        <%= typeRoom.name %>
-                                    </td>
-
-                                    <% } %>
-                                        <td>
-                                            <%= typeRoom.rooms[j].number_room %>
-                                        </td>
-                                        <td>
-                                            <%= parseInt(typeRoom.rooms[j].original_price).toLocaleString('it-IT', {
-                                                style: 'currency' , currency: 'VND' }) %>
-                                        </td>
-                                        <td>
-                                            <%= parseInt(typeRoom.rooms[j].original_price -
-                                                typeRoom.rooms[j].original_price * (discount> typeRoom.discount/100 ?
-                                                discount : typeRoom.discount/100)).toLocaleString('it-IT', {style :
-                                                'currency', currency : 'VND'}) %>
-
-                                        </td>
-                                        <td>
-                                            <% if (typeRoom.rooms[j].status==='available' ) { %>
-                                                <span class="badge bg-success">Trống</span>
-                                                <% } else { %>
-                                                    <span class="badge bg-danger">Đang trống</span>
-                                                    <% } %>
-                                        </td>
+                                <th scope="col">Loại phòng</th>
+                                <th scope="col">Số phòng</th>
+                                <th scope="col">Giá phòng</th>
+                                <th scope="col">Giá giảm</th>
+                                <th scope="col">Tình trạng</th>
                             </tr>
-                            <% } %>
-                                <% } %>
-            </tbody>
-        </table>
+                        </thead>
+                        <tbody>
+                            <% for(let i=0; i < typeRooms.length; i++) { %>
+                                <% let typeRoom=typeRooms[i]; %>
+                                    <% for(let j=0; j < typeRoom.rooms.length; j++) { %>
+                                        <tr>
+                                            <% if (j===0) { %>
+                                                <td rowspan="<%= typeRoom.rooms.length %>">
+                                                    <%= typeRoom.name %>
+                                                </td>
+                                                <% } %>
+                                                    <td>
+                                                        <%= typeRoom.rooms[j].number_room %>
+                                                    </td>
+                                                    <td>
+                                                        <%= parseInt(typeRoom.rooms[j].original_price).toLocaleString('it-IT',
+                                                            { style: 'currency' , currency: 'VND' }) %>
+                                                    </td>
+                                                    <td>
+                                                        <%= parseInt(typeRoom.rooms[j].original_price -
+                                                            typeRoom.rooms[j].original_price * (discount>
+                                                            typeRoom.discount / 100 ? discount : typeRoom.discount /
+                                                            100)).toLocaleString('it-IT', { style: 'currency', currency:
+                                                            'VND' }) %>
+                                                    </td>
+                                                    <td>
+                                                        <% if (typeRoom.rooms[j].status==='available' ) { %>
+                                                            <span class="badge bg-success">Trống</span>
+                                                            <% } else { %>
+                                                                <span class="badge bg-danger">Đang trống</span>
+                                                                <% } %>
+                                                    </td>
+                                        </tr>
+                                        <% } %>
+                                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
 
+            </div>
+        </div>
     </div>
-
-    <a class="btn btn-warning shadow-none" href="/manager/<%=hotel._id%>/booking/status_booking/<%=booking._id%>">
-        Trở về
-    </a>
 </div>
