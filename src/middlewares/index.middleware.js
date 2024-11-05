@@ -96,17 +96,17 @@ class Middleware {
                 } else if (user.role.name == RoleEnum.Employee) {
                     let employee = await getEmployeeByUser(user);
                     redirectUrl = "/manager/" + employee.hotel._id.toString() + "/room";
-                    cookies.setCookie(constants.user_role, 'employee', 10000); // Lưu vai trò
+                    cookies.setCookie("user_role", 'employee', 10000); // Lưu vai trò
                 } else if (user.role.name == RoleEnum.Sub) {
                     let employee = await getEmployeeByUser(user);
                     redirectUrl = "/sub/" + employee.hotel._id.toString() + "/room";
-                    cookies.setCookie(constants.user_role, 'sub', 10000); // Lưu vai trò
+                    cookies.setCookie("user_role", 'sub', 10000); // Lưu vai trò
                 } else if (user.role.name == RoleEnum.Admin) {
                     redirectUrl = "/administrator/hotel";
-                    cookies.setCookie(constants.user_role, 'admin', 10000); // Lưu vai trò
+                    cookies.setCookie("user_role", 'admin', 10000); // Lưu vai trò
                 } else if (user.role.name == RoleEnum.Mod) {
                     redirectUrl = "/mod/city";
-                    cookies.setCookie(constants.user_role, 'mod', 10000); // Lưu vai trò
+                    cookies.setCookie("user_role", 'mod', 10000); // Lưu vai trò
                 }
     
                 return res.redirect(redirectUrl); // Chuyển hướng đến trang mục tiêu

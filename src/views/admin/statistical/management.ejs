@@ -123,6 +123,109 @@
             transition: transform .3s linear;
             transition: transform .3s linear, -webkit-transform .3s linear;
         }
+        h1 {
+        font-family: sans-serif;
+        }
+        .olcards,
+        .olcards * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        }
+
+        .olcards {
+        list-style: none;
+        counter-reset: cardCount;
+        font-family: sans-serif;
+        display: flex;
+        flex-direction: column;
+        --cardsGap: 1rem;
+        gap: var(--cardsGap);
+        padding-bottom: var(--cardsGap);
+        }
+        .olcards li {
+        counter-increment: cardCount;
+        display: flex;
+        color: white;
+        --labelOffset: 1rem;
+        --arrowClipSize: 1.5rem;
+        margin-top: var(--labelOffset);
+        }
+
+        .olcards li::before {
+        content: counter(cardCount, decimal-leading-zero);
+        background: white;
+        color: var(--cardColor);
+        font-size: 2em;
+        font-weight: 700;
+        transform: translateY(calc(-1 * var(--labelOffset)));
+        margin-right: calc(-1 * var(--labelOffset));
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-inline: 0.5em;
+        }
+
+        .olcards li .content {
+        background-color: var(--cardColor);
+        --inlinePadding: 1em;
+        --boxPadding: 0.5em;
+        display: grid;
+        padding: var(--boxPadding) calc(var(--inlinePadding) + var(--arrowClipSize))
+            var(--boxPadding) calc(var(--inlinePadding) + var(--labelOffset));
+        grid-template-areas:
+            "icon title"
+            "icon text";
+        gap: 0.25em 1em;
+        clip-path: polygon(
+            0 0,
+            calc(100% - var(--arrowClipSize)) 0,
+            100% 50%,
+            calc(100% - var(--arrowClipSize)) 100%,
+            calc(100% - var(--arrowClipSize)) calc(100% + var(--cardsGap)),
+            0 calc(100% + var(--cardsGap))
+        );
+        position: relative;
+        }
+        .olcards li .content::before {
+        content: "";
+        position: absolute;
+        width: var(--labelOffset);
+        height: var(--labelOffset);
+        background: var(--cardColor);
+        left: 0;
+        bottom: 0;
+        clip-path: polygon(0 0, 100% 0, 0 100%);
+        filter: brightness(0.75);
+        }
+        .olcards li .content::after {
+        content: "";
+        position: absolute;
+        height: var(--cardsGap);
+        width: var(--cardsGap);
+        background: linear-gradient(to right, rgba(0, 0, 0, 0.25), transparent 50%);
+        left: 0;
+        top: 100%;
+        }
+        .olcards li .icon {
+        grid-area: icon;
+        align-self: center;
+        font-size: 2em;
+        }
+        .olcards li .content .title {
+        grid-area: title;
+        font-size: 1.25em;
+        /* font-weight: 700; */
+        }
+        .olcards li .content .text {
+        grid-area: text;
+        }
+        .statistic-section {
+            display: flex;
+            justify-content: space-evenly;
+        }
+
     </style>
    
 </head>
@@ -168,6 +271,11 @@
             </div>
         </div>
         <!-- Form chọn -->
+         <h3>Thống kê số khách sạn theo vị trí địa lý</h3>
+        <div class="chart-container" style="position: relative; height:400px; width:100%;">
+            <canvas id="cityChart"></canvas>
+        </div>
+         <h3>Thống kê số lượng booking của khách sạn</h3>
         <form action="/administrator/statistical" method="GET" class="mb-4">
             <div class="form-group">
                 <label for="periodType">Chọn loại thời gian:</label>
@@ -198,30 +306,146 @@
                 <input type="number" id="year" name="year" class="form-control" value="<%= new Date().getFullYear() %>" min="2000" max="2100">
             </div>
         
-            <button type="submit" class="btn btn-primary mt-2">Xem thống kê</button>
+            <button type="submit" class="start btn btn-primary mt-2">Xem thống kê</button>
             <button type="button" id="resetButton" class="btn btn-secondary mt-2">Xóa phân loại</button>
         </form>
+        <h2 style="text-align: center;">Số lượng booking của các khách sạn</h1>
         <!-- Biểu đồ -->
+         <div class="statistic-section">
+             <div>
+                 <h2>Cao nhất</h2>
+                 <div class="statistic-section">
+                     <ol class="olcards" id="rankingBoard"></ol>
+                 </div>
+             </div>
+             <div>
+                <h2>Thấp nhất</h2>
+                <div class="statistic-section">
+                    <ol class="olcards" id="rankingBoardLowest"></ol>
+                </div>
+            </div>
+         </div>
         <div class="chart-container" style="position: relative; height:400px; width:800px;">
             <canvas id="bookingChart"></canvas>
+        </div>
+        <h2 style="text-align: center;">Thu nhập của các khách sạn</h1>
+        <div class="chart-container" style="position: relative; height:400px; width:800px;">
+            <canvas id="incomeChart"></canvas>
         </div>
     </div>
 </section>
 
 <script>
     const result = <%- JSON.stringify(statistic_result) %>;
+    const income = <%- JSON.stringify(hotel_incomes) %>;
     const name = <%- JSON.stringify(hotel_names) %>;
     const type = <%- JSON.stringify(type) %>;
     const month = <%- JSON.stringify(month) %>;
     const quarter = <%- JSON.stringify(quarter) %>;
     const year = <%- JSON.stringify(year) %>;
+    const cityResult = <%- JSON.stringify(hotel_city) %>;
+    const cities = <%- JSON.stringify(cities) %>;
+    const cityNames = {}
+    const cityLabels = []
+    const cData = []
+    for (let c in cities) {
+        cityNames[cities[c]._id] = cities[c].name;
+    }
+    for (let c in cityResult) {
+        cityLabels.push(cityNames[c])
+        cData.push(cityResult[c].length)
+    }
+
+    // Draw top booking
+
+    // Sắp xếp các khách sạn theo tổng số đặt phòng
+    const sortedHotels = Object.entries(result)
+        .sort(([, a], [, b]) => b.totalBookings - a.totalBookings);
+
+    // Lấy top 5 khách sạn và sắp xếp cho bảng xếp hạng
+    const topHotels = sortedHotels.slice(0, 5);
+    const rankingBoard = [
+        topHotels[0] || null, // vị trí thứ 3
+        topHotels[1] || null, // vị trí thứ 2
+        topHotels[2] || null, // vị trí thứ 1 (giữa)
+        topHotels[3] || null, // vị trí thứ 4
+        topHotels[4] || null  // vị trí thứ 5
+    ];
+    const rankingBoardLowest = [
+        topHotels[topHotels.length - 1] || null, 
+        topHotels[topHotels.length - 2] || null, 
+        topHotels[topHotels.length - 3] || null,
+        topHotels[topHotels.length - 4] || null, 
+        topHotels[topHotels.length - 5] || null 
+    ];
+
+    const colors = ["#fc374e", "#36aeb3", "#162d59", "#f15f0e", "#8b5cf6"];
+    const emojis = ["😀", "😁", "😉", "😜", "😍"];
+    const labels = Object.values(name);
+    const rankingBoardContainer = document.getElementById("rankingBoard");
+    const rankingBoardLowestContainer = document.getElementById("rankingBoardLowest");
+    rankingBoard.forEach((hotel, index) => {
+      const li = document.createElement("li");
+      li.style.setProperty("--cardColor", colors[index]);
+
+      const content = document.createElement("div");
+      content.className = "content";
+
+      const icon = document.createElement("div");
+      icon.className = "icon";
+      icon.textContent = emojis[index];
+
+      const title = document.createElement("div");
+      title.className = "title";
+      title.textContent = hotel ? `${labels[index]}` : "N/A";
+
+      const text = document.createElement("div");
+      text.className = "text";
+      text.textContent = hotel ? `Tổng đặt phòng: ${hotel[1].totalBookings}` : "Không có dữ liệu";
+
+      content.appendChild(icon);
+      content.appendChild(title);
+      content.appendChild(text);
+      li.appendChild(content);
+      rankingBoardContainer.appendChild(li);
+    });
+
+    rankingBoardLowest.forEach((hotel, index) => {
+      const li = document.createElement("li");
+      li.style.setProperty("--cardColor", colors[index]);
+
+      const content = document.createElement("div");
+      content.className = "content";
+
+      const icon = document.createElement("div");
+      icon.className = "icon";
+      icon.textContent = emojis[index];
+
+      const title = document.createElement("div");
+      title.className = "title";
+      title.textContent = hotel ? `${labels[labels.length - (index + 1)]}` : "N/A";
+
+      const text = document.createElement("div");
+      text.className = "text";
+      text.textContent = hotel ? `Tổng đặt phòng: ${hotel[1].totalBookings}` : "Không có dữ liệu";
+
+      content.appendChild(icon);
+      content.appendChild(title);
+      content.appendChild(text);
+      li.appendChild(content);
+      rankingBoardLowestContainer.appendChild(li);
+    });
+
+
+        
     const visualData = {
         month:  {title: 'tháng', value: month},
         quarter: {title: 'quý', value: quarter},
         year: {title: 'năm', value: year}
     }
     const title = `Số lượt booking vào ${visualData[type].title} ${visualData[type].value}`
-    const labels = Object.values(name);
+    const cityTitle = `Số khách sạn ở từng tỉnh thành`
+    const incomeTitle = `Thu nhập của từng khách sạn`
     const data = {
         labels: labels,
         datasets: [{
@@ -249,6 +473,61 @@
     const bookingChart = new Chart(
         document.getElementById('bookingChart'),
         config
+    );
+    const cityData = {
+        labels: cityLabels,
+        datasets: [{
+            label: cityTitle,
+            data: cData,
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    };
+
+    const cityConfig = {
+        type: 'bar',
+        data: cityData,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    };
+
+    const cityChart = new Chart(
+        document.getElementById('cityChart'),
+        cityConfig
+    );
+
+    const incomeData = {
+        labels: labels,
+        datasets: [{
+            label: incomeTitle,
+            data: Object.values(income).map(item => item),
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    };
+    
+    const incomeConfig = {
+        type: 'bar',
+        data: incomeData,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    };
+
+    const incomeChart = new Chart(
+        document.getElementById('incomeChart'),
+        incomeConfig
     );
     const periodTypeSelect = document.getElementById('periodType');
     const monthInput = document.getElementById('monthInput');

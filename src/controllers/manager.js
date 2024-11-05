@@ -23,6 +23,8 @@ const getAllSelection = require("../services/get_all_selection")
 const getAllService = require("../services/get_all_service")
 const getAllServiceHotel = require("../services/get_all_service_hotel")
 const getAllServiceQuantity = require("../services/get_all_service_quantity")
+const getAllServicesQuantityOfDetail = require("../services/get_all_service_quantity_of_booking")
+
 const getAllTypeRoom = require("../services/get_all_type_of_rooms")
 const getAllDetailBookingByIdBookings = require("../services/get_all_detail_booking_by_id_booking")
 const getTypeRoomById = require("../services/get_type_room_by_id")
@@ -32,10 +34,12 @@ const getServiceById = require("../services/get_service_by_id")
 const getServiceHotelById = require("../services/get_service_hotel_by_id")
 const getServiceQuantityById = require("../services/get_service_quantity_by_id")
 const getRoomById = require("../services/get_room_by_id")
+const getRoomByHotel = require("../services/get_room_by_hotel")
 const getDiscountById = require("../services/get_discount_by_id")
 const getBookingDetailById = require("../services/get_detail_booking_by_id")
 const getBookingById = require("../services/get_booking_by_id")
 const getReviewById = require("../services/get_review_by_id")
+const getFinalByIdBooking = require("../services/get_final_by_id_booking")
 const getFinalByBookingId = require("../services/get_final_by_booking_id")
 const getPaymentByIdBooking = require("../services/get_payment_by_booking_id")
 const getEventById = require("../services/get_event_by_id")
@@ -95,6 +99,7 @@ const constants = require("../constants")
 const constantMesages = require("../constants/message");
 const { RoleEnum } = require("../models/enum/role");
 const { BookingStatusEnum } = require("../models/enum/booking_status");
+const getAllDetailBookings = require("../services/get_all_detai_booking");
 
 //controller nơi nhận dữ liệu từ request(req) => vào Service xử lý dữ liệu 
 //=> gọi repository để truy cập vào database  thông qua models
@@ -120,6 +125,13 @@ class ManagerController {
     //         ...defaultData(req)
     //     })
     // }
+
+    async not_found(req, res) {
+        res.render("index-manager", {
+            page: "manager/index",
+            roomPage: "404/index"
+        })
+    }
     async statistical(req, res) {
         // Lấy tháng từ query (nếu có) hoặc lấy tháng hiện tại
         let month = req.query.month
@@ -139,6 +151,68 @@ class ManagerController {
         } else {
             best_type_room = await bestTypeRoom(req.hotel, month, 'month'); 
         }
+        let detailBooking = await getAllDetailBookings(req.hotel)
+        let services = {};
+        let details = [];
+        let service_quantity = await getAllServiceQuantity();
+        let income = 0
+        let allincome = 0
+        for (let detail of detailBooking) {
+            let booking = await getBookingById(detail.booking);
+            let final = await getFinalByBookingId(booking._id);
+        
+            if (final.length !== 0) {
+                final.forEach(item => {
+                    let nowDate = new Date(item.NowDate);
+                    let cleanedStr = item.tienthucte.replace(" VND", "");
+                    let price = parseInt(cleanedStr.replace(/\./g, ""), 10);
+                    allincome += price;
+                    // Kiểm tra nếu người dùng chọn theo tháng
+                    if (type === 'month' && nowDate.getMonth() + 1 === parseInt(month.split("-")[1]) && nowDate.getFullYear() === parseInt(parseInt(month.split("-")[0]))) {
+                        details.push(detail._id.toString());
+                        income += price
+                    }
+                    // Kiểm tra nếu người dùng chọn theo quý
+                    else if (type === 'quarter') {
+                        let itemQuarter = Math.floor(nowDate.getMonth() / 3) + 1;
+                        if (itemQuarter === parseInt(quarter.split("-")[1]) && nowDate.getFullYear() === parseInt(quarter.split("-")[0])) {
+                            details.push(detail._id.toString());
+                            income += price
+                        }
+                    }
+                    // Kiểm tra nếu người dùng chọn theo năm
+                    else if (type === 'year' && nowDate.getFullYear() === parseInt(year)) {
+                        details.push(detail._id.toString());
+                        income += price
+                    }
+                });
+            }
+        }
+        for(let service of service_quantity){
+            if(details.includes(service.detail_booking._id.toString())){
+                if(services[service.service_hotel.name]) {
+                    services[service.service_hotel.name]+= service.quatity
+                } else {
+                    services[service.service_hotel.name] = service.quatity
+                }
+            }
+        }
+        console.log(services);
+        let statistic_service = {}
+        let max = 0
+        let min = 999999
+        for (let s in services) {
+            if (services[s] > max) {
+                max = services[s]
+                statistic_service["max"] = {[s]: services[s]}
+            } 
+            if (services[s] < min) {
+                min = services[s]
+                statistic_service["min"] = {[s]: services[s]}
+            } 
+        }
+        console.log("statistic service", statistic_service);
+
         res.render("index-manager", {
             page: "manager/index",
             roomPage: "statistical/management",
@@ -147,10 +221,15 @@ class ManagerController {
             number_of_event: number_of_event,
             number_of_user: number_of_user,
             best_type_room: best_type_room,
+            statistic_service: statistic_service,
+            services: services,
             type: type,
+            allincome: allincome,
+            services: services,
             month: month,
             quarter: quarter,
             year: year,
+            income: income,
             ...defaultManagerNav(),
             ...defaultData(req)
         });
@@ -926,13 +1005,13 @@ class ManagerController {
         let details = await getAllDetailBookingByIdBookings({
             booking: booking._id,
         }); 
-        let final = await getFinalByBookingId({
+        let final = await getFinalByIdBooking({
             booking: booking._id,
         });
         let cookies = new CookieProvider(req, res);
         let userString = cookies.getCookie(constants.user_info);
         let service_hotels = await getAllServiceHotel({ hotel: req.hotel });
-        let service_quantitys = await getAllServiceQuantity({ detail_booking: details });
+        let service_quantitys = await getAllServicesQuantityOfDetail({ detail_booking: details });
         let getStatus = (booking) => {
             if (booking.deleteAt || booking.status == "Đã hủy") {
                 return 'Đã bị hủy';

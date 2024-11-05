@@ -63,14 +63,28 @@ class AdminController{
         let number_of_city = await numberOfCitys();
     
         let hotels = await getAllHotel(true);
+        let cities = await getAllCity()
         let hotel_bookings = {};
         let hotel_names = {};
+        let hotel_incomes = {};
         let statistic_result = {};
-    
+        const hotel_city = hotels.reduce((result, hotel) => {
+            const cityId = hotel.city;
+            if (!result[cityId]) {
+              result[cityId] = [];
+            }
+            result[cityId].push(hotel);
+            return result;
+          }, {});
+              
         for (let hotel of hotels) {
             let bookings = await getAllBooking(hotel);
+            const totalRevenue = bookings.reduce((total, booking) => {
+                return total + parseInt(booking.total_price); 
+            }, 0);
             hotel_bookings[hotel._id] = bookings;
             hotel_names[hotel._id] = hotel.name;
+            hotel_incomes[hotel._id] = totalRevenue
     
             // Filter bookings based on the selected time period
             let filteredBookings = [];
@@ -103,7 +117,8 @@ class AdminController{
                 totalBookings: filteredBookings.length,
             };
         }
-        console.log(statistic_result);
+
+        console.log(hotel_bookings);
     
         res.render("index-manager", {
             page: "admin/index",
@@ -115,6 +130,9 @@ class AdminController{
             number_of_city:number_of_city,
             statistic_result: statistic_result,
             hotel_names: hotel_names,
+            hotel_incomes: hotel_incomes,
+            hotel_city: hotel_city,
+            cities: cities,
             type: type,
             month: month, 
             year: year,
@@ -124,6 +142,7 @@ class AdminController{
         });
     }
     
+
 
     async city(req, res) {
         let citys = await getAllCity();

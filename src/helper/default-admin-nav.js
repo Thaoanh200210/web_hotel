@@ -1,10 +1,14 @@
 module.exports = () => {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = String(today.getMonth() + 1).padStart(2, '0'); 
+
     return {
         navTabs: [
             {
                 name: "Thống kê",
                 icon: "bi bi-gear-wide",
-                url: "/administrator/statistical",
+                url: `/administrator/statistical?type=month&month=${currentYear}-${currentMonth}&quarter=${currentYear}-1&year=${currentYear}`,
                 children: []
             },
             {
@@ -19,26 +23,12 @@ module.exports = () => {
                 url: "/administrator/hotel",
                 children: []
             },
-
-
             {
                 name: "Quản lý nhân viên",
                 icon: "bi bi-person-circle",
                 url: "/administrator/user",
                 children: []
             },
-            // {
-            //     name: "Quản lý dịch vụ",
-            //     icon: "bi bi-journal-text",
-            //     url: "/administrator/service",
-            //     children: []
-            // },
-            // {
-            //     name: "Quản lý loại phòng",
-            //     icon: "bi bi-calendar-event",
-            //     url: "/administrator/type_room",
-            //     children: []
-            // },
             {
                 name: "Quản lý lựa chọn",
                 icon: "bi bi-star",

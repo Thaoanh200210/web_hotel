@@ -301,6 +301,7 @@ class StoreRunController{
     async logout(req, res) {
         let cookies = new CookieProvider(req, res);
         cookies.clearCookie(constants.user_info);
+        cookies.clearCookie(constants.user_role);
         return res.redirect('/');
     }
 

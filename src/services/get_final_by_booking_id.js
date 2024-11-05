@@ -1,9 +1,11 @@
-const {FinalRepository} = require('../repositories/index');
+const {FinalRepository } = require('../repositories/index');
 
-async function getFinalByIdBooking(filter) {
-    const finalRepo = new FinalRepository();
-    return await finalRepo.selectOne(filter);
+async function getFinalByBookingId(id) {
+    const finalByBookingRepo = new FinalRepository();
+    let finalByBooking = await finalByBookingRepo.select({booking: id});
+    return finalByBooking;
+
 }
 
 
-module.exports =  getFinalByIdBooking ;
+module.exports =  getFinalByBookingId ;

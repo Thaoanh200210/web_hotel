@@ -106,45 +106,204 @@
         </form>
         <!-- Biểu đồ và thông tin loại phòng -->
         <div class="row mt-4">
-            <div class="card col-12">
-                <div class="card-header ui-sortable-handle">
-                    <h3 class="card-title">
-                        <i class="fas fa-chart-pie mr-1"></i>
-                        Loại phòng được đặt nhiều nhất trong <%= type === 'month' ? 'tháng' : type === 'year' ? 'năm' : 'quý' %> <%= type === 'month' ? month : type === 'quarter' ? quarter : year %>
-                    </h3>
+            <!-- Card for Most Booked Room Type -->
+            <div class="col-6 pr-3"> <!-- Thêm pr-3 để tạo khoảng cách bên phải -->
+                <div class="card">
+                    <div class="card-header ui-sortable-handle">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-pie mr-1"></i>
+                            Loại phòng được đặt nhiều nhất trong <%= type === 'month' ? 'tháng' : type === 'year' ? 'năm' : 'quý' %> <%= type === 'month' ? month : type === 'quarter' ? quarter : year %>
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content p-0">
+                            <% for(let typeroom of best_type_room.typeOfRooms) { %>
+                                <div class="mb-3">
+                                    <strong>Loại phòng:</strong> <%= typeroom.name %><br>
+                                    <strong>Số lượng đặt:</strong> <%= best_type_room.maxCount %>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="tab-content p-0">
-                        <% for(let typeroom of best_type_room.typeOfRooms) { %>
-                            <div>Loại phòng: <%= typeroom.name %></div>
-                            <div>Số lượng đặt: <%= best_type_room.maxCount %></div>
-                        <% } %>
+            </div>
+        
+            <!-- Card for Least Booked Room Type -->
+            <div class="col-6 pl-3"> <!-- Thêm pl-3 để tạo khoảng cách bên trái -->
+                <div class="card">
+                    <div class="card-header ui-sortable-handle">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-pie mr-1"></i>
+                            Loại phòng được đặt ít nhất trong <%= type === 'month' ? 'tháng' : type === 'year' ? 'năm' : 'quý' %> <%= type === 'month' ? month : type === 'quarter' ? quarter : year %>
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content p-0">
+                            <% for(let typeroom of best_type_room.typeOfRooms) { %>
+                                <div class="mb-3">
+                                    <strong>Loại phòng:</strong> <%= typeroom.name %><br>
+                                    <strong>Số lượng đặt:</strong> <%= best_type_room.minCount %>
+                                </div>
+                            <% } %>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <div class="row mt-4">
+            <div class="col-6 pr-3"> <!-- Thêm pr-3 để tạo khoảng cách bên phải -->
+                <div class="card">
+                    <div class="card-header ui-sortable-handle">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-pie mr-1"></i>
+                            Dịch vụ được dùng nhiều nhất trong <%= type === 'month' ? 'tháng' : type === 'year' ? 'năm' : 'quý' %> <%= type === 'month' ? month : type === 'quarter' ? quarter : year %>
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content p-0">
+                            <% const maxKey = statistic_service.max ? Object.keys(statistic_service.max)[0] || '' : ''; %>
+                            <% const maxValue = statistic_service.max ? Object.values(statistic_service.max)[0] || 0 : 0; %>
+
+                            
+                            <div class="mb-3">
+                                <strong>Loại phòng được đặt nhiều nhất:</strong> <%= maxKey %><br>
+                                <strong>Số lượng đặt:</strong> <%= maxValue %>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Card for Least Booked Room Type -->
+            <div class="col-6 pl-3"> <!-- Thêm pl-3 để tạo khoảng cách bên trái -->
+                <div class="card">
+                    <div class="card-header ui-sortable-handle">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-pie mr-1"></i>
+                            Loại phòng được đặt ít nhất trong <%= type === 'month' ? 'tháng' : type === 'year' ? 'năm' : 'quý' %> <%= type === 'month' ? month : type === 'quarter' ? quarter : year %>
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content p-0">
+                            <% const minKey = statistic_service.min ? Object.keys(statistic_service.min)[0] || '' : ''; %>
+                            <% const minValue = statistic_service.min ? Object.values(statistic_service.min)[0] || 0 : 0; %>
+                            
+                            
+                            <div class="mb-3">
+                                <strong>Loại phòng được đặt ít nhất:</strong> <%= minKey %><br>
+                                <strong>Số lượng đặt:</strong> <%= minValue %>
+                            </div>
+                        </div>   
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-6 pl-3"> <!-- Thêm pr-3 để tạo khoảng cách bên phải -->
+                <div class="card">
+                    <div class="card-header ui-sortable-handle">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-pie mr-1"></i>
+                                Tổng thu nhập của khách sạn:                   </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content p-0">
+                           
+                                <div class="mb-3">
+                                    <strong>Tổng thu nhập:</strong> <%= allincome %><br>
+                                </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Card for Most Booked Room Type -->
+            <div class="col-6 pl-3"> <!-- Thêm pr-3 để tạo khoảng cách bên phải -->
+                <div class="card">
+                    <div class="card-header ui-sortable-handle">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-pie mr-1"></i>
+                            Thu nhập trong <%= type === 'month' ? 'tháng' : type === 'year' ? 'năm' : 'quý' %> <%= type === 'month' ? month : type === 'quarter' ? quarter : year %>
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content p-0">
+                            <% for(let typeroom of best_type_room.typeOfRooms) { %>
+                                <div class="mb-3">
+                                    <strong>Tổng thu nhập:</strong> <%= income %><br>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <!-- Biểu đồ -->
         <div class="row mt-4">
             <div class="col-12">
                 <canvas id="roomBookingChart" width="200" height="100"></canvas>
+            </div>
+            <div class="chart-container" style="position: relative; height:400px; width:800px;">
+                <canvas id="serviceBookingChart"></canvas>
             </div>
         </div>
     </div>
 </section>
 
 <style>
-    #roomBookingChart {
+    #roomBookingChart, #serviceBookingChart {
         width: 300px; /* Chiều rộng mong muốn */
         height: 300px; /* Chiều cao mong muốn */
     }
 </style>
 
 <script>
+    const services = <%- JSON.stringify(services) %>;
+    const type = <%- JSON.stringify(type) %>;
+    const month = <%- JSON.stringify(month) %>;
+    const quarter = <%- JSON.stringify(quarter) %>;
+    const year = <%- JSON.stringify(year) %>;
     const bookedCountPerTypeRoom = <%- JSON.stringify(best_type_room.bookedCountPerTypeRoom) %>;
+    const visualData = {
+        month:  {title: 'tháng', value: month},
+        quarter: {title: 'quý', value: quarter},
+        year: {title: 'năm', value: year}
+    }
+    const title = `Số lượt sử dụng dịch vụ vào ${visualData[type].title} ${visualData[type].value}`
 
     const roomTypes = Object.keys(bookedCountPerTypeRoom);
     const bookingCounts = Object.values(bookedCountPerTypeRoom);
+
+    const serviceData = {
+        labels: Object.keys(services).map(item => item),
+        datasets: [{
+            label: title,
+            data: Object.values(services).map(item => item),
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    };
+
+    const serviceConfig = {
+        type: 'bar',
+        data: serviceData,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    };
+
+    const serviceChart = new Chart(
+        document.getElementById('serviceBookingChart'),
+        serviceConfig
+    );
 
     const ctx = document.getElementById('roomBookingChart').getContext('2d');
     const roomBookingChart = new Chart(ctx, {

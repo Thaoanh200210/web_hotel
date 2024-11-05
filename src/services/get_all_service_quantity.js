@@ -1,8 +1,8 @@
 const {ServiceQuantityRepository} = require('../repositories/index');
 
-async function getAllServicesQuantity(hotel) {
+async function getAllServicesQuantity() {
     const serviceQuantityRepo = new ServiceQuantityRepository();
-    return await serviceQuantityRepo.select(hotel);
+    return await serviceQuantityRepo.selectAll();
 }
 
 
