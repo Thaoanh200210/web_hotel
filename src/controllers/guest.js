@@ -72,6 +72,10 @@ class GuestController{
             phone: req.body.sodienthoai,
             email: req.body.email,
             password: req.body.matkhau,
+            gioitinh: req.body.gioitinh,
+            address: req.body.address,
+            cmnd: req.body.cmnd,
+
         }
         let user = await createUser(owner,RoleEnum.Employee);
         console.log("Create user successfully:::", user);

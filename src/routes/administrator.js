@@ -24,8 +24,8 @@ router.route("/hotel/activate/:id").get(admin.activateHotelHandler);
 router.route("/hotel/negate/:id").get(admin.negateHotelHandler);
 router.route("/hotel/delete/:id").get(admin.deleteHotelHandler);
 router.route("/hotel/add-handler").post(admin.addHotelHandler);
-router.route("/hotel/add").get(admin.addHotel);
 router.route("/hotel/detail/:id").get(admin.hotelDetail);
+router.route("/hotel/add").get(admin.addHotel);
 
 router.route("/hotel").get(admin.hotel);
 

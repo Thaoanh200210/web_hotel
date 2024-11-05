@@ -294,11 +294,12 @@ class AdminController{
         })
     }
     async hotelDetail(req, res) {
-        let hotel = await getHotelById(req.params.id);
+        let hotel_owner = await getHotelById(req.params.id);
+        console.log("hotel",hotel_owner)
         res.render("index-manager", {
             page: "admin/index",
             roomPage: "hotel/detail",
-            hotel: hotel,
+            hotel_owner: hotel_owner,
             ...defaultAdminNav(),
             ...defaultData(req)
         })

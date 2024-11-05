@@ -4,8 +4,9 @@
         background-color: #f9f9f9;
         border-radius: 8px;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        max-width: 800px;
+        max-width: 1200px;
         margin: 0 auto;
+        width: 100%;
     }
 
     .hotel-name {
@@ -17,7 +18,15 @@
         text-align: center;
         margin-bottom: 20px;
     }
-
+    .phongcantim {
+        font-size: 18px;
+        font-weight: bold;
+        color: #991010;
+        padding: 0px;
+        border-radius: 5px;
+        text-align: center;
+        margin-bottom: 10px;
+    }
     .baophu {
         padding: 20px;
         background-color: #ffffff;
@@ -57,9 +66,15 @@
     }
 
     .table th {
-        background-color: #007bff;
-        color: #ffffff;
+        background-color: #86b4e4;
+        color: #111010;
         text-align: center;
+    }
+
+    .highlight-row {
+        background-color: #103264;
+        color: red;
+        /* Màu nền nổi bật */
     }
 
     .badge {
@@ -75,7 +90,8 @@
         margin-top: 20px;
     }
 </style>
-<div class="container" style="max-width: 1200px;width: 100%; ">
+
+<div class="container">
     <div class="row">
         <div class="col-1">
             <a class="btn back-btn shadow-none" href="/manager/<%=hotel._id%>/booking/status_booking/<%=booking._id%>">
@@ -88,14 +104,15 @@
                     Tên khách sạn: <%= hotel.name %>
                 </div>
 
-                <div class="">
-                    Số phòng:
-                <% details.forEach(function(detail) { %>
-                  <span style="margin-right: 10px;">
-                    <%= detail.room.number_room %>
-                  </span>
-                  <% }) %>
+                <div class="phongcantim">
+                    Phòng cần tìm:
+                    <% details.forEach(function(detail) { %>
+                        <span style="margin-right: 10px;">
+                            <%= detail.room.number_room %>
+                        </span>
+                        <% }) %>
                 </div>
+
                 <form action="/manager/<%=hotel._id%>/booking/status_booking/<%=booking._id%>/kiemtra" method="GET"
                     class="form-container">
                     <div class="mb-3">
@@ -128,40 +145,39 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <% for(let i=0; i < typeRooms.length; i++) { %>
-                                <% let typeRoom=typeRooms[i]; %>
-                                    <% for(let j=0; j < typeRoom.rooms.length; j++) { %>
-                                        <tr>
-                                            <% if (j===0) { %>
-                                                <td rowspan="<%= typeRoom.rooms.length %>">
-                                                    <%= typeRoom.name %>
-                                                </td>
-                                                <% } %>
-                                                    <td>
-                                                        <%= typeRoom.rooms[j].number_room %>
-                                                    </td>
-                                                    <td>
-                                                        <%= parseInt(typeRoom.rooms[j].original_price).toLocaleString('it-IT',
-                                                            { style: 'currency' , currency: 'VND' }) %>
-                                                    </td>
-                                                    <td>
-                                                        <%= parseInt(typeRoom.rooms[j].original_price -
-                                                            typeRoom.rooms[j].original_price * (discount>
-                                                            typeRoom.discount / 100 ? discount : typeRoom.discount /
-                                                            100)).toLocaleString('it-IT', { style: 'currency', currency:
-                                                            'VND' }) %>
-                                                    </td>
-                                                    <td>
-                                                        <% if (typeRoom.rooms[j].status==='available' ) { %>
-                                                            <span class="badge bg-success">Trống</span>
-                                                            <% } else { %>
-                                                                <span class="badge bg-danger">Đang trống</span>
-                                                                <% } %>
-                                                    </td>
-                                        </tr>
+                            <% for (let i = 0; i < typeRooms.length; i++) { %>
+                                <% let typeRoom = typeRooms[i]; %>
+                                <% for (let j = 0; j < typeRoom.rooms.length; j++) { %>
+                                    <% let room = typeRoom.rooms[j]; %>
+                                    <tr>
+                                        <% if (j === 0) { %>
+                                            <td rowspan="<%= typeRoom.rooms.length %>">
+                                                <%= typeRoom.name %>
+                                            </td>
                                         <% } %>
+                                        
+                                        <!-- Áp dụng điều kiện chỉ cho ô "Số phòng" -->
+                                        <td class="<%= details.some(detail => detail.room.number_room.toString() === room.number_room.toString()) ? 'highlight-row' : '' %>">
+                                            <%= room.number_room %>
+                                        </td>
+                        
+                                        <td><%= parseInt(room.original_price).toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) %></td>
+                                        
+                                        <td><%= parseInt(room.original_price - room.original_price * (discount > typeRoom.discount / 100 ? discount : typeRoom.discount / 100)).toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) %></td>
+                        
+                                        <td>
+                                            <% if (room.status === 'available') { %>
+                                                <span class="badge bg-success">Trống</span>
+                                            <% } else { %>
+                                                <span class="badge bg-danger">Đang trống</span>
                                             <% } %>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            <% } %>
                         </tbody>
+                        
+                        
                     </table>
                 </div>
 
