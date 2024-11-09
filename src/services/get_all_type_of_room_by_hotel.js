@@ -8,7 +8,7 @@ const {
     DetailBookingRepository
 } = require('../repositories/index');
 
-async function getAllTypeRoomByHotel(hotel, startDate= "", endDate= "") {
+async function getAllTypeRoomByHotel(hotel, startDate = "", endDate = "") {
     const typeRoomRepo = new TypeRoomRepository();
     const roomRepo = new RoomRepository();
     const serviceRoomRepo = new ServiceRoomRepository();
@@ -16,101 +16,73 @@ async function getAllTypeRoomByHotel(hotel, startDate= "", endDate= "") {
     const selectionRoomRepo = new SelectionRoomRepository();
     const imageRepo = new ImageRepository();
     const discountRepo = new DiscountRepository();
-    let typesOfRoom =  await typeRoomRepo.select({
-        hotel: hotel,
-    });
-    //list typeofroom
+
+    let typesOfRoom = await typeRoomRepo.select({ hotel: hotel });
     let result = [];
-    for(let typeOfRoom of typesOfRoom){
-        let rooms = await roomRepo.select({hotel:hotel, type_room:typeOfRoom, status: 'Đang hoạt động'});
-        // console.log("All rooms of hotel", rooms.length);
-        if (startDate != "" || endDate != "") {
+
+    for (let typeOfRoom of typesOfRoom) {
+        let rooms = await roomRepo.select({ hotel: hotel, type_room: typeOfRoom, status: 'Đang hoạt động' });
+        
+        if (startDate && endDate) {
             let detailBookings = await detailBookingRepo.select({
-                room: {
-                    "$in": rooms,
-                },
-                // status: {
-                //     // "$eq": "Đang đặt",
-                //     // "$eq": "Đã nhận phòng",
-                //     // Tìm status "Đang đặt"
-                // }
-                status: {
-                    "$in": ["Đang đặt", "Đã nhận phòng"], // Tìm những status nằm trong danh sách
-                }
+                room: { "$in": rooms },
+                status: { "$in": ["Đang đặt", "Đã nhận phòng"] }
             });
-            // detailBookings =  detailBookings.filter((detail)=>{
-                
-            //     if (detail.booking.check_out <= new Date(startDate) && detail.booking.check_out >= new Date(Date.now()) || detail.booking.check_in >= new Date(endDate)) {
-            //         return false;
-            //     } else
-            //     return true;
-            //  });
-            detailBookings = detailBookings.filter((detail) => {
-                // Convert booking check-out and check-in dates to Date objects
-                let checkOutDate = new Date(detail.booking.check_out);
-                let checkInDate = new Date(detail.booking.check_in);
-                let currentDate = new Date();
-            
-                // Create a new Date object from startDate and add 1 day
-                let startDateAdjusted = new Date(startDate);
-                startDateAdjusted.setDate(startDateAdjusted.getDate() + 1); // Add one day
-            
-                // Check the conditions for filtering
-                if (
-                    (checkOutDate <= startDateAdjusted && checkOutDate >= currentDate) ||
-                    checkInDate >= new Date(endDate)
-                ) {
-                    return false; // Exclude this detailBooking
-                }
-                return true; // Include this detailBooking
+
+            // Lọc các bản ghi đặt phòng trong khoảng startDate và endDate
+            detailBookings = detailBookings.filter(detail => {
+                const checkIn = new Date(detail.booking.check_in);
+                const checkOut = new Date(detail.booking.check_out);
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+
+                // Nếu khoảng thời gian đặt phòng trùng với startDate và endDate, loại bỏ phòng này
+                return (
+                    (checkIn <= end && checkOut >= start) // Phòng đã đặt trong khoảng thời gian
+                );
             });
-             let roomBooked = detailBookings.map((detail)=>{
-                if (detail.status === "Đang đặt" || detail.status === "Đã nhận phòng") {
-                    return detail.room._id.toString();
-                }
-             });
-     
-             //lấy danh sách rooms kh có những phòng đã được đặt.
-             rooms = rooms.filter((room)=>{
-                 return !roomBooked.includes(room._id.toString());
-             })
+
+            // Tạo danh sách ID các phòng đã đặt trong khoảng thời gian đó
+            const roomBooked = detailBookings.map(detail => detail.room._id.toString());
+
+            // Loại bỏ các phòng đã đặt khỏi danh sách rooms
+            rooms = rooms.filter(room => !roomBooked.includes(room._id.toString()));
         }
-        //chứa list room
+
+        // Duyệt qua danh sách phòng còn lại để lấy thông tin chi tiết
         let roomResult = [];
-        for(let room of rooms ){
-            let servicesOfRoom =  await serviceRoomRepo.select({room: room});
-            let selectionsOfRoom = await selectionRoomRepo.select({room: room});
-            let imagesOfRoom =  await imageRepo.select({room: room});
+        for (let room of rooms) {
+            let servicesOfRoom = await serviceRoomRepo.select({ room: room });
+            let selectionsOfRoom = await selectionRoomRepo.select({ room: room });
+            let imagesOfRoom = await imageRepo.select({ room: room });
             roomResult.push({
-                //._doc dùng để lấy data cho đúng.
                 ...room._doc,
-                services: servicesOfRoom.map((serviceOfRoom) => { return serviceOfRoom.service;}),
-                selections: selectionsOfRoom.map((selectionOfRoom) => { return selectionOfRoom.selection;}),
+                services: servicesOfRoom.map(serviceOfRoom => serviceOfRoom.service),
+                selections: selectionsOfRoom.map(selectionOfRoom => selectionOfRoom.selection),
                 images: imagesOfRoom
-            })
+            });
         }
+
         roomResult.sort((a, b) => a.original_price - b.original_price);
-        //danh sách giảm giá của từng loại phòng ở hotel
+
+        // Lấy giảm giá hiện có của loại phòng
         const today = new Date();
-        // thêm điều kiện mã giảm giá phải còn hữu hiệu khi người dùng đặt phòng
         let discounts = await discountRepo.select({
             type_room: typeOfRoom,
-            hotel:hotel,
+            hotel: hotel,
             date_end: { $gt: today }
         });
         discounts.sort((a, b) => a.discount_percent - b.discount_percent);
-        let discount = 0;
-        if(discounts.length > 0){
-            discount = discounts[0].discount_percent;
-        }
+        let discount = discounts.length > 0 ? discounts[0].discount_percent : 0;
+
         result.push({
             ...typeOfRoom._doc,
             rooms: roomResult,
             discount: discount,
-        })
+        });
     }
+
     return result;
 }
 
-
-module.exports =  getAllTypeRoomByHotel ;
+module.exports = getAllTypeRoomByHotel;
