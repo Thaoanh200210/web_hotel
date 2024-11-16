@@ -24,12 +24,10 @@
               </td>
             </tr>
             <tr>
-              <td>Ngày nhận phòng: <%= booking.check_in.toLocaleString() %>
-              </td>
+              <td class="highlight">Ngày nhận phòng: <%= booking.check_in.toLocaleString() %></td>
             </tr>
             <tr>
-              <td>Ngày trả: <%= booking.check_out.toLocaleString() %>
-              </td>
+              <td class="highlight">Ngày trả: <%= booking.check_out.toLocaleString() %></td>
             </tr>
             <% let totalOriginalPrice=0; let totalDiscountPrice=0; details.forEach(function(detail) { totalOriginalPrice
               +=parseInt(detail.original_price); totalDiscountPrice +=parseInt(detail.discount_price); }); %>
@@ -57,11 +55,18 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>Tiền đã thanh toán trên web:
-                    <%= parseInt(booking.total_price).toLocaleString('it-IT', { style: 'currency' , currency: 'VND' })
-                      %>
-                  </td>
+                  <% if(payment) { %>
+                    <td>Tiền đã thanh toán trên web:
+                      <%= parseInt(booking.total_price).toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) %>
+                    </td>
+                  <% } else { %>
+                    <td>
+                      Số tiền phòng phải thanh toán:
+                      <%= parseInt(booking.total_price).toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) %>
+                    </td>
+                  <% } %>
                 </tr>
+                
           </tbody>
         </table>
 
@@ -199,14 +204,23 @@
           </thead>
           <tbody>
             <tr>
-              <td>Đã thanh toán trên web
-              </td>
-              <td>
-                <div id="thanhtoantrenweb">
-                  <%= parseInt(booking.total_price).toLocaleString('it-IT', {style : 'currency' , currency : 'VND' }) %>
-                </div>
-              </td>
+              <% if (payment) { %>
+                <td>Đã thanh toán trên web</td>
+                <td>
+                  <div id="thanhtoantrenweb">
+                    <%= parseInt(booking.total_price).toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) %>
+                  </div>
+                </td>
+              <% } else { %>
+                <td>Tiền phòng:</td>
+                <td>
+                  <div id="thanhtoantaikhachsan">
+                    <%= parseInt(booking.total_price).toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) %>
+                  </div>
+                </td>
+              <% } %>
             </tr>
+            
             <tr>
               <td>Tiền ở thực tế:</td>
               <td>
@@ -279,7 +293,15 @@
   </form>
 
 </div>
-
+<style>
+  .highlight {
+    background-color: #ffeb3b; /* Màu nền vàng */
+    font-weight: bold; /* Chữ đậm */
+    border: 1px solid #ffc107; /* Viền vàng */
+    padding: 5px; /* Padding để tạo khoảng cách */
+    color: blueviolet;
+  }
+</style>
 <script>
   window.onload = function () {
     document.querySelectorAll('.btn-danger').forEach(button => {
@@ -302,81 +324,96 @@
     }
 
     document.getElementById('ngaytraphong').addEventListener('change', function () {
-      const ngayTraPhong = new Date(this.value);
-      const checkIn = new Date(this.getAttribute('data-check-in'));
-      const checkOut = new Date(this.getAttribute('data-check-out'));
-      const details = JSON.parse(this.getAttribute('data-details'));
+  const ngayTraPhong = new Date(this.value);
+  const checkIn = new Date(this.getAttribute('data-check-in'));
+  const checkOut = new Date(this.getAttribute('data-check-out'));
+  const details = JSON.parse(this.getAttribute('data-details'));
 
-      // Tạo biến mới cho ngày trả phòng thêm 1 ngày
-      const ngayTraPhongTinhToan = new Date(ngayTraPhong);
-      ngayTraPhongTinhToan.setDate(ngayTraPhongTinhToan.getDate() + 1);
+  // Tạo biến mới cho ngày trả phòng thêm 1 ngày
+  const ngayTraPhongTinhToan = new Date(ngayTraPhong);
+  ngayTraPhongTinhToan.setDate(ngayTraPhongTinhToan.getDate() );
 
-      let totalActualPayment = 0;
+  let totalActualPayment = 0;
 
-      details.forEach(function (detail) {
-        const originalPrice = parseInt(detail.original_price);
-        const discount = Math.abs(parseFloat(detail.discount_price / detail.original_price));
-        let numberOfDaysStayed = 0;
+  details.forEach(function (detail) {
+    const originalPrice = parseInt(detail.original_price);
+    const discount = Math.abs(parseFloat(detail.discount_price / detail.original_price));
+    let numberOfDaysStayed = 0;
 
-        // Tính số ngày đã ở dựa trên biến ngày trả phòng tính toán
-        if (ngayTraPhongTinhToan.getTime() === checkOut.getTime()) {
-          numberOfDaysStayed = Math.floor((checkOut - checkIn) / (86400 * 1000));
-        } else if (ngayTraPhongTinhToan.getTime() < checkOut.getTime()) {
-          numberOfDaysStayed = Math.floor((ngayTraPhongTinhToan - checkIn) / (86400 * 1000));
-        } else {
-          numberOfDaysStayed = Math.floor((ngayTraPhongTinhToan - checkIn) / (86400 * 1000));
-        }
+    // Tính số ngày đã ở dựa trên biến ngày trả phòng tính toán
+    if (ngayTraPhongTinhToan.getTime() === checkOut.getTime()) {
+      numberOfDaysStayed = Math.floor((checkOut - checkIn) / (86400 * 1000));
+    } else if (ngayTraPhongTinhToan.getTime() < checkOut.getTime()) {
+      numberOfDaysStayed = Math.floor((ngayTraPhongTinhToan - checkIn) / (86400 * 1000));
+    } else {
+      numberOfDaysStayed = Math.floor((ngayTraPhongTinhToan - checkIn) / (86400 * 1000));
+    }
 
-        const discountedPrice = originalPrice - (originalPrice * discount);
-        let actualPayment = discountedPrice * numberOfDaysStayed;
+    const discountedPrice = originalPrice - (originalPrice * discount);
+    let actualPayment = discountedPrice * numberOfDaysStayed;
 
-        if (ngayTraPhongTinhToan.getTime() < checkOut.getTime()) {
-          actualPayment += (originalPrice * 0.3);
-        }
+    if (ngayTraPhongTinhToan.getTime() < checkOut.getTime()) {
+      actualPayment += (originalPrice * 0.3);
+    }
 
-        totalActualPayment += actualPayment;
-      });
+    totalActualPayment += actualPayment;
+  });
 
-      document.getElementById('thuctephaitra').value = totalActualPayment.toLocaleString('it-IT', {
-        style: 'currency',
-        currency: 'VND'
-      });
+  document.getElementById('thuctephaitra').value = totalActualPayment.toLocaleString('it-IT', {
+    style: 'currency',
+    currency: 'VND'
+  });
 
-      const actualPaymentDiv = document.getElementById('tienthucte');
-      actualPaymentDiv.value = totalActualPayment.toLocaleString('it-IT', {
-        style: 'currency',
-        currency: 'VND'
-      });
+  const actualPaymentDiv = document.getElementById('tienthucte');
+  actualPaymentDiv.value = totalActualPayment.toLocaleString('it-IT', {
+    style: 'currency',
+    currency: 'VND'
+  });
 
-      const thanhtoantrenweb = parseInt(document.getElementById('thanhtoantrenweb').innerText.replace(/[^\d]/g, ''));
-      const tienthucte = totalActualPayment;
-      const tiendichvu = parseInt(document.getElementById('tiendichvu').innerText.replace(/[^\d]/g, ''));
+  const tiendichvu = parseInt(document.getElementById('tiendichvu').innerText.replace(/[^\d]/g, ''));
 
-      let final_price = 0;
-      let finalLabel = "Tổng thanh toán";
-      let tien = 0;
+  let final_price = 0;
+  let finalLabel = "Tổng thanh toán";
 
-      if (thanhtoantrenweb > tienthucte) {
-        tien = (thanhtoantrenweb - tienthucte);
-        final_price = -tien + tiendichvu;
-      } else {
-        final_price = (tienthucte - thanhtoantrenweb) + tiendichvu;
-      }
+  // Check if "thanhtoantaikhachsan" exists
+  const thanhtoantaikhachsan = document.getElementById('thanhtoantaikhachsan');
+  if (thanhtoantaikhachsan) {
+    // If "thanhtoantaikhachsan" exists, just calculate "tienthucte + tiendichvu"
+    final_price = totalActualPayment + tiendichvu;
+  } else {
+    // Proceed with the existing logic if "thanhtoantaikhachsan" does not exist
+    const thanhtoantrenweb = parseInt(document.getElementById('thanhtoantrenweb').innerText.replace(/[^\d]/g, ''));
+    const tienthucte = totalActualPayment;
 
-      if (final_price > 0) {
-        finalLabel = "Tiền khách phải trả";
-      } else if (final_price < 0) {
-        finalLabel = "Hoàn lại cho khách";
-      }
+    if (thanhtoantrenweb > tienthucte) {
+      final_price = -(thanhtoantrenweb - tienthucte) + tiendichvu;
+    } else {
+      final_price = (tienthucte - thanhtoantrenweb) + tiendichvu;
+    }
+  }
 
-      document.getElementById('final_price').value = final_price.toLocaleString('it-IT', {
-        style: 'currency',
-        currency: 'VND'
-      });
+  if (final_price > 0) {
+    finalLabel = "Tiền khách phải trả";
+  } else if (final_price < 0) {
+    finalLabel = "Hoàn lại cho khách";
+  }
 
-      document.getElementById('tongthanhtoan').textContent = finalLabel;
-    });
+  document.getElementById('final_price').value = final_price.toLocaleString('it-IT', {
+    style: 'currency',
+    currency: 'VND'
+  });
+
+  document.getElementById('tongthanhtoan').textContent = finalLabel;
+});
+
 
   };
-
+  document.getElementById('CheckedOut').addEventListener('click', function (event) {
+  const ngayTraPhong = document.getElementById('ngaytraphong').value;
+  if (!ngayTraPhong) {
+    alert('Vui lòng chọn ngày trả phòng thực tế trước khi chuyển trạng thái sang "Đã trả phòng".');
+    event.preventDefault();
+    return false;
+  }
+});
 </script>

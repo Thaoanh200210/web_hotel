@@ -1,10 +1,4 @@
-<script>
-  function setIframe(element, id) {
-    document.getElementById("roomDetailModalLabel").innerText = element.innerText
-    document.getElementById("roomDetailModalIframe").src = "/hotel/<%=hotel._id%>/room/" + id;
-    modelHandle(element)
-  }
-</script>
+
 <%- include("./shared/header") %>
   <div class="container">
     <div class="row">
@@ -100,7 +94,7 @@
                 <tbody>
                   <% for (let rooms of typeRoom.rooms) {%>
                     <tr>
-                      <td><input type="checkbox" value="<%=rooms._id%>" name="phong"></td>
+                      <td><input type="checkbox" value="<%=rooms._id%>" name="phong" onclick="calculateTotal()"></td>
                       <td>
                         <%=rooms.number_room%>
                       </td>
@@ -125,10 +119,8 @@
                         </div>
 
                       </td>
-                      <td>
-                        <%= parseInt((rooms.original_price - (rooms.original_price*(discount> typeRoom.discount/100 ?
-                          discount : typeRoom.discount/100)))).toLocaleString('it-IT', {style : 'currency', currency :
-                          'VND'})%>
+                      <td class="room-price">
+                        <%= parseInt((rooms.original_price - (rooms.original_price*(discount > typeRoom.discount/100 ? discount : typeRoom.discount/100)))).toLocaleString('it-IT', {style : 'currency', currency : 'VND'})%>
                       </td>
                       <td style="width:38%; " class="">
                         <div class="d-flex flex-column align-items-start">
@@ -200,6 +192,7 @@
     </div>
   </div>
 
+
   <div class="modal fade" id="roomDetailModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="roomDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="width: 75vw; height:99vh; margin:auto; max-width: 75vw;">
@@ -216,3 +209,47 @@
       </div>
     </div>
   </div>
+  <script>
+    function calculateTotal() {
+  // Lấy giá trị của ngày bắt đầu, ngày kết thúc và phòng được chọn
+  const ngaydau = document.getElementById('ngaydau').value;
+  const ngayket = document.getElementById('ngayket').value;
+  const selectedRooms = document.querySelectorAll('input[name="phong"]:checked'); // Lấy tất cả các phòng đã chọn
+  
+  // Kiểm tra nếu đã chọn phòng và đã nhập ngày đầy đủ
+  if (ngaydau && ngayket && selectedRooms.length > 0) {
+    const checkInDate = new Date(ngaydau);
+    const checkOutDate = new Date(ngayket);
+
+    // Tính số đêm lưu trú
+    const nights = (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24);
+
+    // Kiểm tra nếu số đêm hợp lệ
+    if (nights > 0) {
+      let totalPrice = 0;
+
+      // Duyệt qua tất cả các phòng đã chọn và tính tổng
+      selectedRooms.forEach(function(room) {
+        const roomPrice = parseInt(room.closest('tr').querySelector('.room-price').textContent.replace(/\D/g, ''));
+        totalPrice += roomPrice * nights;
+      });
+
+      // Hiển thị tổng tiền
+      document.getElementById('tongtien').value = totalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' });
+    } else {
+      document.getElementById('tongtien').value = 'Ngày không hợp lệ';
+    }
+  } else {
+    // Xóa tổng tiền nếu không đủ thông tin
+    document.getElementById('tongtien').value = '';
+  }
+}
+
+
+
+    function setIframe(element, id) {
+    document.getElementById("roomDetailModalLabel").innerText = element.innerText
+    document.getElementById("roomDetailModalIframe").src = "/hotel/<%=hotel._id%>/room/" + id;
+    modelHandle(element)
+  }
+  </script>
