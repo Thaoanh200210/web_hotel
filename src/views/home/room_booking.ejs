@@ -75,7 +75,7 @@
         </div>
       </div>
 
-      <form action="/hotel/<%=hotel._id%>/booking-room" method="POST">
+      <form action="/hotel/<%=hotel._id%>/booking-room" method="POST" onsubmit="return validateForm(event)">
 
         <div class="row">
           <!-- bang thong tin phong -->
@@ -251,5 +251,21 @@
     document.getElementById("roomDetailModalLabel").innerText = element.innerText
     document.getElementById("roomDetailModalIframe").src = "/hotel/<%=hotel._id%>/room/" + id;
     modelHandle(element)
+  }
+
+  function validateForm(event) {
+    // Lấy danh sách các checkbox của phòng
+    const selectedRooms = document.querySelectorAll('input[name="phong"]:checked');
+    
+    // Kiểm tra nếu không có phòng nào được chọn
+    if (selectedRooms.length === 0) {
+      // Hiển thị thông báo nhắc nhở
+      alert("Vui lòng chọn phòng trước khi đặt phòng.");
+      
+      // Ngăn không cho form gửi đi
+      return false;
+    }
+    // Nếu đã chọn phòng, cho phép gửi form
+    return true;
   }
   </script>

@@ -25,52 +25,45 @@
         <div class="row">
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-info">
-                    <div class="inner">
+                    <div class="inner d-flex align-items-center justify-content-between">
                         <h3><%= number_room %></h3>
-                        <p>Phòng</p>
+                        <i class="icon ion-bag"></i>
                     </div>
-                    <div class="icon">
-                        <i class="ion ion-bag"></i>
-                    </div>
+                    <p class="text-center">Phòng</p>
                 </div>
             </div>
-
+        
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-success">
-                    <div class="inner">
+                    <div class="inner d-flex align-items-center justify-content-between">
                         <h3><%= number_of_booking %></h3>
-                        <p>Đặt phòng</p>
+                        <i class="icon ion-stats-bars"></i>
                     </div>
-                    <div class="icon">
-                        <i class="ion ion-stats-bars"></i>
-                    </div>
+                    <p class="text-center">Đặt phòng</p>
                 </div>
             </div>
-
+        
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-warning">
-                    <div class="inner">
+                    <div class="inner d-flex align-items-center justify-content-between">
                         <h3><%= number_of_user %></h3>
-                        <p>Khách hàng</p>
+                        <i class="icon ion-person-add"></i>
                     </div>
-                    <div class="icon">
-                        <i class="ion ion-person-add"></i>
-                    </div>
+                    <p class="text-center">Khách hàng</p>
                 </div>
             </div>
-
+        
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-danger">
-                    <div class="inner">
+                    <div class="inner d-flex align-items-center justify-content-between">
                         <h3><%= number_of_event %></h3>
-                        <p>Sự kiện</p>
+                        <i class="icon ion-pie-graph"></i>
                     </div>
-                    <div class="icon">
-                        <i class="ion ion-pie-graph"></i>
-                    </div>
+                    <p class="text-center">Sự kiện</p>
                 </div>
             </div>
         </div>
+        
         <form action="/manager/<%= hotel._id %>/statistical" method="GET" class="mb-4">
             <div class="form-group">
                 <label for="periodType">Chọn loại thời gian:</label>
@@ -262,6 +255,28 @@
         width: 300px; /* Chiều rộng mong muốn */
         height: 300px; /* Chiều cao mong muốn */
     }
+    .small-box .inner {
+    display: flex; /* Đặt số và icon trên một dòng */
+    justify-content: space-between; /* Khoảng cách đều giữa số và icon */
+    align-items: center; /* Căn giữa dọc */
+}
+
+.small-box h3 {
+    font-size: 2.5em; /* Tăng kích thước số */
+    margin: 0; /* Loại bỏ khoảng cách thừa */
+}
+
+.small-box .icon {
+    font-size: 3em; /* Tăng kích thước icon */
+    margin-left: 10px; /* Tạo khoảng cách nhỏ giữa số và icon */
+}
+
+.small-box p {
+    font-size: 1.2em; /* Tăng kích thước chữ */
+    margin-top: 0.5em; /* Khoảng cách giữa chữ và khối số + icon */
+    text-align: center; /* Căn giữa chữ */
+}
+
 </style>
 
 <script>

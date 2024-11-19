@@ -230,7 +230,7 @@
    
 </head>
 <section class="content">
-    <div class="container-fluid">
+    <div class="container">
         <!-- Chung -->
         <div class="d-flex flex-column gap-5">
             <div class="d-flex gap-5">
@@ -259,7 +259,7 @@
                     <div class="icon">
                         <i class="ion ion-search"></i>                    </div>
                 </div>
-                <div class="small-box bg-success flex-fill d-flex flex-column justify-content-between">
+                <div class="small-box bg-warning flex-fill d-flex flex-column justify-content-between">
                     <div class="inner">
                         <h1><%= number_of_selection %></h1>
                         <p style="font-size: 30px; font-family: initial;">Hình thức thanh toán</p>
@@ -272,7 +272,7 @@
         </div>
         <!-- Form chọn -->
          <h3>Thống kê số khách sạn theo vị trí địa lý</h3>
-        <div class="chart-container" style="position: relative; height:400px; width:100%;">
+        <div class="chart-container" style="position: relative; height:300px; width:100%;">
             <canvas id="cityChart"></canvas>
         </div>
          <h3>Thống kê số lượng booking của khách sạn</h3>
@@ -309,29 +309,44 @@
             <button type="submit" class="start btn btn-primary mt-2">Xem thống kê</button>
             <button type="button" id="resetButton" class="btn btn-secondary mt-2">Xóa phân loại</button>
         </form>
-        <h2 style="text-align: center;">Số lượng booking của các khách sạn</h1>
+        <div>
+            
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <h3 style="text-align: center;  ">Số lượng booking của các khách sạn</h3>
+                <div class="chart-container" style="position: relative; height:300px; width:600px;padding-right: 20px;">
+                    <canvas id="bookingChart"></canvas>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <h3 style="text-align: center;   ">Thu nhập của các khách sạn</h3>
+                <div class="chart-container" style="position: relative; height:300px; width:600px;  padding-right: 10px;">
+                    <canvas id="incomeChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
         <!-- Biểu đồ -->
          <div class="statistic-section">
              <div>
-                 <h2>Cao nhất</h2>
+                 <h3>Cao nhất</h3>
                  <div class="statistic-section">
                      <ol class="olcards" id="rankingBoard"></ol>
                  </div>
              </div>
              <div>
-                <h2>Thấp nhất</h2>
+                <h3>Thấp nhất</h3>
                 <div class="statistic-section">
                     <ol class="olcards" id="rankingBoardLowest"></ol>
                 </div>
             </div>
          </div>
-        <div class="chart-container" style="position: relative; height:400px; width:800px;">
-            <canvas id="bookingChart"></canvas>
-        </div>
-        <h2 style="text-align: center;">Thu nhập của các khách sạn</h1>
-        <div class="chart-container" style="position: relative; height:400px; width:800px;">
-            <canvas id="incomeChart"></canvas>
-        </div>
+
+         
+       
     </div>
 </section>
 

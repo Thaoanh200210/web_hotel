@@ -19,7 +19,7 @@
                   <div class="d-flex flex-column">
                     <div class="d-flex justify-content-between">
                       <div class="text-color">Thoải mái</div>
-                      <div><%= getReview(booking.reviews,bookingDetail).comfortScore/10 %></div></div>
+                      <div><%= getReview(booking.reviews,bookingDetail).comfortScore %></div></div>
                     </div>
                     <div class="progress" style="height: 10px">
                       <div
@@ -28,7 +28,7 @@
                         role="progressbar"
                         aria-valuenow="<%= getReview(booking.reviews,bookingDetail).comfortScore %>"
                         aria-valuemin="0"
-                        aria-valuemax="100"
+                        aria-valuemax="10"
                       ></div>
                     </div>
                   </div>
@@ -38,7 +38,7 @@
                   <div class="d-flex flex-column">
                     <div class="d-flex justify-content-between">
                       <div class="text-color">Đáng đồng tiền</div>
-                      <div><%= getReview(booking.reviews,bookingDetail).moneyScore/10 %></div>
+                      <div><%= getReview(booking.reviews,bookingDetail).moneyScore %></div>
                     </div>
                     <div class="progress" style="height: 10px">
                       <div
@@ -47,7 +47,7 @@
                         role="progressbar"
                         aria-valuenow="<%= getReview(booking.reviews,bookingDetail).moneyScore %>"
                         aria-valuemin="0"
-                        aria-valuemax="100"
+                        aria-valuemax="10"
                       ></div>
                     </div>
                   </div>
@@ -57,16 +57,16 @@
                   <div class="d-flex flex-column">
                     <div class="d-flex justify-content-between">
                       <div class="text-color">Wifi miễn phí</div>
-                      <div><%= getReview(booking.reviews,bookingDetail).wifiScore/10 %></div>
+                      <div><%= getReview(booking.reviews,bookingDetail).wifiScore %></div>
                     </div>
                     <div class="progress" style="height: 10px">
                       <div
                         class="progress-bar c-bg-secondary"
                         style="width: <%= getReview(booking.reviews,bookingDetail).wifiScore %>; height: 10px"
                         role="progressbar"
-                        aria-valuenow="<%= getReview(booking.reviews,bookingDetail).wifiScore/10 %>"
+                        aria-valuenow="<%= getReview(booking.reviews,bookingDetail).wifiScore %>"
                         aria-valuemin="0"
-                        aria-valuemax="100"
+                        aria-valuemax="10"
                       ></div>
                     </div>
                   </div>
@@ -78,16 +78,16 @@
                   <div class="d-flex flex-column">
                     <div class="d-flex justify-content-between">
                       <div class="text-color">Nhân viên phục vụ</div>
-                      <div><%= getReview(booking.reviews,bookingDetail).employeeScore/10 %></div>
+                      <div><%= getReview(booking.reviews,bookingDetail).employeeScore %></div>
                     </div>
                     <div class="progress" style="height: 10px">
                       <div
                         class="progress-bar c-bg-secondary"
                         style="width: <%= getReview(booking.reviews,bookingDetail).employeeScore %>; height: 10px"
                         role="progressbar"
-                        aria-valuenow="<%= getReview(booking.reviews,bookingDetail).employeeScore/10 %>"
+                        aria-valuenow="<%= getReview(booking.reviews,bookingDetail).employeeScore %>"
                         aria-valuemin="0"
-                        aria-valuemax="100"
+                        aria-valuemax="10"
                       ></div>
                     </div>
                   </div>
@@ -97,16 +97,16 @@
                   <div class="d-flex flex-column">
                     <div class="d-flex justify-content-between">
                       <div class="text-color">Tiện nghi</div>
-                      <div><%= getReview(booking.reviews,bookingDetail).sactificationScore/10 %></div>
+                      <div><%= getReview(booking.reviews,bookingDetail).sactificationScore %></div>
                     </div>
                     <div class="progress" style="height: 10px">
                       <div
                         class="progress-bar c-bg-secondary"
                         style="width: <%= getReview(booking.reviews,bookingDetail).sactificationScore %>; height: 10px"
                         role="progressbar"
-                        aria-valuenow="<%= getReview(booking.reviews,bookingDetail).sactificationScore/10 %>"
+                        aria-valuenow="<%= getReview(booking.reviews,bookingDetail).sactificationScore %>"
                         aria-valuemin="0"
-                        aria-valuemax="100"
+                        aria-valuemax="10"
                       ></div>
                     </div>
                   </div>
@@ -116,16 +116,16 @@
                   <div class="d-flex flex-column">
                     <div class="d-flex justify-content-between">
                       <div class="text-color">Sạch sẽ</div>
-                      <div><%= getReview(booking.reviews,bookingDetail).cleanlinessScore/10 %></div>
+                      <div><%= getReview(booking.reviews,bookingDetail).cleanlinessScore%></div>
                     </div>
                     <div class="progress" style="height: 10px">
                       <div
                         class="progress-bar c-bg-secondary"
                         style="width: <%= getReview(booking.reviews,bookingDetail).cleanlinessScore %>; height: 10px"
                         role="progressbar"
-                        aria-valuenow="<%= getReview(booking.reviews,bookingDetail).cleanlinessScore/10 %>"
+                        aria-valuenow="<%= getReview(booking.reviews,bookingDetail).cleanlinessScore%>"
                         aria-valuemin="0"
-                        aria-valuemax="100"
+                        aria-valuemax="10"
                       ></div>
                     </div>
                   </div>
@@ -142,77 +142,77 @@
                 <form action="/review_handler/<%= booking._id %>" method="POST">
                   <div class="row">
                     <div class="col-6" style="width: 350px;">
-                      <label for="thoaimai">Thoải mái <span id="thoaimaiValue">50 điểm</span></label>
+                      <label for="thoaimai">Thoải mái <span id="thoaimaiValue">5 điểm</span></label>
                       <input
                         type="range"
                         name="thoaimai"
                         id="thoaimai"
                         class="range-slider"
-                        value="50"
+                        value="5"
                         min="0"
-                        max="100"
+                        max="10"
                         oninput="updateRangeValue('thoaimai')"
                       />
   
-                      <label for="dangtien">Đáng đồng tiền <span id="dangtienValue">50 điểm</span></label>
+                      <label for="dangtien">Đáng đồng tiền <span id="dangtienValue">5 điểm</span></label>
                       <input
                         type="range"
                         name="dangtien"
                         id="dangtien"
                         class="range-slider"
-                        value="50"
+                        value="5"
                         min="0"
-                        max="100"
+                        max="10"
                         oninput="updateRangeValue('dangtien')"
                       />
   
-                      <label for="wifi">Wifi miễn phí <span id="wifiValue">50 điểm</span></label>
+                      <label for="wifi">Wifi miễn phí <span id="wifiValue">5 điểm</span></label>
                       <input
                         type="range"
                         name="wifi"
                         id="wifi"
                         class="range-slider"
-                        value="50"
+                        value="5"
                         min="0"
-                        max="100"
+                        max="10"
                         oninput="updateRangeValue('wifi')"
                       />
                     </div>
   
                     <div class="col-6" style="width: 350px;">
-                      <label for="nhanvien">Nhân viên phục vụ <span id="nhanvienValue">50 điểm</span></label>
+                      <label for="nhanvien">Nhân viên phục vụ <span id="nhanvienValue">5 điểm</span></label>
                       <input
                         type="range"
                         name="nhanvien"
                         id="nhanvien"
                         class="range-slider"
-                        value="50"
+                        value="5"
                         min="0"
-                        max="100"
+                        max="10"
                         oninput="updateRangeValue('nhanvien')"
                       />
   
-                      <label for="tiennghi">Tiện nghi <span id="tiennghiValue">50 điểm</span></label>
+                      <label for="tiennghi">Tiện nghi <span id="tiennghiValue">5 điểm</span></label>
                       <input
                         type="range"
                         name="tiennghi"
                         id="tiennghi"
                         class="range-slider"
-                        value="50"
+                        value="5"
                         min="0"
-                        max="100"
+                        max="10"
                         oninput="updateRangeValue('tiennghi')"
                       />
   
-                      <label for="sachse">Sạch sẽ <span id="sachseValue">50 điểm</span></label>
+                      <label for="sachse">Sạch sẽ <span id="sachseValue">5 điểm</span></label>
                       <input
                         type="range"
                         name="sachse"
                         id="sachse"
                         class="range-slider"
-                        value="50"
+                        value="5"
                         min="0"
-                        max="100"
+                        max="10"
                         oninput="updateRangeValue('sachse')"
                       />
                     </div>
