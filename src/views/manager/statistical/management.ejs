@@ -152,7 +152,7 @@
                         <div class="tab-content p-0">
                             <% for(let typeroom of best_type_room.typeOfRooms) { %>
                                 <div class="mb-3">
-                                    <strong>Loại phòng:</strong> <%= typeroom.name %><br>
+                                    <strong>Loại phòng:</strong> <%= best_type_room.maxName %><br>
                                     <strong>Số lượng đặt:</strong> <%= best_type_room.maxCount %>
                                 </div>
                             <% } %>
@@ -174,7 +174,7 @@
                         <div class="tab-content p-0">
                             <% for(let typeroom of best_type_room.typeOfRooms) { %>
                                 <div class="mb-3">
-                                    <strong>Loại phòng:</strong> <%= typeroom.name %><br>
+                                    <strong>Loại phòng:</strong> <%= best_type_room.minName %><br>
                                     <strong>Số lượng đặt:</strong> <%= best_type_room.minCount %>
                                 </div>
                             <% } %>

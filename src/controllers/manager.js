@@ -211,7 +211,7 @@ class ManagerController {
                 statistic_service["min"] = {[s]: services[s]}
             } 
         }
-        console.log("statistic service", statistic_service);
+        console.log("best type room", best_type_room);
 
         res.render("index-manager", {
             page: "manager/index",

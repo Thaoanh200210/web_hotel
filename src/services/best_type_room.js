@@ -71,6 +71,7 @@ async function bestTypeRoom(hotel, period = "", type = "month") {
         (key) => groupedByString[key] === maxCount
     );
 
+
     let typeOfRooms = await getAllTypeRoomByHotel(hotel);
 
     const bookedCountPerTypeRoom = {};
@@ -89,10 +90,18 @@ async function bestTypeRoom(hotel, period = "", type = "month") {
 
     console.log(bookedCountPerTypeRoom);
 
+    function getKeyByValue(obj, value) {
+        return Object.keys(obj).find(key => obj[key] === value);
+    }
+    const maxName = getKeyByValue(bookedCountPerTypeRoom, maxCount)
+    const minName = getKeyByValue(bookedCountPerTypeRoom, minCount)
+
     return {
         typeOfRooms: typeOfRooms,
         maxCount: maxCount,
-        minCount:minCount,
+        minCount: minCount,
+        maxName: maxName,
+        minName: minName,
         bookedCountPerTypeRoom: bookedCountPerTypeRoom,
     };
 }

@@ -218,7 +218,6 @@ class StoreRunController{
         let services = await getAllServices({
             hotel: req.hotel,
         });
-        console.log("co so vat chat", services)
         const {hotelId} = req.params;
         let service_hotels = await getAllServiceHotel({hotel: hotelId})
 
@@ -325,6 +324,7 @@ class StoreRunController{
         let ngaydau = req.query.ngaydau;
         let ngayket = req.query.ngayket;
         let typeRoom = await getTypeRoomByIdAndHotel(req.hotel,req.params.id,ngaydau,ngayket,true);
+        console.log("Type room", typeRoom);
         let getImageOfTypeOfRoom = (rooms) => {
             let images = rooms.map((room) => room.images);
             let mergedImages = images.flat();
