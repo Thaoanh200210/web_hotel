@@ -30,17 +30,38 @@ async function getAllTypeRoomByHotel(hotel, startDate = "", endDate = "") {
             });
 
             // Lọc các bản ghi đặt phòng trong khoảng startDate và endDate
-            detailBookings = detailBookings.filter(detail => {
-                const checkIn = new Date(detail.booking.check_in);
-                const checkOut = new Date(detail.booking.check_out);
-                const start = new Date(startDate);
-                const end = new Date(endDate);
+            // detailBookings = detailBookings.filter(detail => {
+            //     const checkIn = new Date(detail.booking.check_in);
+            //     const checkOut = new Date(detail.booking.check_out);
+            //     const start = new Date(startDate);
+            //     const end = new Date(endDate);
 
-                // Nếu khoảng thời gian đặt phòng trùng với startDate và endDate, loại bỏ phòng này
-                return (
-                    (checkIn <= end && checkOut >= start) // Phòng đã đặt trong khoảng thời gian
-                );
-            });
+            //     // Nếu khoảng thời gian đặt phòng trùng với startDate và endDate, loại bỏ phòng này
+            //     return (
+            //         (checkIn <= end && checkOut >= start) // Phòng đã đặt trong khoảng thời gian
+            //     );
+            // });
+            detailBookings = detailBookings.filter((detail) => {
+                // Convert check-in and check-out dates to Date objects
+                let checkInDate = new Date(detail.booking.check_in);
+                let checkOutDate = new Date(detail.booking.check_out);
+          
+                // Create a new Date object from startDate and add 1 day
+                let startDateAdjusted = new Date(startDate);
+                startDateAdjusted.setDate(startDateAdjusted.getDate() + 1); // Add one day
+          
+                // Get the current date
+                let currentDate = new Date();
+          
+                // Check if the detailBooking should be included based on the dates
+                if (
+                  (checkOutDate <= startDateAdjusted && checkOutDate >= currentDate) ||
+                  checkInDate >= new Date(endDate)
+                ) {
+                  return false; // Exclude this detailBooking
+                }
+                return true; // Include this detailBooking
+              });
 
             // Tạo danh sách ID các phòng đã đặt trong khoảng thời gian đó
             const roomBooked = detailBookings.map(detail => detail.room._id.toString());
