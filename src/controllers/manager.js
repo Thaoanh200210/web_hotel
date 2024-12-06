@@ -133,107 +133,135 @@ class ManagerController {
         })
     }
     async statistical(req, res) {
-        // Lấy tháng từ query (nếu có) hoặc lấy tháng hiện tại
-        let month = req.query.month
-        let quarter = req.query.quarter
-        let year = req.query.year
-        let type = req.query.type
-        // Gọi các hàm để lấy dữ liệu theo tháng
+        // Lấy tham số từ query
+        const { month, quarter, year, type } = req.query;
+    
+        // Gọi các hàm để lấy dữ liệu
         let number_room = await numberOfRoomByHotel(req.hotel);
-        let number_of_booking = await numberOfBookingByHotel(req.hotel, month); // Truyền thêm tham số month nếu cần thiết
-        let number_of_event = await numberOfEventByHotel(req.hotel, month); // Truyền thêm tham số month nếu cần thiết
-        let number_of_user = await numberOfUser(month); // Truyền thêm tham số month nếu cần thiết
-        let best_type_room = []
-        if (type === 'quarter') {
-            best_type_room = await bestTypeRoom(req.hotel, quarter, 'quarter'); 
-        } else if (type === 'year') {
-            best_type_room = await bestTypeRoom(req.hotel, year, 'year'); 
+        let number_of_booking = await numberOfBookingByHotel(req.hotel, month); 
+        let number_of_event = await numberOfEventByHotel(req.hotel, month); 
+        let number_of_user = await numberOfUser(month); 
+        let best_type_room = [];
+    
+        // Xử lý kiểu thống kê: tháng, quý, năm
+        if (type === "quarter") {
+            best_type_room = await bestTypeRoom(req.hotel, quarter, "quarter");
+        } else if (type === "year") {
+            best_type_room = await bestTypeRoom(req.hotel, year, "year");
         } else {
-            best_type_room = await bestTypeRoom(req.hotel, month, 'month'); 
+            best_type_room = await bestTypeRoom(req.hotel, month, "month");
         }
-        let detailBooking = await getAllDetailBookings(req.hotel)
+    
+        let detailBooking = await getAllDetailBookings(req.hotel);
         let services = {};
         let details = [];
         let service_quantity = await getAllServiceQuantity();
-        let income = 0
-        let allincome = 0
+        let income = 0;
+        let allincome = 0;
+    
+        // Tính thu nhập và chi tiết booking
         for (let detail of detailBooking) {
             let booking = await getBookingById(detail.booking);
             let final = await getFinalByBookingId(booking._id);
-        
+    
             if (final.length !== 0) {
-                final.forEach(item => {
-                    let nowDate = new Date(item.NowDate);
-                    let cleanedStr = item.tienthucte.replace(" VND", "");
-                    let price = parseInt(cleanedStr.replace(/\./g, ""), 10);
+                final.forEach((item) => {
+                    let nowDate = new Date(item.NowDate); // Ngày hiện tại
+                    let cleanedStr = item.tienthucte.replace(" VND", ""); // Loại bỏ " VND"
+                    let price = parseInt(cleanedStr.replace(/\./g, ""), 10); // Chuyển chuỗi thành số
                     allincome += price;
-                    // Kiểm tra nếu người dùng chọn theo tháng
-                    if (type === 'month' && nowDate.getMonth() + 1 === parseInt(month.split("-")[1]) && nowDate.getFullYear() === parseInt(parseInt(month.split("-")[0]))) {
-                        details.push(detail._id.toString());
-                        income += price
-                    }
-                    // Kiểm tra nếu người dùng chọn theo quý
-                    else if (type === 'quarter') {
-                        let itemQuarter = Math.floor(nowDate.getMonth() / 3) + 1;
-                        if (itemQuarter === parseInt(quarter.split("-")[1]) && nowDate.getFullYear() === parseInt(quarter.split("-")[0])) {
+    
+                    // Xử lý theo tháng
+                    if (type === "month" && month) {
+                        const [inputYear, inputMonth] = month.split("-").map(Number);
+                        const firstDayOfMonth = new Date(Date.UTC(inputYear, inputMonth - 1, 1));
+                        const lastDayOfMonth = new Date(Date.UTC(inputYear, inputMonth, 0));
+    
+                        if (nowDate >= firstDayOfMonth && nowDate <= lastDayOfMonth) {
                             details.push(detail._id.toString());
-                            income += price
+                            income += price;
                         }
                     }
-                    // Kiểm tra nếu người dùng chọn theo năm
-                    else if (type === 'year' && nowDate.getFullYear() === parseInt(year)) {
-                        details.push(detail._id.toString());
-                        income += price
+    
+                    // Xử lý theo quý
+                    else if (type === "quarter" && quarter) {
+                        const [inputYear, inputQuarter] = quarter.split("-").map(Number);
+                        const startMonth = (inputQuarter - 1) * 3; // Tháng đầu tiên của quý
+                        const firstDayOfQuarter = new Date(Date.UTC(inputYear, startMonth, 1));
+                        const lastDayOfQuarter = new Date(Date.UTC(inputYear, startMonth + 3, 0));
+    
+                        if (nowDate >= firstDayOfQuarter && nowDate <= lastDayOfQuarter) {
+                            details.push(detail._id.toString());
+                            income += price;
+                        }
+                    }
+    
+                    // Xử lý theo năm
+                    else if (type === "year" && year) {
+                        const inputYear = parseInt(year, 10);
+                        const firstDayOfYear = new Date(Date.UTC(inputYear, 0, 1));
+                        const lastDayOfYear = new Date(Date.UTC(inputYear, 11, 31));
+    
+                        if (nowDate >= firstDayOfYear && nowDate <= lastDayOfYear) {
+                            details.push(detail._id.toString());
+                            income += price;
+                        }
                     }
                 });
             }
         }
-        for(let service of service_quantity){
-            if(details.includes(service.detail_booking._id.toString())){
-                if(services[service.service_hotel.name]) {
-                    services[service.service_hotel.name]+= service.quatity
+    
+        // Tính số lượng dịch vụ đã sử dụng
+        for (let service of service_quantity) {
+            if (details.includes(service.detail_booking._id.toString())) {
+                if (services[service.service_hotel.name]) {
+                    services[service.service_hotel.name] += service.quatity;
                 } else {
-                    services[service.service_hotel.name] = service.quatity
+                    services[service.service_hotel.name] = service.quatity;
                 }
             }
         }
-        console.log(services);
-        let statistic_service = {}
-        let max = 0
-        let min = 999999
-        for (let s in services) {
-            if (services[s] > max) {
-                max = services[s]
-                statistic_service["max"] = {[s]: services[s]}
-            } 
-            if (services[s] < min) {
-                min = services[s]
-                statistic_service["min"] = {[s]: services[s]}
-            } 
+    
+        // Thống kê dịch vụ được sử dụng nhiều nhất và ít nhất
+        let statistic_service = {};
+        let max = 0;
+        let min = Infinity;
+    
+        for (let serviceName in services) {
+            if (services[serviceName] > max) {
+                max = services[serviceName];
+                statistic_service["max"] = { [serviceName]: services[serviceName] };
+            }
+            if (services[serviceName] < min) {
+                min = services[serviceName];
+                statistic_service["min"] = { [serviceName]: services[serviceName] };
+            }
         }
-        console.log("best type room", best_type_room);
 
+        console.log("Best type room", best_type_room);
+    
+        // Kết quả cho client
         res.render("index-manager", {
             page: "manager/index",
             roomPage: "statistical/management",
-            number_room: number_room,
-            number_of_booking: number_of_booking,
-            number_of_event: number_of_event,
-            number_of_user: number_of_user,
-            best_type_room: best_type_room,
-            statistic_service: statistic_service,
-            services: services,
-            type: type,
-            allincome: allincome,
-            services: services,
-            month: month,
-            quarter: quarter,
-            year: year,
-            income: income,
+            number_room,
+            number_of_booking,
+            number_of_event,
+            number_of_user,
+            best_type_room,
+            statistic_service,
+            services,
+            type,
+            allincome,
+            month,
+            quarter,
+            year,
+            income,
             ...defaultManagerNav(),
-            ...defaultData(req)
+            ...defaultData(req),
         });
     }
+    
     
 
     //quản lý khách sạn

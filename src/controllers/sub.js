@@ -11,56 +11,91 @@ const getAllRooms = require("../services/get_all_rooms")
 const getAllBookings = require("../services/get_all_booking")
 const getAllServiceHotel = require("../services/get_all_service_hotel")
 const getAllBookingDetails = require("../services/get_all_detai_booking")
-const getAllTypeRoomByHotel = require("../services/get_all_type_of_room_by_hotel")
 const getAllUsersByHotel = require("../services/get_all_user_by_hotel")
-const getBookingDetailById = require("../services/get_detail_booking_by_id")
+const getAllUserBookingInHotels = require("../services/get_all_user_booking_in_hotel")
+const getAllRole = require("../services/get_all_role")
 const getAllUsers = require("../services/get_all_user")
-const getAllServiceQuantity = require("../services/get_all_service_quantity")
+const getAllCity = require("../services/get_all_city")
+const getAllEvents = require("../services/get_all_event")
 const getAllReviews = require("../services/get_all_review")
 const getAllTypeRooms = require("../services/get_all_type_of_rooms")
+const getAllTypeRoomByHotel = require("../services/get_all_type_of_room_by_hotel")
 const getAllSelection = require("../services/get_all_selection")
 const getAllService = require("../services/get_all_service")
-const getCurrentEvent = require("../services/get_current_event")
+
+const getAllServiceQuantity = require("../services/get_all_service_quantity")
+const getAllServicesQuantityOfDetail = require("../services/get_all_service_quantity_of_booking")
+
+const getAllTypeRoom = require("../services/get_all_type_of_rooms")
+const getAllDetailBookingByIdBookings = require("../services/get_all_detail_booking_by_id_booking")
 const getTypeRoomById = require("../services/get_type_room_by_id")
+const getTypeRoomByIdAndHotel = require("../services/get_type_of_room_by_id_and_hotel")
+const getCurrentEvent = require("../services/get_current_event")
 const getServiceById = require("../services/get_service_by_id")
 const getServiceHotelById = require("../services/get_service_hotel_by_id")
+const getServiceQuantityById = require("../services/get_service_quantity_by_id")
 const getRoomById = require("../services/get_room_by_id")
+const getRoomByHotel = require("../services/get_room_by_hotel")
 const getDiscountById = require("../services/get_discount_by_id")
-const getTypeRoomByIdAndHotel = require("../services/get_type_of_room_by_id_and_hotel")
-const getDetailBookingById = require("../services/get_detail_booking_by_id")
+const getBookingDetailById = require("../services/get_detail_booking_by_id")
 const getBookingById = require("../services/get_booking_by_id")
 const getReviewById = require("../services/get_review_by_id")
+const getFinalByIdBooking = require("../services/get_final_by_id_booking")
+const getFinalByBookingId = require("../services/get_final_by_booking_id")
+const getPaymentByIdBooking = require("../services/get_payment_by_booking_id")
 const getEventById = require("../services/get_event_by_id")
 const getUserById = require("../services/get_user_by_id")
 const getSelectionById = require("../services/get_selection_by_id")
 const getImageByFilter = require("../services/get_image_by_filter")
-const getFinalByBookingId = require("../services/get_final_by_booking_id")
 const getAllDiscounts = require("../services/get_all_discount")
+const getCityByID = require("../services/get_city_by_id")
+const createBookingDetails = require("../services/create_booking_detail")
+const createBookings = require("../services/create_booking")
 const createRoom = require("../services/create_room")
 const createUser = require("../services/create_user")
-const createFinal = require("../services/create_final")
+const createEvent = require("../services/create_event")
 const createDiscount = require("../services/create_discount")
+const createEmployee = require("../services/create_employee");
 const createImage = require("../services/create_image")
+const createTypeRoom = require("../services/create_type_room")
+const createFinal = require("../services/create_final")
+const createService = require("../services/create_service")
+const createServiceHotel = require("../services/create_service_hotel")
+const createSelection = require("../services/create_selection")
 const createServiceRoom = require("../services/create_service_room")
 const createSelectionRoom = require("../services/create_selection_room")
-const createBookingDetails = require("../services/create_booking_detail")
 const createServiceQuantity = require("../services/create_service_quantity")
 const updateRoom = require("../services/update_room");
 const updateUser = require("../services/update_user");
 const updateEvent = require("../services/update_event");
 const updateDiscount = require("../services/update_discount");
+const updateSelection = require("../services/update_selection")
+const updateService = require("../services/update_service")
+const updateServiceHotel = require("../services/update_service_hotel")
+const updateTypeRoom = require("../services/update_type_room")
 const updateBooking = require("../services/update_booking");
 const updateBookingDetail = require("../services/update_detail_booking")
 const deleteServiceRoomByFilter = require("../services/delete_service_room_by_filter");
 const deleteSelectionRoomByFilter = require("../services/delete_selection_room_by_filter");
-const deleteServiceQuantity = require("../services/delete_service_quantity")
-const getAllDetailBookingByIdBookings = require("../services/get_all_detail_booking_by_id_booking")
 const deleteImageByFilter = require("../services/delete_image_by_filter");
 const deleteRoom = require("../services/delete_room");
+const deleteEvent = require("../services/delete_event");
+const deleteSelection = require("../services/delete_selection")
+const deleteService = require("../services/delete_service")
+const deleteServiceHotel = require("../services/delete_service_hotel")
+const deleteServiceQuantity = require("../services/delete_service_quantity")
+const deleteTypeRoom = require("../services/delete_type_room")
 const deleteDiscount = require("../services/delete_discount");
-const deleteReview = require("../services/delete_review")
 const deleteUser = require("../services/delete_user");
+const deleteReview = require("../services/delete_review")
+const deleteEmployee = require("../services/delete_employee");
 const deleteBooking = require("../services/delete_booking");
+const numberOfRoomByHotel = require("../services/number_of_room_by_hotel")
+const numberOfEventByHotel = require("../services/number_of_event_by_hotel")
+const numberOfUser = require("../services/number_of_user")
+const numberOfBookingByHotel = require("../services/number_of_booking_by_hotel")
+const bestTypeRoom = require("../services/best_type_room");
+const getHotelById = require("../services/get_hotel_by_id");
 const constants = require("../constants")
 const constantMesages = require("../constants/message");
 const { RoleEnum } = require("../models/enum/role");
@@ -588,16 +623,17 @@ class SubController {
 
     async editBookingStatus(req, res) {
         let booking = await getBookingById(req.params.id);
+        let payment = await getPaymentByIdBooking({booking: booking._id})
         let details = await getAllDetailBookingByIdBookings({
             booking: booking._id,
         }); 
-        let final = await getFinalByBookingId({
+        let final = await getFinalByIdBooking({
             booking: booking._id,
         });
         let cookies = new CookieProvider(req, res);
         let userString = cookies.getCookie(constants.user_info);
         let service_hotels = await getAllServiceHotel({ hotel: req.hotel });
-        let service_quantitys = await getAllServiceQuantity({ detail_booking: details });
+        let service_quantitys = await getAllServicesQuantityOfDetail({ detail_booking: details });
         let getStatus = (booking) => {
             if (booking.deleteAt || booking.status == "Đã hủy") {
                 return 'Đã bị hủy';
@@ -616,6 +652,7 @@ class SubController {
             id: req.params.id,
             booking: booking,
             final:final,
+            payment:payment,
             details: details, // Truyền mảng details vào view
             service_quantitys: service_quantitys,
             service_hotels: service_hotels,
@@ -626,6 +663,9 @@ class SubController {
     }
     async findRoomEmpty(req, res){
         let booking = await getBookingById(req.params.id);
+        let details = await getAllDetailBookingByIdBookings({
+            booking: booking._id,
+        }); 
         let ngaydau = req.query.ngaydau;
         let ngayket = req.query.ngayket;
         let events = await getCurrentEvent(req.hotel);
@@ -643,6 +683,7 @@ class SubController {
             booking: booking,
             ngaydau:ngaydau,
             typeRooms:typeRooms,
+            details:details,
             discount:discount,
             ngayket:ngayket,
             ...defaultSubNav(),

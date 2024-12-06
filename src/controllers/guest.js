@@ -69,7 +69,7 @@ class GuestController{
         let file = req.file;
         let owner = {
             name: req.body.chusohuu,
-            phone: req.body.sodienthoai,
+            phone: req.body.phone,
             email: req.body.email,
             password: req.body.matkhau,
             gioitinh: req.body.gioitinh,
@@ -83,7 +83,14 @@ class GuestController{
             owner: user,
             name: req.body.tenkhachsan,
             address: req.body.diachi,
+            sodienthoai: req.body.sodienthoai,
             description: req.body.mieuta,
+            timecheckin: req.body.timecheckin,
+            timecheckout: req.body.timecheckout,
+            chinhsachdatphong: req.body.chinhsachdatphong,
+            chinhsachtreem: req.body.chinhsachtreem,
+            dotuoigioihan: req.body.dotuoigioihan,
+            vatnuoi: req.body.vatnuoi,
             star: req.body.sosao,
             city: req.body.city,
             slogan: req.body.slogan,
@@ -98,7 +105,7 @@ class GuestController{
         let cookies = new CookieProvider(req, res);
         cookies.setCookie(
           constants.has_message,
-          JSON.stringify(message("Bạn đã đăng ký khách sạn thành công, chờ quản trị viên duyệt để đi vào hoạt động!", constantMesages.successCustom)),
+          JSON.stringify(message("Bạn đã đăng ký khách sạn thành công, thông báo xét duyệt chúng tôi sẽ gửi qua mail cho bạn xin vui lòng chờ!", constantMesages.successCustom)),
           1
         );
     

@@ -29,21 +29,15 @@ async function bestTypeRoom(hotel, period = "", type = "month") {
         lastDay = new Date(Date.UTC(currentYear, currentMonth + 1, 0));
     }
 
+    // Chỉ lấy các booking có ngày check_in thuộc khoảng thời gian được chỉ định
     let bookings = await bookingRepo.select({
-        $and: [
-            {
-                check_in: {
-                    $gte: firstDay
-                }
-            },
-            {
-                check_out: {
-                    $lte: lastDay
-                }
-            }
-        ]
+        check_in: {
+            $gte: firstDay, // Ngày check-in phải lớn hơn hoặc bằng firstDay (ngày đầu tháng)
+            $lt: lastDay // Ngày check-in phải nhỏ hơn lastDay (ngày cuối tháng)
+        }
     });
     
+    // Lọc các booking chi tiết liên quan đến khách sạn hiện tại
     let details = await detailBookingRepo.select({
         booking: { $in: bookings },
     });
@@ -51,10 +45,12 @@ async function bestTypeRoom(hotel, period = "", type = "month") {
         return detail.room.hotel._id.toString() == hotel._id.toString();
     });
 
+    // Lấy danh sách các loại phòng từ chi tiết booking
     let type_of_rooms = details.map((detail) => {
         return detail.room.type_room._id.toString();
     });
 
+    // Đếm số lần đặt cho từng loại phòng
     const groupedByString = {};
 
     for (const str of type_of_rooms) {
@@ -64,16 +60,19 @@ async function bestTypeRoom(hotel, period = "", type = "month") {
         groupedByString[str]++;
     }
 
+    // Tìm số lần đặt phòng nhiều nhất và ít nhất
     const maxCount = Math.max(...Object.values(groupedByString));
     const minCount = Math.min(...Object.values(groupedByString));
     
+    // Lấy danh sách các loại phòng có lượt đặt nhiều nhất
     const maxCountKeys = Object.keys(groupedByString).filter(
         (key) => groupedByString[key] === maxCount
     );
 
-
+    // Lấy thông tin các loại phòng từ khách sạn
     let typeOfRooms = await getAllTypeRoomByHotel(hotel);
 
+    // Tạo danh sách số lượt đặt phòng cho từng loại phòng
     const bookedCountPerTypeRoom = {};
 
     Object.keys(groupedByString).forEach(key => {
@@ -84,12 +83,12 @@ async function bestTypeRoom(hotel, period = "", type = "month") {
         bookedCountPerTypeRoom[roomName] = value;
     });
 
+    // Lọc danh sách loại phòng chỉ chứa các loại có lượt đặt nhiều nhất
     typeOfRooms = typeOfRooms.filter((typeOfRoom) => {
         return maxCountKeys.includes(typeOfRoom._id.toString());
     });
 
-    console.log(bookedCountPerTypeRoom);
-
+    // Tìm tên loại phòng có lượt đặt nhiều nhất và ít nhất
     function getKeyByValue(obj, value) {
         return Object.keys(obj).find(key => obj[key] === value);
     }
